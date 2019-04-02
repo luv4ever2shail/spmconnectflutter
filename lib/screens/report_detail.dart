@@ -23,7 +23,7 @@ class _ReportDetail extends State<ReportDetail> {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
-
+    
     return WillPopScope(
         onWillPop: () {
           movetolastscreen();
