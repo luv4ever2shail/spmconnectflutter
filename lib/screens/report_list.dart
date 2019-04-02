@@ -21,6 +21,7 @@ class _ReportList extends State<ReportList> {
   Widget build(BuildContext context) {
     if (reportlist == null) {
       reportlist = List<Report>();
+      updateListView();
     }
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +66,8 @@ class _ReportList extends State<ReportList> {
                 color: Colors.grey,
               ),
               onTap: () {
-                _delete(context, reportlist[position]);
+                //_delete(context, reportlist[position]);
+                _showDialog(context, reportlist[position]);
               },
             ),
             onTap: () {
@@ -78,8 +80,8 @@ class _ReportList extends State<ReportList> {
     );
   }
 
-  void _delete(BuildContext context, Report note) async {
-    int result = await databaseHelper.deleteReport(note.id);
+  void _delete(BuildContext context, Report report) async {
+    int result = await databaseHelper.deleteReport(report.id);
     if (result != 0) {
       _showSnackBar(context, 'Report Deleted Successfully');
       updateListView();
@@ -112,5 +114,35 @@ class _ReportList extends State<ReportList> {
         });
       });
     });
+  }
+
+  void _showDialog(BuildContext context, Report report) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Delete Report?"),
+          content:
+              new Text("This will delete this service report permanently."),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Yes"),
+              onPressed: () {
+                _delete(context, report);
+              },
+            ),
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
