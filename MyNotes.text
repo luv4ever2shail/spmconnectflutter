@@ -1,0 +1,94 @@
+//ToDO: import library
+//ToDo: create a main function
+//ToDo: Create a widget  
+//ToDo: Run that widget on a mobile device
+//ToDo: Create a widget
+
+//* Write => and remove curly braces if the function executes only one statement
+
+
+/*
+
+class _MyAppState extends State<MyApp> {
+  List<String> _products = ['Food Tester'];
+
+  final barColor = const Color(0xFF192A56);
+  final bgColor = const Color(0xFFEAF0F1);
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _products.add('Advance Food Tester');
+                });                
+              },
+              backgroundColor: Colors.red,
+            ),
+            backgroundColor: bgColor,
+            appBar:
+                AppBar(title: Text('SPM Connect'), backgroundColor: barColor),
+            body: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  child: RaisedButton(
+                    onPressed: () {},
+                    child: Text('Add New'),
+                  ),
+                ),
+                Column(
+                  children: _products
+                      .map(
+                        (element) => Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Image.asset('assets/auto.jpg'),
+                                  Text(element)
+                                ],
+                              ),
+                            ),
+                      )
+                      .toList(),
+                )
+              ],
+            )));
+  }
+}
+
+class SliverApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.add),
+        tooltip: 'Create New Request',
+      ),
+      body: new CustomScrollView(
+        slivers: <Widget>[
+          new SliverAppBar(
+            //expandedHeight: 80.0,
+            floating: true,
+            pinned: true,
+            snap: false,
+            flexibleSpace: new FlexibleSpaceBar(
+              title: new Text('SPM Connect - Service Reports'),
+              centerTitle: true,
+            ),
+          ),
+          new SliverList(
+            delegate:
+                new SliverChildBuilderDelegate((context, index) => new ListTile(
+                      title: new Text('List item $index'),
+                    )),
+          ),
+        ],
+      ),
+    ));
+  }
+}
+*/
