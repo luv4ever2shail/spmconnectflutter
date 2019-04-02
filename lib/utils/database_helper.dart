@@ -3,9 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:spmconnectapp/models/report.dart';
-
-
-class DatabaseHelper(){
+class DatabaseHelper{
 
   static DatabaseHelper _databaseHelper;
   static Database _database;                // Singleton Database
@@ -57,7 +55,7 @@ class DatabaseHelper(){
 
 
 	// Fetch Operation: Get all note objects from database
-	Future<List<Map<String, dynamic>>> getNoteMapList() async {
+	Future<List<Map<String, dynamic>>> getReportMapList() async {
 		Database db = await this.database;
 
     //		var result = await db.rawQuery('SELECT * FROM $noteTable order by $colPriority ASC');
@@ -66,16 +64,16 @@ class DatabaseHelper(){
 	}
 
   	// Insert Operation: Insert a Note object to database
-	Future<int> inserReport(Report note) async {
+	Future<int> inserReport(Report report) async {
 		Database db = await this.database;
-		var result = await db.insert(reportTable, note.toMap());
+		var result = await db.insert(reportTable, report.toMap());
 		return result;
 	}
 
 	// Update Operation: Update a Note object and save it to database
-	Future<int> updateReport(Report note) async {
+	Future<int> updateReport(Report report) async {
 		var db = await this.database;
-		var result = await db.update(reportTable, note.toMap(), where: '$colId = ?', whereArgs: [note.id]);
+		var result = await db.update(reportTable, report.toMap(), where: '$colId = ?', whereArgs: [report.id]);
 		return result;
 	}
 
@@ -92,6 +90,20 @@ class DatabaseHelper(){
 		List<Map<String, dynamic>> x = await db.rawQuery('SELECT COUNT (*) from $reportTable');
 		int result = Sqflite.firstIntValue(x);
 		return result;
+	}
+
+  	Future<List<Report>> getReportList() async {
+
+		var reportMapList = await getReportMapList(); // Get 'Map List' from database
+		int count = reportMapList.length;         // Count the number of map entries in db table
+
+		List<Report> reportList = List<Report>();
+		// For loop to create a 'Note List' from a 'Map List'
+		for (int i = 0; i < count; i++) {
+			reportList.add(Report.fromMapObject(reportMapList[i]));
+		}
+
+		return reportList;
 	}
 
 

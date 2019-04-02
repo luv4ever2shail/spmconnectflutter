@@ -1,5 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/screens/report_detail.dart';
+import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/utils/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ReportList extends StatefulWidget {
   @override
@@ -9,10 +13,15 @@ class ReportList extends StatefulWidget {
 }
 
 class _ReportList extends State<ReportList> {
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  List<Report> reportlist;
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
+    if (reportlist == null) {
+      reportlist = List<Report>();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('SPM Connect Service Reports'),
@@ -21,7 +30,8 @@ class _ReportList extends State<ReportList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint('FAB clicked');
-          navigateToDetail('Add New Report');
+          navigateToDetail(
+              Report('', '', '', '', '', '', '', ''), 'Add New Report');
         },
         tooltip: 'Create New Report',
         child: Icon(Icons.add),
@@ -39,22 +49,28 @@ class _ReportList extends State<ReportList> {
           color: Colors.white,
           elevation: 2.0,
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.yellow,
-              child: Icon(Icons.keyboard_arrow_right),
-            ),
             title: Text(
-              'Dummy Title',
+              this.reportlist[position].projectno +
+                  " - " +
+                  this.reportlist[position].customer,
               style: titleStyle,
             ),
-            subtitle: Text('Dummy Date'),
-            trailing: Icon(
-              Icons.delete,
-              color: Colors.grey,
+            subtitle: Text(
+              this.reportlist[position].date,
+              style: titleStyle,
+            ),
+            trailing: GestureDetector(
+              child: Icon(
+                Icons.delete,
+                color: Colors.grey,
+              ),
+              onTap: () {
+                _delete(context, reportlist[position]);
+              },
             ),
             onTap: () {
               debugPrint("ListTile Tapped");
-              navigateToDetail('Edit Report');
+              navigateToDetail(this.reportlist[position], 'Edit Report');
             },
           ),
         );
@@ -62,9 +78,39 @@ class _ReportList extends State<ReportList> {
     );
   }
 
-  void navigateToDetail(String title) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ReportDetail(title);
+  void _delete(BuildContext context, Report note) async {
+    int result = await databaseHelper.deleteReport(note.id);
+    if (result != 0) {
+      _showSnackBar(context, 'Report Deleted Successfully');
+      updateListView();
+    }
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void navigateToDetail(Report report, String title) async {
+    bool result =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ReportDetail(report, title);
     }));
+    if (result == true) {
+      updateListView();
+    }
+  }
+
+  void updateListView() {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    dbFuture.then((database) {
+      Future<List<Report>> reportListFuture = databaseHelper.getReportList();
+      reportListFuture.then((reportlist) {
+        setState(() {
+          this.reportlist = reportlist;
+          this.count = reportlist.length;
+        });
+      });
+    });
   }
 }
