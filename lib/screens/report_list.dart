@@ -66,8 +66,7 @@ class _ReportList extends State<ReportList> {
                 color: Colors.grey,
               ),
               onTap: () {
-                //_delete(context, reportlist[position]);
-                _showDialog(context, reportlist[position]);
+                _delete(context, reportlist[position]);
               },
             ),
             onTap: () {
@@ -115,34 +114,5 @@ class _ReportList extends State<ReportList> {
       });
     });
   }
-
-  void _showDialog(BuildContext context, Report report) {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Delete Report?"),
-          content:
-              new Text("This will delete this service report permanently."),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Yes"),
-              onPressed: () {
-                _delete(context, report);
-              },
-            ),
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  
 }

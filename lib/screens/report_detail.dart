@@ -292,7 +292,7 @@ class _ReportDetail extends State<ReportDetail> {
 
     if (result != 0) {
       // Success
-      _showAlertDialog('SPM Connect', 'Note Saved Successfully');
+      _showAlertDialog('SPM Connect', 'Report Saved Successfully');
     } else {
       // Failure
       _showAlertDialog('SPM Connect', 'Problem Saving Note');
@@ -305,8 +305,8 @@ class _ReportDetail extends State<ReportDetail> {
     // Case 1: If user is trying to delete the NEW NOTE i.e. he has come to
     // the detail page by pressing the FAB of NoteList page.
     if (report.id == null) {
-     // _showAlertDialog('Status', 'No Report was deleted');
-       _showSnackBar(context, 'No Report was deleted');
+      _showAlertDialog('Status', 'No Report was deleted');
+       //_showSnackBar(context, 'No Report was deleted');
 
       return;
     }
