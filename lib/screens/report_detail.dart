@@ -21,6 +21,37 @@ class _ReportDetail extends State<ReportDetail> {
   String appBarTitle;
   Report report;
 
+  FocusNode customerFocusNode;
+  FocusNode plantlocFocusNode;
+  FocusNode contactnameFocusNode;
+  FocusNode authorbyFocusNode;
+  FocusNode technameFocusNode;
+  FocusNode equipFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    customerFocusNode = FocusNode();
+    plantlocFocusNode = FocusNode();
+    contactnameFocusNode = FocusNode();
+    authorbyFocusNode = FocusNode();
+    technameFocusNode = FocusNode();
+    equipFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed
+    customerFocusNode.dispose();
+    plantlocFocusNode.dispose();
+    contactnameFocusNode.dispose();
+    authorbyFocusNode.dispose();
+    technameFocusNode.dispose();
+    equipFocusNode.dispose();
+
+    super.dispose();
+  }
+
   TextEditingController projectController = TextEditingController();
   TextEditingController customerController = TextEditingController();
   TextEditingController planlocController = TextEditingController();
@@ -63,8 +94,12 @@ class _ReportDetail extends State<ReportDetail> {
                 Padding(
                   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                   child: TextField(
+                    keyboardType: TextInputType.numberWithOptions(),
+                    textInputAction: TextInputAction.next,
+                    autofocus: true,
                     controller: projectController,
                     style: textStyle,
+                    onEditingComplete: () => FocusScope.of(context).requestFocus(customerFocusNode),
                     onChanged: (value) {
                       debugPrint('Something changed in Project Text Field');
                       updateProjectno();
@@ -83,6 +118,9 @@ class _ReportDetail extends State<ReportDetail> {
                   child: TextField(
                     controller: customerController,
                     style: textStyle,
+                    focusNode: customerFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).requestFocus(plantlocFocusNode),
                     onChanged: (value) {
                       debugPrint('Something changed in Customer Text Field');
                       updateCustomername();
@@ -101,6 +139,9 @@ class _ReportDetail extends State<ReportDetail> {
                   child: TextField(
                     controller: planlocController,
                     style: textStyle,
+                    focusNode: plantlocFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).requestFocus(contactnameFocusNode),
                     onChanged: (value) {
                       debugPrint(
                           'Something changed in Plant Location Text Field');
@@ -120,6 +161,9 @@ class _ReportDetail extends State<ReportDetail> {
                   child: TextField(
                     controller: contactnameController,
                     style: textStyle,
+                    focusNode: contactnameFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).requestFocus(authorbyFocusNode),
                     onChanged: (value) {
                       debugPrint(
                           'Something changed in Contact Name Text Field');
@@ -139,6 +183,9 @@ class _ReportDetail extends State<ReportDetail> {
                   child: TextField(
                     controller: authorizedbyController,
                     style: textStyle,
+                    focusNode: authorbyFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).requestFocus(equipFocusNode),
                     onChanged: (value) {
                       debugPrint(
                           'Something changed in Authorized by Text Field');
@@ -158,6 +205,9 @@ class _ReportDetail extends State<ReportDetail> {
                   child: TextField(
                     controller: equipmentController,
                     style: textStyle,
+                    focusNode: equipFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).requestFocus(technameFocusNode),
                     onChanged: (value) {
                       debugPrint('Something changed in Equipment Text Field');
                       updateEquipment();
@@ -176,6 +226,7 @@ class _ReportDetail extends State<ReportDetail> {
                   child: TextField(
                     controller: technameController,
                     style: textStyle,
+                    focusNode: technameFocusNode,
                     onChanged: (value) {
                       debugPrint(
                           'Something changed in SPM Tech Name Text Field');
@@ -223,8 +274,10 @@ class _ReportDetail extends State<ReportDetail> {
                           ),
                           onPressed: () {
                             setState(() {
+                               _neverSatisfied();
                               debugPrint("Delete button clicked");
-                              _delete();
+                              //
+                             
                             });
                           },
                         ),
@@ -300,25 +353,22 @@ class _ReportDetail extends State<ReportDetail> {
   }
 
   void _delete() async {
+
     movetolastscreen();
 
     // Case 1: If user is trying to delete the NEW NOTE i.e. he has come to
     // the detail page by pressing the FAB of NoteList page.
     if (report.id == null) {
       _showAlertDialog('Status', 'No Report was deleted');
-       //_showSnackBar(context, 'No Report was deleted');
-
       return;
     }
 
     // Case 2: User is trying to delete the old note that already has a valid ID.
     int result = await helper.deleteReport(report.id);
     if (result != 0) {
-      //_showAlertDialog('Status', 'Report Deleted Successfully');
-      _showSnackBar(context, 'Report Deleted Successfully');
+      _showAlertDialog('Status', 'Report Deleted Successfully');      
     } else {
-      //_showAlertDialog('Status', 'Error Occured while Deleting Note');
-       _showSnackBar(context, 'Error Occured while Deleting Note');
+      _showAlertDialog('Status', 'Error Occured while Deleting Note');       
     }
   }
 
@@ -330,8 +380,38 @@ class _ReportDetail extends State<ReportDetail> {
     showDialog(context: context, builder: (_) => alertDialog);
   }
 
-    void _showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
+  Future<void> _neverSatisfied() async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Delete report?'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('Are you sure want to discard this report?')
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text('Discard'),
+            onPressed: () {              
+              Navigator.of(context).pop();
+              _delete();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 }

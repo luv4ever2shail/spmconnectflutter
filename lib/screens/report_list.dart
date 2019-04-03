@@ -66,7 +66,8 @@ class _ReportList extends State<ReportList> {
                 color: Colors.grey,
               ),
               onTap: () {
-                _delete(context, reportlist[position]);
+                //_delete(context, reportlist[position]);
+                _neverSatisfied(position);
               },
             ),
             onTap: () {
@@ -80,17 +81,18 @@ class _ReportList extends State<ReportList> {
   }
 
   void _delete(BuildContext context, Report report) async {
-    int result = await databaseHelper.deleteReport(report.id);
-    if (result != 0) {
-      _showSnackBar(context, 'Report Deleted Successfully');
-      updateListView();
-    }
+     await databaseHelper.deleteReport(report.id);
+    // if (result != 0) {
+    //   debugPrint('delete cleared');
+    //   _showSnackBar(context, 'Report Deleted Successfully');
+    //   updateListView();
+    // }
   }
 
-  void _showSnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
+  // void _showSnackBar(BuildContext context, String message) {
+  //   final snackBar = SnackBar(content: Text(message));
+  //   Scaffold.of(context).showSnackBar(snackBar);
+  // }
 
   void navigateToDetail(Report report, String title) async {
     bool result =
@@ -114,5 +116,40 @@ class _ReportList extends State<ReportList> {
       });
     });
   }
+
+   Future<void> _neverSatisfied(int position) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Delete report?'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('Are you sure want to discard this report?')
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text('Discard'),
+            onPressed: () {              
+              Navigator.of(context).pop();
+              _delete(context, reportlist[position]);
+              updateListView();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
   
 }
