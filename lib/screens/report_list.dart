@@ -23,19 +23,30 @@ class _ReportList extends State<ReportList> {
       reportlist = List<Report>();
       updateListView();
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('SPM Connect Service Reports'),
-      ),
-      body: getReportListView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          debugPrint('FAB clicked');
-          navigateToDetail(
-              Report('', '', '', '', '', '', '', ''), 'Add New Report');
-        },
-        tooltip: 'Create New Report',
-        child: Icon(Icons.add),
+    return WillPopScope(
+      onWillPop: () {
+        movetolastscreen();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('SPM Connect Service Reports'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              movetolastscreen();
+            },
+          ),
+        ),
+        body: getReportListView(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            debugPrint('FAB clicked');
+            navigateToDetail(
+                Report('', '', '', '', '', '', '', ''), 'Add New Report');
+          },
+          tooltip: 'Create New Report',
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -80,8 +91,12 @@ class _ReportList extends State<ReportList> {
     );
   }
 
+  void movetolastscreen() {
+    Navigator.pop(context, true);
+  }
+
   void _delete(BuildContext context, Report report) async {
-     await databaseHelper.deleteReport(report.id);
+    await databaseHelper.deleteReport(report.id);
     // if (result != 0) {
     //   debugPrint('delete cleared');
     //   _showSnackBar(context, 'Report Deleted Successfully');
@@ -117,39 +132,38 @@ class _ReportList extends State<ReportList> {
     });
   }
 
-   Future<void> _neverSatisfied(int position) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Delete report?'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text('Are you sure want to discard this report?')
-            ],
+  Future<void> _neverSatisfied(int position) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete report?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure want to discard this report?')
+              ],
+            ),
           ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            child: Text('Discard'),
-            onPressed: () {              
-              Navigator.of(context).pop();
-              _delete(context, reportlist[position]);
-              updateListView();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-  
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Discard'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _delete(context, reportlist[position]);
+                updateListView();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
