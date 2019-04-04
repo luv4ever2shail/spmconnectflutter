@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/screens/report_list.dart';
+import 'package:spmconnectapp/screens/privacy_policy.dart';
 
 class Myhome extends StatefulWidget {
   @override
@@ -17,8 +18,27 @@ class _MyhomeState extends State<Myhome> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
             backgroundColor: bgColor,
-            appBar:
-                AppBar(title: Text('SPM Connect'), backgroundColor: barColor),
+            appBar: AppBar(
+              title: Text('SPM Connect'),
+              backgroundColor: barColor,
+              actions: <Widget>[
+            // action button            
+            // overflow menu
+            PopupMenuButton<Choice>(
+              onSelected: (choices){
+                navigateToprivacy();
+              },
+              itemBuilder: (BuildContext context) {
+                return choices.map((Choice choice) {
+                  return PopupMenuItem<Choice>(
+                    value: choice,
+                    child: Text(choice.title),
+                  );
+                }).toList();
+              },
+            ),            
+          ],
+            ),
             body: Column(
               children: <Widget>[
                 Container(
@@ -48,9 +68,7 @@ class _MyhomeState extends State<Myhome> {
                   'Service Reports',
                   textScaleFactor: 2.0,
                 )
-                
               ],
-              
             )));
   }
 
@@ -59,4 +77,19 @@ class _MyhomeState extends State<Myhome> {
       return ReportList();
     }));
   }
+
+  void navigateToprivacy() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return PrivacyPolicyScreen();
+    }));
+  }
 }
+class Choice {
+  const Choice({this.title, this.icon});
+  final String title;
+  final IconData icon;
+}
+
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'Privacy'),
+];
