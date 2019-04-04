@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'package:spmconnectapp/screens/report_list.dart';
 import 'package:spmconnectapp/screens/home.dart';
 
-//import 'package:spmconnect/screens/report_detail.dart';
 void main() => runApp(MyApp());
 
 //*Main widget called MyApp

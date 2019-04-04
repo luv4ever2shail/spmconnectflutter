@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:spmconnectapp/screens/report_detail.dart';
+//import 'package:spmconnectapp/screens/report_detail.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
-
+import 'package:spmconnectapp/screens/reportdetailtabs.dart';
 class ReportList extends StatefulWidget {
+  
   @override
   State<StatefulWidget> createState() {
     return _ReportList();
@@ -83,6 +84,7 @@ class _ReportList extends State<ReportList> {
             ),
             onTap: () {
               debugPrint("ListTile Tapped");
+             
               navigateToDetail(this.reportlist[position], 'Edit Report');
             },
           ),
@@ -111,8 +113,8 @@ class _ReportList extends State<ReportList> {
 
   void navigateToDetail(Report report, String title) async {
     bool result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ReportDetail(report, title);
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {           
+      return ReportDetTab(report, title);
     }));
     if (result == true) {
       updateListView();

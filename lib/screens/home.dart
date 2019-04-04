@@ -22,51 +22,51 @@ class _MyhomeState extends State<Myhome> {
               title: Text('SPM Connect'),
               backgroundColor: barColor,
               actions: <Widget>[
-            // action button            
-            // overflow menu
-            PopupMenuButton<Choice>(
-              onSelected: (choices){
-                navigateToprivacy();
-              },
-              itemBuilder: (BuildContext context) {
-                return choices.map((Choice choice) {
-                  return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Text(choice.title),
-                  );
-                }).toList();
-              },
-            ),            
-          ],
+                // action button
+                // overflow menu
+                PopupMenuButton<Choice>(
+                  onSelected: (choices) {
+                    navigateToprivacy();
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return choices.map((Choice choice) {
+                      return PopupMenuItem<Choice>(
+                        value: choice,
+                        child: Text(choice.title),
+                      );
+                    }).toList();
+                  },
+                ),
+              ],
             ),
             body: Column(
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.all(5.0),
+               
+                Center(
                   child: Card(
-                    color: Colors.white,
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      onTap: () {
-                        navigateToDetail();
-                      },
-                      child: Image.asset(
-                        'assets/tools.jpg',
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                    semanticContainer: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 10.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const ListTile(
+                          leading: Icon(Icons.description),
+                          title: Text('Service Reports',textScaleFactor: 2.0,),
+                          subtitle: Text(
+                              'Access all you service reports.'),
+                        ),
+                        ButtonTheme.bar(
+                          // make buttons use the appropriate styles for cards
+                          child: ButtonBar(
+                            children: <Widget>[
+                              FlatButton(
+                                child: const Text('View Reports'),
+                                onPressed: () {navigateToDetail();},
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Text(
-                  'Service Reports',
-                  textScaleFactor: 2.0,
                 )
               ],
             )));
@@ -84,6 +84,7 @@ class _MyhomeState extends State<Myhome> {
     }));
   }
 }
+
 class Choice {
   const Choice({this.title, this.icon});
   final String title;
