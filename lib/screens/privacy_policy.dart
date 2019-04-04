@@ -30,10 +30,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
   }
 
   static const _PRIVACY_POLICY = """
-**SPM Automation**
+## SPM Automation
 **Privacy Policy of SPM Connect**
 
-**Effective date: April 04, 2019**
+Effective date: April 04, 2019
 
 SPM Automation ("us", "we", or "our") operates the SPM Connect mobile application (the "Service").
 
