@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/report_detail_pg1.dart';
-import 'package:spmconnectapp/screens/report_detail_pg2.dart';
+import 'package:spmconnectapp/screens/task_list.dart';
 import 'package:spmconnectapp/screens/report_detail_pg3.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:intl/intl.dart';
@@ -26,14 +26,14 @@ class _ReportDetTabState extends State<ReportDetTab> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _children = [
-      ReportDetail(report, appBarTitle),
-      ReportDetail2(report, appBarTitle),
+      ReportDetail(report),
+      TaskList(report.projectno),
       ReportDetail3(report),
     ];
     //TextStyle textStyle = Theme.of(context).textTheme.title;
     return  Scaffold(
         appBar: AppBar(
-          title: Text(appBarTitle),
+          title: Text(appBarTitle + ' - ' + report.projectno),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -52,16 +52,16 @@ class _ReportDetTabState extends State<ReportDetTab> {
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.info_outline),
               title: Text('Customer'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.first_page),
-              title: Text('Equip Info'),
+              icon: Icon(Icons.track_changes),
+              title: Text('Tasks'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.last_page),
-              title: Text('Other'),
+              icon: Icon(Icons.done),
+              title: Text('Comments/Approval'),
             ),
           ],
         ),

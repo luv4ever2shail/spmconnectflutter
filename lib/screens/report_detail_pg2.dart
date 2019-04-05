@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 
 class ReportDetail2 extends StatefulWidget {
   final String appBarTitle;
-  final Report report;
+  final Tasks task;
+  final String reportno;
 
-  ReportDetail2(this.report, this.appBarTitle);
+  ReportDetail2(this.task, this.appBarTitle,this.reportno);
   @override
   State<StatefulWidget> createState() {
-    return _ReportDetail2(this.report, this.appBarTitle);
+    return _ReportDetail2(this.task, this.appBarTitle,this.reportno);
   }
 }
 
@@ -17,254 +18,204 @@ class _ReportDetail2 extends State<ReportDetail2> {
   DatabaseHelper helper = DatabaseHelper();
 
   String appBarTitle;
-  Report report;
+  String reportno;
+  Tasks task;
 
-  FocusNode customerFocusNode;
-  FocusNode plantlocFocusNode;
-  FocusNode contactnameFocusNode;
-  FocusNode authorbyFocusNode;
-  FocusNode technameFocusNode;
-  FocusNode equipFocusNode;
+  FocusNode timeFocusNode;
+  FocusNode wrkperfrmFocusNode;
+  FocusNode hoursFocusNode;
 
   @override
   void initState() {
     super.initState();
-    customerFocusNode = FocusNode();
-    plantlocFocusNode = FocusNode();
-    contactnameFocusNode = FocusNode();
-    authorbyFocusNode = FocusNode();
-    technameFocusNode = FocusNode();
-    equipFocusNode = FocusNode();
+    timeFocusNode = FocusNode();
+    wrkperfrmFocusNode = FocusNode();
+    hoursFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     // Clean up the focus node when the Form is disposed
-    customerFocusNode.dispose();
-    plantlocFocusNode.dispose();
-    contactnameFocusNode.dispose();
-    authorbyFocusNode.dispose();
-    technameFocusNode.dispose();
-    equipFocusNode.dispose();
+    timeFocusNode.dispose();
+    wrkperfrmFocusNode.dispose();
+    hoursFocusNode.dispose();
 
     super.dispose();
   }
 
-  TextEditingController projectController = TextEditingController();
-  TextEditingController customerController = TextEditingController();
-  TextEditingController planlocController = TextEditingController();
-  TextEditingController contactnameController = TextEditingController();
-  TextEditingController authorizedbyController = TextEditingController();
-  TextEditingController equipmentController = TextEditingController();
-  TextEditingController technameController = TextEditingController();
-  _ReportDetail2(this.report, this.appBarTitle);
+  TextEditingController itemController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController workperfrmController = TextEditingController();
+  TextEditingController hoursController = TextEditingController();
+  _ReportDetail2(this.task, this.appBarTitle,this.reportno);
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
-    projectController.text = report.projectno;
-    customerController.text = report.customer;
-    planlocController.text = report.plantloc;
-    contactnameController.text = report.contactname;
-    authorizedbyController.text = report.authorby;
-    equipmentController.text = report.equipment;
-    technameController.text = report.techname;
+    itemController.text = task.item;
+    timeController.text = task.time;
+    workperfrmController.text = task.workperformed;
+    hoursController.text = task.hours;
 
     return Scaffold(
-      backgroundColor: Colors.red,
+       appBar: AppBar(
+            title: Text(appBarTitle),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {                
+                _save(reportno);
+              },
+            ),
+          ),
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
           children: <Widget>[
-            // First Element - Project Number
+            // First Element - Item Number
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 keyboardType: TextInputType.numberWithOptions(),
                 textInputAction: TextInputAction.next,
-                //autofocus: true,
-                controller: projectController,
+                autofocus: true,
+                controller: itemController,
                 style: textStyle,
                 onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(customerFocusNode),
+                    FocusScope.of(context).requestFocus(timeFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Project Text Field');
-                  updateProjectno();
+                  debugPrint('Something changed in Item Text Field');
+                  updateItem();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Project No.',
+                    labelText: 'Item No.',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
-            // Second Element - Customer Name
+            // Second Element - Time
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: customerController,
+                controller: timeController,
                 style: textStyle,
-                focusNode: customerFocusNode,
+                focusNode: timeFocusNode,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(plantlocFocusNode),
+                    FocusScope.of(context).requestFocus(wrkperfrmFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Customer Text Field');
-                  updateCustomername();
+                  debugPrint('Something changed in Time Text Field');
+                  updateTime();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Customer',
+                    labelText: 'Time',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
-            // Third Element - Plant Location
+            // Third Element - Work Performed
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: planlocController,
+                controller: workperfrmController,
                 style: textStyle,
-                focusNode: plantlocFocusNode,
+                focusNode: wrkperfrmFocusNode,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(contactnameFocusNode),
+                    FocusScope.of(context).requestFocus(hoursFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Plant Location Text Field');
-                  updatePlantloc();
+                  debugPrint('Something changed in Work Performed Text Field');
+                  updateWorkperformed();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Plant Location',
+                    labelText: 'Work Performed',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
-            //Fourth Element - Contact Name
+            //Fourth Element - Hours
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: contactnameController,
+                controller: hoursController,
                 style: textStyle,
-                focusNode: contactnameFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(authorbyFocusNode),
+                focusNode: hoursFocusNode,
+                textInputAction: TextInputAction.done,
                 onChanged: (value) {
-                  debugPrint('Something changed in Contact Name Text Field');
-                  updateContactname();
+                  debugPrint('Something changed in Hours Text Field');
+                  updateHours();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Contact Name',
+                    labelText: 'Hours',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
-            //Fifth Element - Authorized By
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: authorizedbyController,
-                style: textStyle,
-                focusNode: authorbyFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(equipFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Authorized by Text Field');
-                  updateAuthorby();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Authorized By',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            //Sixth Element - Equipment
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: equipmentController,
-                style: textStyle,
-                focusNode: equipFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(technameFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Equipment Text Field');
-                  updateEquipment();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Equipment',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            //Seventh Element - Technician Name
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: technameController,
-                style: textStyle,
-                focusNode: technameFocusNode,
-                onChanged: (value) {
-                  debugPrint('Something changed in SPM Tech Name Text Field');
-                  updateTechname();
-                },
-                decoration: InputDecoration(
-                    labelText: 'SPM Tech Name',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
+   void movetolastscreen() {
+    Navigator.pop(context,true);
+  }
+
+   void _save(String reportno) async {
+
+    movetolastscreen();
+    task.projectno = reportno;
+    int result;
+    if (task.id != null) {
+      // Case 1: Update operation
+      result = await helper.updateTask(task);
+    } else {
+      // Case 2: Insert Operation
+      result = await helper.inserTask(task);
+    }
+
+    if (result != 0) {
+      // Success
+      _showAlertDialog('SPM Connect', 'Task Saved Successfully');
+    } else {
+      // Failure
+      _showAlertDialog('SPM Connect', 'Problem Saving Task');
+    }
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
+  }
+
 // Update the project no.
-  void updateProjectno() {
-    report.projectno = projectController.text;
+  void updateItem() {
+    task.item = itemController.text;
   }
 
   // Update the customer namme of Note object
-  void updateCustomername() {
-    report.customer = customerController.text;
+  void updateTime() {
+    task.time = timeController.text;
   }
 
   // Update the plant location namme of Note object
-  void updatePlantloc() {
-    report.plantloc = planlocController.text;
+  void updateWorkperformed() {
+    task.workperformed = workperfrmController.text;
   }
 
   // Update the customer namme of Note object
-  void updateContactname() {
-    report.contactname = contactnameController.text;
+  void updateHours() {
+    task.hours = hoursController.text;
   }
 
-  // Update the customer namme of Note object
-  void updateAuthorby() {
-    report.authorby = authorizedbyController.text;
-  }
-
-  // Update the customer namme of Note object
-  void updateEquipment() {
-    report.equipment = equipmentController.text;
-  }
-
-  // Update the customer namme of Note object
-  void updateTechname() {
-    report.techname = technameController.text;
-  }
 }

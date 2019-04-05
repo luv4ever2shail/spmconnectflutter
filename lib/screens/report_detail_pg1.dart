@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 class ReportDetail extends StatefulWidget {
-  final String appBarTitle;
   final Report report;
 
-  ReportDetail(this.report, this.appBarTitle);
+  ReportDetail(this.report);
   @override
   State<StatefulWidget> createState() {
-    return _ReportDetail(this.report, this.appBarTitle);
+    return _ReportDetail(this.report);
   }
 }
 
 class _ReportDetail extends State<ReportDetail> {
   DatabaseHelper helper = DatabaseHelper();
 
-  String appBarTitle;
   Report report;
 
   FocusNode customerFocusNode;
@@ -56,7 +54,7 @@ class _ReportDetail extends State<ReportDetail> {
   TextEditingController authorizedbyController = TextEditingController();
   TextEditingController equipmentController = TextEditingController();
   TextEditingController technameController = TextEditingController();
-  _ReportDetail(this.report, this.appBarTitle);
+  _ReportDetail(this.report);
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;

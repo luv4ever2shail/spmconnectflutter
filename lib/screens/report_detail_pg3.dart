@@ -64,7 +64,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
               child: TextField(
                 keyboardType: TextInputType.multiline,
                 maxLines: 5,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.newline,
                 controller: furtheractionController,
                 style: textStyle,
                 onEditingComplete: () =>
@@ -90,7 +90,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
                 controller: custcommentsController,
                 style: textStyle,
                 focusNode: custcommentsFocusNode,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.newline,
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(custrepFocusNode),
                 onChanged: (value) {
@@ -132,14 +132,13 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: custrepController,
                 style: textStyle,
                 //focusNode: custrepFocusNode,
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
-                      return SignPad();
+                      return SignApp();
                     }),
                   );
                 },
