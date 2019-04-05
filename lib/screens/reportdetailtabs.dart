@@ -28,16 +28,10 @@ class _ReportDetTabState extends State<ReportDetTab> {
     List<Widget> _children = [
       ReportDetail(report, appBarTitle),
       ReportDetail2(report, appBarTitle),
-      ReportDetail3(report, appBarTitle),
+      ReportDetail3(report),
     ];
-    TextStyle textStyle = Theme.of(context).textTheme.title;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primaryTextTheme: TextTheme(
-        title: textStyle,
-      )),
-      home: Scaffold(
+    //TextStyle textStyle = Theme.of(context).textTheme.title;
+    return  Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle),
           leading: IconButton(
@@ -71,8 +65,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
             ),
           ],
         ),
-      ),
-    );
+      );    
   }
 
   void movetolastscreen() {

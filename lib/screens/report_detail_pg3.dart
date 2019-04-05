@@ -1,74 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/screens/signpad.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 
 class ReportDetail3 extends StatefulWidget {
-  final String appBarTitle;
   final Report report;
 
-  ReportDetail3(this.report, this.appBarTitle);
+  ReportDetail3(this.report);
   @override
   State<StatefulWidget> createState() {
-    return _ReportDetail3(this.report, this.appBarTitle);
+    return _ReportDetail3(this.report);
   }
 }
 
 class _ReportDetail3 extends State<ReportDetail3> {
   DatabaseHelper helper = DatabaseHelper();
 
-  String appBarTitle;
   Report report;
 
-  FocusNode customerFocusNode;
-  FocusNode plantlocFocusNode;
+  FocusNode custcommentsFocusNode;
+  FocusNode custrepFocusNode;
   FocusNode contactnameFocusNode;
-  FocusNode authorbyFocusNode;
-  FocusNode technameFocusNode;
-  FocusNode equipFocusNode;
 
   @override
   void initState() {
     super.initState();
-    customerFocusNode = FocusNode();
-    plantlocFocusNode = FocusNode();
+    custcommentsFocusNode = FocusNode();
+    custrepFocusNode = FocusNode();
     contactnameFocusNode = FocusNode();
-    authorbyFocusNode = FocusNode();
-    technameFocusNode = FocusNode();
-    equipFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     // Clean up the focus node when the Form is disposed
-    customerFocusNode.dispose();
-    plantlocFocusNode.dispose();
+    custcommentsFocusNode.dispose();
+    custrepFocusNode.dispose();
     contactnameFocusNode.dispose();
-    authorbyFocusNode.dispose();
-    technameFocusNode.dispose();
-    equipFocusNode.dispose();
 
     super.dispose();
   }
 
-  TextEditingController projectController = TextEditingController();
-  TextEditingController customerController = TextEditingController();
-  TextEditingController planlocController = TextEditingController();
-  TextEditingController contactnameController = TextEditingController();
-  TextEditingController authorizedbyController = TextEditingController();
-  TextEditingController equipmentController = TextEditingController();
-  TextEditingController technameController = TextEditingController();
-  _ReportDetail3(this.report, this.appBarTitle);
+  TextEditingController furtheractionController = TextEditingController();
+  TextEditingController custcommentsController = TextEditingController();
+  TextEditingController custrepController = TextEditingController();
+
+  _ReportDetail3(this.report);
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
-    projectController.text = report.projectno;
-    customerController.text = report.customer;
-    planlocController.text = report.plantloc;
-    contactnameController.text = report.contactname;
-    authorizedbyController.text = report.authorby;
-    equipmentController.text = report.equipment;
-    technameController.text = report.techname;
+    furtheractionController.text = report.furtheractions;
+    custcommentsController.text = report.custcomments;
+    custrepController.text = report.custrep;
 
     return Scaffold(
       body: Padding(
@@ -79,19 +62,19 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                keyboardType: TextInputType.numberWithOptions(),
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
                 textInputAction: TextInputAction.next,
-                //autofocus: true,
-                controller: projectController,
+                controller: furtheractionController,
                 style: textStyle,
                 onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(customerFocusNode),
+                    FocusScope.of(context).requestFocus(custcommentsFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Project Text Field');
-                  updateProjectno();
+                  debugPrint('Something changed in Furtheraction Text Field');
+                  updateFurtheraction();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Project No.',
+                    labelText: 'Further Action Req.',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
@@ -102,18 +85,21 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: customerController,
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+                controller: custcommentsController,
                 style: textStyle,
-                focusNode: customerFocusNode,
+                focusNode: custcommentsFocusNode,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(plantlocFocusNode),
+                    FocusScope.of(context).requestFocus(custrepFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Customer Text Field');
-                  updateCustomername();
+                  debugPrint(
+                      'Something changed in Customer Comments Text Field');
+                  updateCustcomments();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Customer',
+                    labelText: 'Customer Comments',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
@@ -124,103 +110,45 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: planlocController,
+                controller: custrepController,
                 style: textStyle,
-                focusNode: plantlocFocusNode,
+                focusNode: custrepFocusNode,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(contactnameFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Plant Location Text Field');
-                  updatePlantloc();
+                  debugPrint('Something changed in Cust rep Text Field');
+                  updateCustrep();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Plant Location',
+                    labelText: 'Customer Representative',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
 
-            //Fourth Element - Contact Name
+            // Fourth Element - Plant Location
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                controller: contactnameController,
+                controller: custrepController,
                 style: textStyle,
-                focusNode: contactnameFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(authorbyFocusNode),
+                //focusNode: custrepFocusNode,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return SignPad();
+                    }),
+                  );
+                },
                 onChanged: (value) {
-                  debugPrint('Something changed in Contact Name Text Field');
-                  updateContactname();
+                  debugPrint('Something changed in Cust sign Text Field');
+                  //updateCustrep();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Contact Name',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            //Fifth Element - Authorized By
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: authorizedbyController,
-                style: textStyle,
-                focusNode: authorbyFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(equipFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Authorized by Text Field');
-                  updateAuthorby();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Authorized By',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            //Sixth Element - Equipment
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: equipmentController,
-                style: textStyle,
-                focusNode: equipFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(technameFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Equipment Text Field');
-                  updateEquipment();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Equipment',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            //Seventh Element - Technician Name
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: technameController,
-                style: textStyle,
-                focusNode: technameFocusNode,
-                onChanged: (value) {
-                  debugPrint('Something changed in SPM Tech Name Text Field');
-                  updateTechname();
-                },
-                decoration: InputDecoration(
-                    labelText: 'SPM Tech Name',
+                    labelText: 'Customer Signature',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
@@ -233,37 +161,17 @@ class _ReportDetail3 extends State<ReportDetail3> {
   }
 
 // Update the project no.
-  void updateProjectno() {
-    report.projectno = projectController.text;
+  void updateFurtheraction() {
+    report.furtheractions = furtheractionController.text;
   }
 
   // Update the customer namme of Note object
-  void updateCustomername() {
-    report.customer = customerController.text;
+  void updateCustcomments() {
+    report.custcomments = custcommentsController.text;
   }
 
   // Update the plant location namme of Note object
-  void updatePlantloc() {
-    report.plantloc = planlocController.text;
-  }
-
-  // Update the customer namme of Note object
-  void updateContactname() {
-    report.contactname = contactnameController.text;
-  }
-
-  // Update the customer namme of Note object
-  void updateAuthorby() {
-    report.authorby = authorizedbyController.text;
-  }
-
-  // Update the customer namme of Note object
-  void updateEquipment() {
-    report.equipment = equipmentController.text;
-  }
-
-  // Update the customer namme of Note object
-  void updateTechname() {
-    report.techname = technameController.text;
+  void updateCustrep() {
+    report.custrep = custrepController.text;
   }
 }

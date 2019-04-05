@@ -18,6 +18,9 @@ class DatabaseHelper{
 	String colEquipment = 'equipment';
 	String colTechname = 'techname';
 	String colDate = 'date';
+	String colfurteractions = 'furtheractions';
+	String colcustcomments = 'custcomments';
+	String colcustrep = 'custrep';
 
   DatabaseHelper._createInstance();
 
@@ -50,7 +53,8 @@ class DatabaseHelper{
   void _createDb(Database db, int newVersion) async {
 
 		await db.execute('CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
-				'$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT)');
+				'$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
+        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT)');
 	}
 
 

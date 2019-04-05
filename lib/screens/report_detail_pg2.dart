@@ -71,6 +71,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
     technameController.text = report.techname;
 
     return Scaffold(
+      backgroundColor: Colors.red,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
