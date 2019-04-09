@@ -187,7 +187,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
       // Success
       String message = 'Task added To ' + reportid.toString();
       if (appBarTitle == 'Edit Item')
-        message = 'Task Updated To' + reportid.toString();
+        message = 'Task Updated To ' + reportid.toString();
       _showAlertDialog('SPM Connect', message);
     } else {
       // Failure
