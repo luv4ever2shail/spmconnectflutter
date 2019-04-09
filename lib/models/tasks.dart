@@ -1,19 +1,19 @@
 class Tasks{
 
   int _id;
-  String _projectno;
+  int _reportid;
   String _item;
   String _time;
   String _workperformed;
   String _hours;
 
-	Tasks(this._projectno, this._item, this._time, this._workperformed, this._hours);
+	Tasks(this._reportid, this._item, this._time, this._workperformed, this._hours);
 
-	Tasks.withId(this._id, this._projectno, this._item, this._time, this._workperformed, this._hours);
+	Tasks.withId(this._id, this._reportid, this._item, this._time, this._workperformed, this._hours);
 
 	int get id => _id;
 
-	String get projectno => _projectno;
+	int get reportid => _reportid;
 
 	String get item => _item;
 
@@ -24,8 +24,8 @@ class Tasks{
 	String get hours => _hours;
 
 
-	set projectno(String newTitle) {
-			this._projectno = newTitle;
+	set reportid(int newTitle) {
+			this._reportid = newTitle;
 	}
 
 	set item(String newProject) {		
@@ -51,7 +51,7 @@ class Tasks{
 		if (id != null) {
 			map['id'] = _id;
 		}
-		map['projectno'] = _projectno;
+		map['reportid'] = _reportid;
 		map['item'] = _item;
 		map['time'] = _time;
 		map['workperformed'] = _workperformed;
@@ -62,7 +62,7 @@ class Tasks{
   // Extract a Report object from a Map object
 	Tasks.fromMapObject(Map<String, dynamic> map) {
 		this._id = map['id'];
-		this._projectno = map['projectno'];
+		this._reportid = map['reportid'];
 		this._item = map['item'];
 		this._time = map['time'];
 		this._workperformed = map['workperformed'];

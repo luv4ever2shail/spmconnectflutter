@@ -41,9 +41,11 @@ class _MyhomeState extends State<Myhome> {
             ),
             body: Column(
               children: <Widget>[
-               
-                Center(
+               Padding(
+                 padding: EdgeInsets.all(2.0),
+                child :Center(
                   child: Card(
+                    elevation: 10.0,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -68,6 +70,7 @@ class _MyhomeState extends State<Myhome> {
                     ),
                   ),
                 )
+               )
               ],
             )));
   }

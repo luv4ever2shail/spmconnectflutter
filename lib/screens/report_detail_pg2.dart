@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
@@ -5,12 +6,12 @@ import 'package:spmconnectapp/utils/database_helper.dart';
 class ReportDetail2 extends StatefulWidget {
   final String appBarTitle;
   final Tasks task;
-  final String reportno;
+  final int reportid;
 
-  ReportDetail2(this.task, this.appBarTitle,this.reportno);
+  ReportDetail2(this.task, this.appBarTitle, this.reportid);
   @override
   State<StatefulWidget> createState() {
-    return _ReportDetail2(this.task, this.appBarTitle,this.reportno);
+    return _ReportDetail2(this.task, this.appBarTitle, this.reportid);
   }
 }
 
@@ -18,7 +19,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   DatabaseHelper helper = DatabaseHelper();
 
   String appBarTitle;
-  String reportno;
+  int reportid;
   Tasks task;
 
   FocusNode timeFocusNode;
@@ -47,7 +48,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   TextEditingController timeController = TextEditingController();
   TextEditingController workperfrmController = TextEditingController();
   TextEditingController hoursController = TextEditingController();
-  _ReportDetail2(this.task, this.appBarTitle,this.reportno);
+  _ReportDetail2(this.task, this.appBarTitle, this.reportid);
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -58,15 +59,15 @@ class _ReportDetail2 extends State<ReportDetail2> {
     hoursController.text = task.hours;
 
     return Scaffold(
-       appBar: AppBar(
-            title: Text(appBarTitle),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {                
-                _save(reportno);
-              },
-            ),
-          ),
+      appBar: AppBar(
+        title: Text(appBarTitle),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            _save(reportid);
+          },
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
@@ -75,7 +76,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                keyboardType: TextInputType.numberWithOptions(),
                 textInputAction: TextInputAction.next,
                 autofocus: true,
                 controller: itemController,
@@ -98,6 +98,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                keyboardType: TextInputType.datetime,
                 controller: timeController,
                 style: textStyle,
                 focusNode: timeFocusNode,
@@ -120,10 +121,12 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
                 controller: workperfrmController,
                 style: textStyle,
                 focusNode: wrkperfrmFocusNode,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.newline,
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(hoursFocusNode),
                 onChanged: (value) {
@@ -143,6 +146,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 controller: hoursController,
+                keyboardType: TextInputType.numberWithOptions(),
                 style: textStyle,
                 focusNode: hoursFocusNode,
                 textInputAction: TextInputAction.done,
@@ -157,21 +161,19 @@ class _ReportDetail2 extends State<ReportDetail2> {
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
-
           ],
         ),
       ),
     );
   }
 
-   void movetolastscreen() {
-    Navigator.pop(context,true);
+  void movetolastscreen() {
+    Navigator.pop(context, true);
   }
 
-   void _save(String reportno) async {
-
+  void _save(int reportid) async {
     movetolastscreen();
-    task.projectno = reportno;
+    task.reportid = reportid;
     int result;
     if (task.id != null) {
       // Case 1: Update operation
@@ -183,19 +185,37 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
     if (result != 0) {
       // Success
-      _showAlertDialog('SPM Connect', 'Task Saved Successfully');
+      String message = 'Task added To ' + reportid.toString();
+      if (appBarTitle == 'Edit Item')
+        message = 'Task Updated To' + reportid.toString();
+      _showAlertDialog('SPM Connect', message);
     } else {
       // Failure
-      _showAlertDialog('SPM Connect', 'Problem Saving Task');
+      _showAlertDialog(
+          'SPM Connect', 'Problem Saving Task To ' + reportid.toString());
     }
   }
 
   void _showAlertDialog(String title, String message) {
-    AlertDialog alertDialog = AlertDialog(
-      title: Text(title),
-      content: Text(message),
-    );
-    showDialog(context: context, builder: (_) => alertDialog);
+    // AlertDialog alertDialog = AlertDialog(
+    //   title: Text(title),
+    //   content: Text(message),
+    // );
+    // showDialog(context: context, builder: (_) => alertDialog);
+
+    Flushbar(
+      title: title,
+      message: message,
+      duration: Duration(seconds: 2),
+      icon: Icon(
+        Icons.info_outline,
+        size: 28.0,
+        color: Colors.blue[300],
+      ),
+      aroundPadding: EdgeInsets.all(8),
+      borderRadius: 8,
+      leftBarIndicatorColor: Colors.blue[300],
+    ).show(context);
   }
 
 // Update the project no.
@@ -217,5 +237,4 @@ class _ReportDetail2 extends State<ReportDetail2> {
   void updateHours() {
     task.hours = hoursController.text;
   }
-
 }

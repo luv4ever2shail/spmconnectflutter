@@ -22,10 +22,11 @@ class DatabaseHelper {
   String colfurteractions = 'furtheractions';
   String colcustcomments = 'custcomments';
   String colcustrep = 'custrep';
+  String colreportmapid = 'reportmapid';
 
   String taskTable = 'tasks_tbl';
   String coltaskId = 'id';
-  String coltaskProjectno = 'projectno';
+  String coltaskreportid = 'reportid';
   String coltaskItem = 'item';
   String coltaskTime = 'time';
   String coltaskWork = 'workperformed';
@@ -63,18 +64,17 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
         '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
-        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT)');
+        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colreportmapid INTEGER)');
     await db.execute(
-        'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskProjectno TEXT, '
+        'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid INTEGER, '
         '$coltaskItem TEXT, $coltaskTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
   Future<List<Map<String, dynamic>>> getReportMapList() async {
     Database db = await this.database;
-
     //		var result = await db.rawQuery('SELECT * FROM $noteTable order by $colPriority ASC');
-    var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
+    var result = await db.query(reportTable, orderBy: '$colreportmapid DESC');
     return result;
   }
 
@@ -125,9 +125,31 @@ class DatabaseHelper {
     return reportList;
   }
 
+  Future<List<Report>> getNewreportid() async {
+    var reportidMapList =
+        await getNewreportidMap(); // Get 'Map List' from database
+    int count =
+        reportidMapList.length; // Count the number of map entries in db table
+
+    List<Report> reportmapidList = List<Report>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      reportmapidList.add(Report.fromMapObject(reportidMapList[i]));
+    }
+    return reportmapidList;
+  }
+
+  Future<List<Map<String, dynamic>>> getNewreportidMap() async {
+    Database db = await this.database;
+    var result = await db.rawQuery(
+        'SELECT * FROM $reportTable WHERE $colreportmapid = (SELECT MAX($colreportmapid) FROM $reportTable) ');
+    //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
+    return result;
+  }
+
 //*! Task table commands
 
-Future<int> inserTask(Tasks task) async {
+  Future<int> inserTask(Tasks task) async {
     Database db = await this.database;
     var result = await db.insert(taskTable, task.toMap());
     return result;
@@ -149,6 +171,13 @@ Future<int> inserTask(Tasks task) async {
     return result;
   }
 
+  Future<int> deleteAllTasks(int reportmapid) async {
+    var db = await this.database;
+    int result = await db.rawDelete(
+        'DELETE FROM $taskTable WHERE $coltaskreportid = $reportmapid');
+    return result;
+  }
+
   // Get number of Note objects in database
   Future<int> getCountTask() async {
     Database db = await this.database;
@@ -158,9 +187,9 @@ Future<int> inserTask(Tasks task) async {
     return result;
   }
 
-  Future<List<Tasks>> getTasksList(String projectno) async {
+  Future<List<Tasks>> getTasksList(int reportid) async {
     var taskMapList =
-        await getTasksMapList(projectno); // Get 'Map List' from database
+        await getTasksMapList(reportid); // Get 'Map List' from database
     int count =
         taskMapList.length; // Count the number of map entries in db table
 
@@ -173,11 +202,11 @@ Future<int> inserTask(Tasks task) async {
     return tasklist;
   }
 
-  Future<List<Map<String, dynamic>>> getTasksMapList(String projectno) async {
+  Future<List<Map<String, dynamic>>> getTasksMapList(int reportid) async {
     Database db = await this.database;
 
     var result = await db.rawQuery(
-        'SELECT * FROM $taskTable where $coltaskProjectno = $projectno order by $coltaskId ASC');
+        'SELECT * FROM $taskTable where $coltaskreportid = $reportid order by $coltaskId ASC');
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }

@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-//import 'package:spmconnectapp/screens/report_detail.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/reportdetailtabs.dart';
+import 'package:flushbar/flushbar.dart';
+
 class ReportList extends StatefulWidget {
-  
   @override
   State<StatefulWidget> createState() {
     return _ReportList();
@@ -16,6 +16,7 @@ class ReportList extends StatefulWidget {
 class _ReportList extends State<ReportList> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Report> reportlist;
+  List<Report> reportmapid;
   int count = 0;
 
   @override
@@ -24,6 +25,12 @@ class _ReportList extends State<ReportList> {
       reportlist = List<Report>();
       updateListView();
     }
+
+    if (reportmapid == null) {
+      reportmapid = List<Report>();
+      getReportmapId();
+    }
+
     return WillPopScope(
       onWillPop: () {
         movetolastscreen();
@@ -42,8 +49,15 @@ class _ReportList extends State<ReportList> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             debugPrint('FAB clicked');
-            navigateToDetail(
-                Report('', '', '', '', '', '', '', ''), 'Add New Report');
+            getReportmapId();
+            int mapid = 0;
+            if (count == 0) {
+              mapid = 1001;
+            } else {
+              mapid = reportmapid[0].reportmapid + 1;
+            }
+            navigateToDetail(Report('', '', '', '', '', '', '', '', mapid),
+                'Add New Report');
           },
           tooltip: 'Create New Report',
           child: Icon(Icons.add),
@@ -60,16 +74,22 @@ class _ReportList extends State<ReportList> {
       itemBuilder: (BuildContext context, int position) {
         return Card(
           color: Colors.white,
-          elevation: 2.0,
+          elevation: 10.0,
           child: ListTile(
             title: Text(
-              this.reportlist[position].projectno +
-                  " - " +
-                  this.reportlist[position].customer,
+              'Report No - ' +
+                  this.reportlist[position].reportmapid.toString() +
+                  ' ( ' +
+                  this.reportlist[position].date +
+                  ' )',
               style: titleStyle,
             ),
             subtitle: Text(
-              this.reportlist[position].date,
+              'Project - ' +
+                  this.reportlist[position].projectno +
+                  " ( " +
+                  this.reportlist[position].customer +
+                  ' )',
               style: titleStyle,
             ),
             trailing: GestureDetector(
@@ -84,7 +104,6 @@ class _ReportList extends State<ReportList> {
             ),
             onTap: () {
               debugPrint("ListTile Tapped");
-             
               navigateToDetail(this.reportlist[position], 'Edit Report');
             },
           ),
@@ -98,12 +117,19 @@ class _ReportList extends State<ReportList> {
   }
 
   void _delete(BuildContext context, Report report) async {
-    await databaseHelper.deleteReport(report.id);
-    // if (result != 0) {
-    //   debugPrint('delete cleared');
-    //   _showSnackBar(context, 'Report Deleted Successfully');
-    //   updateListView();
-    // }
+    int result = await databaseHelper.deleteReport(report.id);
+    if (result != 0) {
+      debugPrint('deleted report');
+      //_showSnackBar(context, 'Report Deleted Successfully');
+      updateListView();
+      reportmapid.clear();
+      getReportmapId();
+    }
+    int result2 = await databaseHelper.deleteAllTasks(report.reportmapid);
+    if (result2 != 0) {
+      debugPrint('deleted all tasks');
+      //_showSnackBar(context, 'Report Deleted Successfully');
+    }
   }
 
   // void _showSnackBar(BuildContext context, String message) {
@@ -113,12 +139,14 @@ class _ReportList extends State<ReportList> {
 
   void navigateToDetail(Report report, String title) async {
     bool result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {           
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportDetTab(report, title);
     }));
     if (result == true) {
       updateListView();
     }
+    reportmapid.clear();
+    getReportmapId();
   }
 
   void updateListView() {
@@ -130,6 +158,15 @@ class _ReportList extends State<ReportList> {
           this.reportlist = reportlist;
           this.count = reportlist.length;
         });
+      });
+    });
+  }
+
+  void getReportmapId() {
+    Future<List<Report>> reportListFuture = databaseHelper.getNewreportid();
+    reportListFuture.then((reportlist) {
+      setState(() {
+        this.reportmapid = reportlist;
       });
     });
   }
@@ -158,9 +195,21 @@ class _ReportList extends State<ReportList> {
             FlatButton(
               child: Text('Discard'),
               onPressed: () {
-                Navigator.of(context).pop();
                 _delete(context, reportlist[position]);
-                updateListView();
+                Navigator.of(context).pop();
+                Flushbar(
+                  title: "Report Deleted Successfully",
+                  message: "All tasks associated with report got trashed.",
+                  duration: Duration(seconds: 3),
+                  icon: Icon(
+                    Icons.delete_forever,
+                    size: 28.0,
+                    color: Colors.red,
+                  ),
+                  aroundPadding: EdgeInsets.all(8),
+                  borderRadius: 8,
+                  leftBarIndicatorColor: Colors.red,
+                ).show(context);
               },
             ),
           ],

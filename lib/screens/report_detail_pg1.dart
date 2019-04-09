@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
+
 class ReportDetail extends StatefulWidget {
   final Report report;
 
@@ -43,7 +44,6 @@ class _ReportDetail extends State<ReportDetail> {
     authorbyFocusNode.dispose();
     technameFocusNode.dispose();
     equipFocusNode.dispose();
-
     super.dispose();
   }
 
@@ -54,6 +54,7 @@ class _ReportDetail extends State<ReportDetail> {
   TextEditingController authorizedbyController = TextEditingController();
   TextEditingController equipmentController = TextEditingController();
   TextEditingController technameController = TextEditingController();
+  bool _validate = false;
   _ReportDetail(this.report);
   @override
   Widget build(BuildContext context) {
@@ -81,15 +82,23 @@ class _ReportDetail extends State<ReportDetail> {
                 //autofocus: true,
                 controller: projectController,
                 style: textStyle,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(customerFocusNode),
+                onEditingComplete: () {
+                  projectController.text.isEmpty
+                      ? _validate = true
+                      : _validate = false;
+                  FocusScope.of(context).requestFocus(customerFocusNode);
+                },
                 onChanged: (value) {
                   debugPrint('Something changed in Project Text Field');
+                  projectController.text.isEmpty
+                      ? _validate = true
+                      : _validate = false;
                   updateProjectno();
                 },
                 decoration: InputDecoration(
                     labelText: 'Project No.',
                     labelStyle: textStyle,
+                    errorText: _validate ? 'Project No. Can\'t Be Empty' : null,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),

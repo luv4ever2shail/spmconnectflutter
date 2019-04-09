@@ -1,102 +1,4 @@
-// import 'package:flutter/material.dart';
-
-// class SignPad extends StatefulWidget {
-//   @override
-//   _SignPadState createState() => new _SignPadState();
-// }
-
-// class _SignPadState extends State<SignPad> {
-//   List<Offset> _points = <Offset>[];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return new Scaffold(
-//         body: new Container(
-//           child: new GestureDetector(
-//             onPanUpdate: (DragUpdateDetails details) {
-//               setState(() {
-//                 RenderBox object = context.findRenderObject();
-//                 Offset _localPosition =
-//                     object.globalToLocal(details.globalPosition);
-//                 _points = new List.from(_points)..add(_localPosition);
-//               });
-//             },
-//             onPanEnd: (DragEndDetails details) => _points.add(null),
-//             child: new CustomPaint(
-//               painter: new Signature(points: _points),
-//               size: Size.infinite,
-//             ),
-//           ),
-//         ),
-//         floatingActionButton: Row(
-//           crossAxisAlignment: CrossAxisAlignment.end,
-//           mainAxisAlignment: MainAxisAlignment.end,
-//           children: <Widget>[
-//             FloatingActionButton(
-//               heroTag: null,
-//               child: Icon(
-//                 Icons.clear,
-//                 color: Colors.white,
-//               ),
-//               onPressed: () => _points.clear(),
-//             ),
-//             Container(
-//               width: 5.0,
-//             ),
-//             FloatingActionButton(
-//               heroTag: null,
-//               child: Icon(
-//                 Icons.save,
-//                 color: Colors.white,
-//               ),
-//               onPressed: () {},
-//             ),
-//           ],
-//         ));
-//   }
-// }
-
-// class Signature extends CustomPainter {
-//   List<Offset> points;
-
-//   Signature({this.points});
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     Paint paint = new Paint()
-//       ..color = Colors.redAccent
-//       ..strokeCap = StrokeCap.round
-//       ..strokeWidth = 5.0;
-
-//     for (int i = 0; i < points.length - 1; i++) {
-//       if (points[i] != null && points[i + 1] != null) {
-//         canvas.drawLine(points[i], points[i + 1], paint);
-//       }
-//     }
-//   }
-
-//   @override
-//   bool shouldRepaint(Signature oldDelegate) => oldDelegate.points != points;
-// }
-import 'dart:io';
-import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:simple_permissions/simple_permissions.dart';
-
-const directoryName = 'Signature';
-
-void main() {
-  runApp(
-      MaterialApp(
-        home: SignApp(),
-        debugShowCheckedModeBanner: false,
-      )
-  );
-}
 
 class SignApp extends StatefulWidget {
   @override
@@ -104,156 +6,11 @@ class SignApp extends StatefulWidget {
     return SignAppState();
   }
 }
-
 class SignAppState extends State<SignApp> {
-  GlobalKey<SignatureState> signatureKey = GlobalKey();
-  var image;
-  String _platformVersion = 'Unknown';
-  Permission _permission = Permission.WriteExternalStorage;
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-  // Platform messages are asynchronous, so we initialize in an async method.
-  initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await SimplePermissions.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-    print(_platformVersion);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Signature(key: signatureKey),
-      floatingActionButton: Row(children:<Widget>[
-        FloatingActionButton(
-          child: Text('Clear'),
-          onPressed: () {
-            signatureKey.currentState.clearPoints();
-          },
-        ),
-        FloatingActionButton(
-          child: Text('Save'),
-          onPressed: () {
-            // Future will resolve later
-            // so setState @image here and access in #showImage
-            // to avoid @null Checks
-            setState(() {
-              image = signatureKey.currentState.rendered;
-            });
-            showImage(context);
-          },
-        )
-      ],
-      ),
-    );
-  }
-
-  Future<Null> showImage(BuildContext context) async {
-    var pngBytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    if(!(await checkPermission())) await requestPermission();
-    // Use plugin [path_provider] to export image to storage
-    Directory directory = await getExternalStorageDirectory();
-    String path = directory.path;
-    print(path);
-    await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/${formattedDate()}.png')
-        .writeAsBytesSync(pngBytes.buffer.asInt8List());
-    return showDialog<Null>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Please check your device\'s Signature folder',
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w300,
-                color: Theme.of(context).primaryColor,
-                letterSpacing: 1.1
-              ),
-            ),
-            content: Image.memory(Uint8List.view(pngBytes.buffer)),
-          );
-        }
-    );
-  }
-
-  String formattedDate() {
-    DateTime dateTime = DateTime.now();
-    String dateTimeString = 'Signature_' +
-        dateTime.year.toString() +
-            dateTime.month.toString() +
-            dateTime.day.toString() +
-            dateTime.hour.toString() +
-            ':' + dateTime.minute.toString() +
-            ':' + dateTime.second.toString() +
-            ':' + dateTime.millisecond.toString() +
-            ':' + dateTime.microsecond.toString();
-    return dateTimeString;
-  }
-
-  requestPermission() async {
-    var result = await SimplePermissions.requestPermission(_permission);
-    return result;
-  }
-
-  checkPermission() async {
-    bool result = await SimplePermissions.checkPermission(_permission);
-    return result;
-  }
-
-  getPermissionStatus() async {
-    final result = await SimplePermissions.getPermissionStatus(_permission);
-    print("permission status is " + result.toString());
-  }
-
-}
-
-class Signature extends StatefulWidget {
-  Signature({Key key}): super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return SignatureState();
-  }
-}
-
-class SignatureState extends State<Signature> {
   // [SignatureState] responsible for receives drag/touch events by draw/user
   // @_points stores the path drawn which is passed to
   // [SignaturePainter]#contructor to draw canvas
   List<Offset> _points = <Offset>[];
-
-  ui.Picture get rendered {
-    // [CustomPainter] has its own @canvas to pass our
-    // [ui.PictureRecorder] object must be passed to [Canvas]#contructor
-    // to capture the Image. This way we can pass @recorder to [Canvas]#contructor
-    // using @painter[SignaturePainter] we can call [SignaturePainter]#paint
-    // with the our newly created @canvas
-    ui.PictureRecorder recorder = ui.PictureRecorder();
-    Canvas canvas = Canvas(recorder);
-    SignaturePainter painter = SignaturePainter(points: _points);
-    var size = context.size;
-    painter.paint(canvas, size);
-    return recorder.endRecording();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -277,6 +34,19 @@ class SignatureState extends State<Signature> {
           ),
         ),
       ),
+     persistentFooterButtons: <Widget>[
+        FlatButton(
+          child: Text('Clear'),
+          onPressed: () {
+            clearPoints();
+          },
+        ),
+        FlatButton(
+          child: Text('Save'),
+          onPressed: () {
+          },
+        )
+      ],
     );
   }
 
@@ -289,8 +59,6 @@ class SignatureState extends State<Signature> {
     });
   }
 }
-
-
 class SignaturePainter extends CustomPainter {
   // [SignaturePainter] receives points through constructor
   // @points holds the drawn path in the form (x,y) offset;
