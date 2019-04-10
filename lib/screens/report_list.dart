@@ -78,25 +78,28 @@ class _ReportList extends State<ReportList> {
           color: Colors.white,
           elevation: 10.0,
           child: ListTile(
+            isThreeLine: true,
+            leading: CircleAvatar(child: Icon(Icons.receipt),),
             title: Text(
               'Report No - ' +
-                  this.reportlist[position].reportmapid.toString() +
-                  ' ( ' +
-                  this.reportlist[position].date +
-                  ' )',
-              style: titleStyle,
+                  this.reportlist[position].reportmapid.toString() ,
+              style:  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
             ),
             subtitle: Text(
               'Project - ' +
                   this.reportlist[position].projectno +
                   " ( " +
                   this.reportlist[position].customer +
-                  ' )',
+                  ' )' +
+                  '\nCreated On (' +
+                  this.reportlist[position].date +
+                  ')',
               style: titleStyle,
             ),
             trailing: GestureDetector(
               child: Icon(
                 Icons.delete,
+                size: 40,
                 color: Colors.grey,
               ),
               onTap: () {

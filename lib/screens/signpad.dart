@@ -6,6 +6,7 @@ class SignApp extends StatefulWidget {
     return SignAppState();
   }
 }
+
 class SignAppState extends State<SignApp> {
   // [SignatureState] responsible for receives drag/touch events by draw/user
   // @_points stores the path drawn which is passed to
@@ -19,7 +20,8 @@ class SignAppState extends State<SignApp> {
           onPanUpdate: (DragUpdateDetails details) {
             setState(() {
               RenderBox _object = context.findRenderObject();
-              Offset _locationPoints = _object.localToGlobal(details.globalPosition);
+              Offset _locationPoints =
+                  _object.localToGlobal(details.globalPosition);
               _points = new List.from(_points)..add(_locationPoints);
             });
           },
@@ -34,7 +36,7 @@ class SignAppState extends State<SignApp> {
           ),
         ),
       ),
-     persistentFooterButtons: <Widget>[
+      persistentFooterButtons: <Widget>[
         FlatButton(
           child: Text('Clear'),
           onPressed: () {
@@ -43,8 +45,7 @@ class SignAppState extends State<SignApp> {
         ),
         FlatButton(
           child: Text('Save'),
-          onPressed: () {
-          },
+          onPressed: () {},
         )
       ],
     );
@@ -59,6 +60,7 @@ class SignAppState extends State<SignApp> {
     });
   }
 }
+
 class SignaturePainter extends CustomPainter {
   // [SignaturePainter] receives points through constructor
   // @points holds the drawn path in the form (x,y) offset;
@@ -74,9 +76,9 @@ class SignaturePainter extends CustomPainter {
       ..strokeCap = StrokeCap.square
       ..strokeWidth = 5.0;
 
-    for(int i=0; i < points.length - 1; i++) {
-      if(points[i] != null && points[i+1] != null) {
-        canvas.drawLine(points[i], points[i+1], paint);
+    for (int i = 0; i < points.length - 1; i++) {
+      if (points[i] != null && points[i + 1] != null) {
+        canvas.drawLine(points[i], points[i + 1], paint);
       }
     }
   }
@@ -85,5 +87,32 @@ class SignaturePainter extends CustomPainter {
   bool shouldRepaint(SignaturePainter oldDelegate) {
     return oldDelegate.points != points;
   }
-
 }
+
+// floatingActionButton: Row(
+//     crossAxisAlignment: CrossAxisAlignment.end,
+//     mainAxisAlignment: MainAxisAlignment.end,
+//     children: <Widget>[
+//       FloatingActionButton(
+//         tooltip: 'Clear Signature',
+//         child: Icon(
+//           Icons.clear,
+//           color: Colors.white,
+//         ),
+//         onPressed: () {
+//           clearPoints();
+//         },
+//       ),
+//       Container(
+//         width: 10.0,
+//       ),
+//       FloatingActionButton(
+//         tooltip: 'Save Signature',
+//         child: Icon(
+//           Icons.save,
+//           color: Colors.white,
+//         ),
+//         onPressed: () {},
+//       ),
+//     ],
+//   ),

@@ -61,23 +61,16 @@ class _TaskListState extends State<TaskList> {
             color: Colors.white,
             elevation: 2.0,
             child: ListTile(
+              leading: CircleAvatar(child: Icon(Icons.description),),
               title: Text(
                 this.tasklist[position].item,
-                style: titleStyle,
+                style: titleStyle.apply(fontSizeFactor: 1.5),
               ),
-              // trailing: GestureDetector(
-              //   child: Icon(
-              //     Icons.delete,
-              //     color: Colors.grey,
-              //   ),
-              //   onTap: () {
-              //     //_delete(context, reportlist[position]);
-              //     _neverSatisfied(position);
-              //   },
-              // ),
+              subtitle: Text(
+                'Added on :-'+this.tasklist[position].date,
+              ),
               onTap: () {
                 debugPrint("ListTile Tapped");
-
                 navigateToDetail(
                     this.tasklist[position], 'Edit Item', reportid);
               },

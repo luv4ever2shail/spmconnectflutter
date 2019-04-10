@@ -27,6 +27,7 @@ class Tasks{
 
 	String get hours => _hours;
 
+  String get date => _date;
 
 	set reportid(int newReportid) {
 			this._reportid = newReportid;
