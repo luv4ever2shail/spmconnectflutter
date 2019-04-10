@@ -23,7 +23,6 @@ dependencies:
   path_provider: any
   intl: ^0.15.8
   flutter_markdown: ^0.2.0  
-  simple_permissions: ^0.1.9
   flushbar: ^1.4.0  
   datetime_picker_formfield: ^0.1.8
   flutter_duration_picker: ^1.0.4
