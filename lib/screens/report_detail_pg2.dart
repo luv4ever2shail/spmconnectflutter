@@ -54,7 +54,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
     itemController.text = task.item;
-    timeController.text = task.time;
+    timeController.text = task.starttime;
     workperfrmController.text = task.workperformed;
     hoursController.text = task.hours;
 
@@ -107,7 +107,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                     FocusScope.of(context).requestFocus(wrkperfrmFocusNode),
                 onChanged: (value) {
                   debugPrint('Something changed in Time Text Field');
-                  updateTime();
+                  updateStartTime();
                 },
                 decoration: InputDecoration(
                     labelText: 'Time',
@@ -224,8 +224,9 @@ class _ReportDetail2 extends State<ReportDetail2> {
   }
 
   // Update the customer namme of Note object
-  void updateTime() {
-    task.time = timeController.text;
+  void updateStartTime() {
+
+    task.starttime = timeController.text;
   }
 
   // Update the plant location namme of Note object

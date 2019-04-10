@@ -28,9 +28,11 @@ class DatabaseHelper {
   String coltaskId = 'id';
   String coltaskreportid = 'reportid';
   String coltaskItem = 'item';
-  String coltaskTime = 'time';
+  String coltaskStartTime = 'starttime';
+  String coltaskEndTime = 'endtime';
   String coltaskWork = 'workperformed';
   String coltaskHours = 'hours';
+  String coltaskDate = 'date';
 
   DatabaseHelper._createInstance();
 
@@ -67,7 +69,7 @@ class DatabaseHelper {
         '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colreportmapid INTEGER)');
     await db.execute(
         'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid INTEGER, '
-        '$coltaskItem TEXT, $coltaskTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT)');
+        '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database

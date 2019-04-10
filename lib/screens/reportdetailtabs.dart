@@ -88,13 +88,14 @@ class _ReportDetTabState extends State<ReportDetTab> {
 
   void _save() async {
     //movetolastscreen();
-    report.date = DateFormat.yMMMd().format(DateTime.now());
+  
     int result;
     if (report.id != null) {
       // Case 1: Update operation
       result = await helper.updateReport(report);
     } else {
       // Case 2: Insert Operation
+      report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
       result = await helper.inserReport(report);
     }
 

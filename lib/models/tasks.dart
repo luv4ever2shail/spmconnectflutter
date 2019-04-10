@@ -3,13 +3,15 @@ class Tasks{
   int _id;
   int _reportid;
   String _item;
-  String _time;
+  String _starttime;
+  String _endtime;
   String _workperformed;
   String _hours;
+  String _date;
 
-	Tasks(this._reportid, this._item, this._time, this._workperformed, this._hours);
+	Tasks(this._reportid, this._item, this._starttime, this._endtime, this._workperformed, this._hours,this._date);
 
-	Tasks.withId(this._id, this._reportid, this._item, this._time, this._workperformed, this._hours);
+	Tasks.withId(this._id, this._reportid, this._item, this._starttime, this._endtime, this._workperformed, this._hours,this._date);
 
 	int get id => _id;
 
@@ -17,32 +19,42 @@ class Tasks{
 
 	String get item => _item;
 
-	String get time => _time;
+	String get starttime => _starttime;
+
+	String get endtime => _endtime;
 
 	String get workperformed => _workperformed;
 
 	String get hours => _hours;
 
 
-	set reportid(int newTitle) {
-			this._reportid = newTitle;
+	set reportid(int newReportid) {
+			this._reportid = newReportid;
 	}
 
-	set item(String newProject) {		
-			this._item = newProject;		
+	set item(String newItem) {		
+			this._item = newItem;		
 	}
 
-  set time(String newPlantloc) {		
-			this._time = newPlantloc;		
+  set starttime(String newStarttime) {		
+			this._starttime = newStarttime;		
 	}
 
-  set workperformed(String newContactname) {		
-			this._workperformed = newContactname;		
+  set endtime(String newEndtime) {		
+			this._starttime = newEndtime;		
 	}
 
-  set hours(String newAuthorby) {		
-			this._hours = newAuthorby;		
+  set workperformed(String newWorkperformed) {		
+			this._workperformed = newWorkperformed;		
 	}
+
+  set hours(String newHours) {		
+			this._hours = newHours;		
+	}
+
+  set date(String newDate) {
+    this._date = newDate;
+  }
 
 // Convert a Report object into a Map object
 	Map<String, dynamic> toMap() {
@@ -53,9 +65,11 @@ class Tasks{
 		}
 		map['reportid'] = _reportid;
 		map['item'] = _item;
-		map['time'] = _time;
+		map['starttime'] = _starttime;
+		map['endtime'] = _endtime;
 		map['workperformed'] = _workperformed;
 		map['hours'] = _hours;
+    map['date'] = _date;
 		return map;
 	}
 
@@ -64,9 +78,11 @@ class Tasks{
 		this._id = map['id'];
 		this._reportid = map['reportid'];
 		this._item = map['item'];
-		this._time = map['time'];
+		this._starttime = map['starttime'];
+		this._endtime = map['endtime'];
 		this._workperformed = map['workperformed'];
 		this._hours = map['hours'];
+    this._date = map['date'];
 	}
 
 }

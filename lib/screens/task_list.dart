@@ -37,7 +37,7 @@ class _TaskListState extends State<TaskList> {
           onPressed: () {
             debugPrint('FAB clicked');
             navigateToDetail(
-                Tasks(0, '', '', '', ''), 'Add New Item', reportid);
+                Tasks(0, '', '', '', '','',''), 'Add New Item', reportid);
           },
           tooltip: 'Create New Item',
           child: Icon(Icons.add),
