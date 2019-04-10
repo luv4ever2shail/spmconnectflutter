@@ -46,7 +46,8 @@ class _ReportList extends State<ReportList> {
           ),
         ),
         body: getReportListView(),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             debugPrint('FAB clicked');
             getReportmapId();
@@ -60,7 +61,8 @@ class _ReportList extends State<ReportList> {
                 'Add New Report');
           },
           tooltip: 'Create New Report',
-          child: Icon(Icons.add),
+          icon: Icon(Icons.add),
+          label: Text('Create New Report'),
         ),
       ),
     );
@@ -120,7 +122,7 @@ class _ReportList extends State<ReportList> {
     int result = await databaseHelper.deleteReport(report.id);
     if (result != 0) {
       debugPrint('deleted report');
-      //_showSnackBar(context, 'Report Deleted Successfully');
+      // _showSnackBar(context, 'Report Deleted Successfully');
       updateListView();
       reportmapid.clear();
       getReportmapId();

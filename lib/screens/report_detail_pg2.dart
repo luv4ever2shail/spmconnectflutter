@@ -1,7 +1,10 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
+import 'package:flutter_duration_picker/flutter_duration_picker.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class ReportDetail2 extends StatefulWidget {
   final String appBarTitle;
@@ -45,16 +48,59 @@ class _ReportDetail2 extends State<ReportDetail2> {
   }
 
   TextEditingController itemController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
+  TextEditingController starttimeController = TextEditingController();
+  TextEditingController endtimeController = TextEditingController();
   TextEditingController workperfrmController = TextEditingController();
   TextEditingController hoursController = TextEditingController();
+
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
+
+  Duration _duration = Duration(hours: 0, minutes: 0);
+
+  Future _selectduration(BuildContext context) async {
+    Duration resultingDuration = await showDurationPicker(
+      context: context,
+      initialTime: _duration,
+    );
+    if (resultingDuration != null)
+      setState(() => _duration = resultingDuration);
+  }
+
+  TimeOfDay _time = TimeOfDay(hour: 15, minute: 0);
+
+  Future<Null> _selectTime(BuildContext context, bool strtime) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: _time,
+    );
+
+    if (picked != null && picked != _time) {
+      setState(() {
+        _time = picked;
+      });
+      if (strtime) {
+        starttimeController.text = '$_time';
+      } else {
+        endtimeController.text = '$_time';
+      }
+    }
+  }
+
+  final formats = {
+    InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
+    InputType.date: DateFormat('yyyy-MM-dd'),
+    InputType.time: DateFormat("HH:mm"),
+  };
+
+  var _myKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
     itemController.text = task.item;
-    timeController.text = task.starttime;
+    starttimeController.text = task.starttime;
+    endtimeController.text = task.endtime;
     workperfrmController.text = task.workperformed;
     hoursController.text = task.hours;
 
@@ -94,26 +140,46 @@ class _ReportDetail2 extends State<ReportDetail2> {
               ),
             ),
 
-            // Second Element - Time
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                keyboardType: TextInputType.datetime,
-                controller: timeController,
-                style: textStyle,
-                focusNode: timeFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(wrkperfrmFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Time Text Field');
-                  updateStartTime();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Time',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+            Form(
+              child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: DateTimePickerFormField(
+                        inputType: InputType.time,
+                        controller: starttimeController,
+                        editable: false,
+                        format: formats[InputType.time],
+                        decoration: InputDecoration(
+                          labelText: 'Start Time',
+                          icon: Icon(Icons.date_range),
+                        ),
+                        onSaved: (value) {
+                          debugPrint(value.toString());
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: 5.0,
+                    ),
+                    Expanded(
+                      child: DateTimePickerFormField(
+                        controller: endtimeController,
+                        inputType: InputType.time,
+                        editable: false,
+                        format: formats[InputType.time],
+                        decoration: InputDecoration(
+                          labelText: 'End Time',
+                          icon: Icon(Icons.date_range),
+                        ),
+                        onSaved: (dt) {
+                          debugPrint(dt.toString());
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
 
@@ -174,13 +240,16 @@ class _ReportDetail2 extends State<ReportDetail2> {
   void _save(int reportid) async {
     movetolastscreen();
     task.reportid = reportid;
-    int result;
+    int result = 0;
     if (task.id != null) {
       // Case 1: Update operation
       result = await helper.updateTask(task);
     } else {
       // Case 2: Insert Operation
-      result = await helper.inserTask(task);
+      if (task.item.length > 0) {
+        task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+        result = await helper.inserTask(task);
+      }
     }
 
     if (result != 0) {
@@ -191,8 +260,8 @@ class _ReportDetail2 extends State<ReportDetail2> {
       _showAlertDialog('SPM Connect', message);
     } else {
       // Failure
-      _showAlertDialog(
-          'SPM Connect', 'Problem Saving Task To ' + reportid.toString());
+      // _showAlertDialog(
+      //     'SPM Connect', 'Problem Saving Task To ' + reportid.toString());
     }
   }
 
@@ -206,10 +275,11 @@ class _ReportDetail2 extends State<ReportDetail2> {
     Flushbar(
       title: title,
       message: message,
+      animationDuration: Duration(seconds: 1),
       duration: Duration(seconds: 2),
       icon: Icon(
         Icons.info_outline,
-        size: 28.0,
+        size: 35.0,
         color: Colors.blue[300],
       ),
       aroundPadding: EdgeInsets.all(8),
@@ -225,8 +295,11 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   // Update the customer namme of Note object
   void updateStartTime() {
+    task.starttime = starttimeController.text;
+  }
 
-    task.starttime = timeController.text;
+  void updateEndTime() {
+    task.endtime = endtimeController.text;
   }
 
   // Update the plant location namme of Note object

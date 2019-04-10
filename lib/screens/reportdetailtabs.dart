@@ -20,7 +20,7 @@ class ReportDetTab extends StatefulWidget {
 class _ReportDetTabState extends State<ReportDetTab> {
   DatabaseHelper helper = DatabaseHelper();
   String appBarTitle;
- 
+
   Report report;
   _ReportDetTabState(this.report, this.appBarTitle);
   int _selectedTab = 0;
@@ -36,48 +36,48 @@ class _ReportDetTabState extends State<ReportDetTab> {
       onWillPop: () {
         movetolastscreen();
       },
-      child:Scaffold(
-      appBar: AppBar(
-        title: Text(appBarTitle + ' - ' + report.reportmapid.toString()),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            movetolastscreen();
-            //Navigator.pop(context,true);
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(appBarTitle + ' - ' + report.reportmapid.toString()),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              movetolastscreen();
+              //Navigator.pop(context,true);
+            },
+          ),
+        ),
+        body: _children[_selectedTab],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedTab,
+          onTap: (int index) {
+            if (report.projectno.length == 0 && index == 1) {
+              _showAlertDialog('Project No', 'Cant be Empty');
+            } else {
+              if (index == 1)
+                this.appBarTitle = 'Edit Tasks';
+              else if (index == 0) this.appBarTitle = 'Edit Report';
+              setState(() {
+                _selectedTab = index;
+              });
+            }
           },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info),
+              title: Text('Details'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.track_changes),
+              title: Text('Tasks'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.done),
+              title: Text('Comments'),
+            ),
+          ],
         ),
       ),
-      body: _children[_selectedTab],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedTab,
-        onTap: (int index) {
-          if (report.projectno.length == 0 && index == 1) {
-            _showAlertDialog('Project No', 'Cant be Empty');            
-          } else {
-           
-            if(index == 1) this.appBarTitle = 'Edit Tasks';
-            else if(index == 0) this.appBarTitle = 'Edit Report';
-            setState(() {
-              _selectedTab = index;
-            });
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            title: Text('Details'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.track_changes),
-            title: Text('Tasks'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.done),
-            title: Text('Comments'),
-          ),
-        ],
-      ),
-    ),
     );
   }
 
@@ -88,20 +88,21 @@ class _ReportDetTabState extends State<ReportDetTab> {
 
   void _save() async {
     //movetolastscreen();
-  
+
     int result;
     if (report.id != null) {
       // Case 1: Update operation
       result = await helper.updateReport(report);
     } else {
       // Case 2: Insert Operation
-      report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
-      result = await helper.inserReport(report);
+      if (report.projectno.length > 0) {
+        report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+        result = await helper.inserReport(report);
+      }
     }
-
     if (result != 0) {
       // Success
-     // _showAlertDialog('SPM Connect', 'Report Saved Successfully');
+      // _showAlertDialog('SPM Connect', 'Report Saved Successfully');
     } else {
       // Failure
       _showAlertDialog('SPM Connect', 'Problem Saving Note');

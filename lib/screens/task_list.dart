@@ -15,6 +15,7 @@ class TaskList extends StatefulWidget {
     return _TaskListState(this.reportid);
   }
 }
+
 class _TaskListState extends State<TaskList> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Tasks> tasklist;
@@ -33,15 +34,15 @@ class _TaskListState extends State<TaskList> {
       },
       child: Scaffold(
         body: getReportListView(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            debugPrint('FAB clicked');
-            navigateToDetail(
-                Tasks(0, '', '', '', '','',''), 'Add New Item', reportid);
-          },
-          tooltip: 'Create New Item',
-          child: Icon(Icons.add),
-        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              debugPrint('FAB clicked');
+              navigateToDetail(
+                  Tasks(0, '', '', '', '', '', ''), 'Add New Item', reportid);
+            },
+            icon: Icon(Icons.add),
+            label: Text('Add a new task')),
       ),
     );
   }
