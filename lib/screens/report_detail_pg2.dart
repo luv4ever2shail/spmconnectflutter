@@ -62,8 +62,12 @@ class _ReportDetail2 extends State<ReportDetail2> {
       context: context,
       initialTime: _duration,
     );
-    if (resultingDuration != null)
-      setState(() => _duration = resultingDuration);
+    if (resultingDuration != null) {
+      setState(() {
+        _duration = resultingDuration;
+        updateHours();
+      });
+    }
   }
 
   TimeOfDay _time = TimeOfDay(hour: 15, minute: 0);
@@ -91,8 +95,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
     InputType.date: DateFormat('yyyy-MM-dd'),
     InputType.time: DateFormat("HH:mm"),
   };
-
-  var _myKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -139,47 +141,48 @@ class _ReportDetail2 extends State<ReportDetail2> {
                         borderRadius: BorderRadius.circular(5.0))),
               ),
             ),
-
-            Form(
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: DateTimePickerFormField(
-                        inputType: InputType.time,
-                        controller: starttimeController,
-                        editable: false,
-                        format: formats[InputType.time],
-                        decoration: InputDecoration(
-                          labelText: 'Start Time',
-                          icon: Icon(Icons.date_range),
-                        ),
-                        onSaved: (value) {
-                          debugPrint(value.toString());
-                        },
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: DateTimePickerFormField(
+                      inputType: InputType.time,
+                      controller: starttimeController,
+                      editable: false,
+                      format: formats[InputType.time],
+                      decoration: InputDecoration(
+                        labelText: 'Start Time',
+                        icon: Icon(Icons.date_range),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          updateStartTime();
+                        });
+                      },
                     ),
-                    Container(
-                      width: 5.0,
-                    ),
-                    Expanded(
-                      child: DateTimePickerFormField(
-                        controller: endtimeController,
-                        inputType: InputType.time,
-                        editable: false,
-                        format: formats[InputType.time],
-                        decoration: InputDecoration(
-                          labelText: 'End Time',
-                          icon: Icon(Icons.date_range),
-                        ),
-                        onSaved: (dt) {
-                          debugPrint(dt.toString());
-                        },
+                  ),
+                  Container(
+                    width: 5.0,
+                  ),
+                  Expanded(
+                    child: DateTimePickerFormField(
+                      controller: endtimeController,
+                      inputType: InputType.time,
+                      editable: false,
+                      format: formats[InputType.time],
+                      decoration: InputDecoration(
+                        labelText: 'End Time',
+                        icon: Icon(Icons.date_range),
                       ),
-                    )
-                  ],
-                ),
+                      onChanged: (dt) {
+                        setState(() {
+                          updateEndTime();
+                        });
+                      },
+                    ),
+                  )
+                ],
               ),
             ),
 
@@ -191,7 +194,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                 maxLines: 5,
                 controller: workperfrmController,
                 style: textStyle,
-                focusNode: wrkperfrmFocusNode,
+                //focusNode: wrkperfrmFocusNode,
                 textInputAction: TextInputAction.newline,
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(hoursFocusNode),
@@ -219,6 +222,9 @@ class _ReportDetail2 extends State<ReportDetail2> {
                 onChanged: (value) {
                   debugPrint('Something changed in Hours Text Field');
                   updateHours();
+                },
+                onTap: () {
+                  _selectduration(context);
                 },
                 decoration: InputDecoration(
                     labelText: 'Hours',
@@ -309,6 +315,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   // Update the customer namme of Note object
   void updateHours() {
+    hoursController.text = '$_duration';
     task.hours = hoursController.text;
   }
 }

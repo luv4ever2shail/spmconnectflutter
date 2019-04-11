@@ -42,7 +42,7 @@ class Tasks{
 	}
 
   set endtime(String newEndtime) {		
-			this._starttime = newEndtime;		
+			this._endtime = newEndtime;		
 	}
 
   set workperformed(String newWorkperformed) {		
