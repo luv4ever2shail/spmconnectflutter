@@ -1,5 +1,4 @@
 import 'dart:async';
-// import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/screens/report_detail_pg2.dart';
 import 'package:spmconnectapp/models/tasks.dart';
@@ -140,11 +139,6 @@ class _TaskListState extends State<TaskList> {
 
   void _delete(BuildContext context, Tasks task) async {
     await databaseHelper.deleteTask(task.id);
-    // if (result != 0) {
-    //   debugPrint('delete cleared');
-    //   _showSnackBar(context, 'Report Deleted Successfully');
-    //   updateListView();
-    // }
   }
 
   void navigateToDetail(Tasks task, String title, int reportid) async {
@@ -170,67 +164,4 @@ class _TaskListState extends State<TaskList> {
       });
     });
   }
-
-  // Flushbar flush;
-  // bool _wasButtonClicked;
-
-  // Future<void> _neverSatisfied(int position) async {
-  //   return showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Delete Item?'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[Text('Are you sure want to delete the task?')],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           FlatButton(
-  //             child: Text('Discard'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //               flush = Flushbar<bool>(
-  //                 title: "Hey Ninja",
-  //                 message:
-  //                     "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-  //                 icon: Icon(
-  //                   Icons.info_outline,
-  //                   color: Colors.blue,
-  //                 ),
-  //                 mainButton: FlatButton(
-  //                   onPressed: () {
-  //                     flush.dismiss(true); // result = true
-  //                   },
-  //                   child: Text(
-  //                     "ADD",
-  //                     style: TextStyle(color: Colors.amber),
-  //                   ),
-  //                 ),
-  //               ) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-  //                 ..show(context).then((result) {
-  //                   setState(() {
-  //                     // setState() is optional here
-  //                     _wasButtonClicked = result;
-
-  //                     if ((_wasButtonClicked)) {
-  //                       _delete(context, tasklist[position]);
-  //                       updateListView();
-  //                     }
-  //                   });
-  //                 });
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }

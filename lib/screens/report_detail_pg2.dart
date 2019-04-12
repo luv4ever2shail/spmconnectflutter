@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
-import 'package:flutter_duration_picker/flutter_duration_picker.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class ReportDetail2 extends StatefulWidget {
@@ -55,40 +54,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
-  Duration _duration = Duration(hours: 0, minutes: 0);
-
-  Future _selectduration(BuildContext context) async {
-    Duration resultingDuration = await showDurationPicker(
-      context: context,
-      initialTime: _duration,
-    );
-    if (resultingDuration != null) {
-      setState(() {
-        _duration = resultingDuration;
-        updateHours();
-      });
-    }
-  }
-
-  TimeOfDay _time = TimeOfDay(hour: 15, minute: 0);
-
-  Future<Null> _selectTime(BuildContext context, bool strtime) async {
-    final TimeOfDay picked = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-
-    if (picked != null && picked != _time) {
-      setState(() {
-        _time = picked;
-      });
-      if (strtime) {
-        starttimeController.text = '$_time';
-      } else {
-        endtimeController.text = '$_time';
-      }
-    }
-  }
 
   final formats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
@@ -223,9 +188,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
                   debugPrint('Something changed in Hours Text Field');
                   updateHours();
                 },
-                onTap: () {
-                  _selectduration(context);
-                },
                 decoration: InputDecoration(
                     labelText: 'Hours',
                     labelStyle: textStyle,
@@ -315,7 +277,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   // Update the customer namme of Note object
   void updateHours() {
-    hoursController.text = '$_duration';
     task.hours = hoursController.text;
   }
 }
