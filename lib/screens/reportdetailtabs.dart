@@ -23,15 +23,10 @@ class _ReportDetTabState extends State<ReportDetTab> {
 
   Report report;
   _ReportDetTabState(this.report, this.appBarTitle);
-  int _selectedTab = 0;
+  PageController controller = PageController();
   @override
   Widget build(BuildContext context) {
-    List<Widget> _children = [
-      ReportDetail(report),
-      TaskList(report.reportmapid),
-      ReportDetail3(report),
-    ];
-    //TextStyle textStyle = Theme.of(context).textTheme.title;
+
     return WillPopScope(
       onWillPop: () {
         movetolastscreen();
@@ -43,39 +38,26 @@ class _ReportDetTabState extends State<ReportDetTab> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               movetolastscreen();
-              //Navigator.pop(context,true);
             },
           ),
         ),
-        body: _children[_selectedTab],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedTab,
-          onTap: (int index) {
-            if (report.projectno.length == 0 && index == 1) {
+        body: PageView(
+          controller: controller,
+          children: <Widget>[
+             ReportDetail(report),
+             TaskList(report.reportmapid),
+             ReportDetail3(report),
+          ],
+          onPageChanged: (int index){
+             if (report.projectno.length == 0 && index == 1) {
               _showAlertDialog('Project No', 'Cant be Empty');
+              controller.jumpToPage(0);              
             } else {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';
               else if (index == 0) this.appBarTitle = 'Edit Report';
-              setState(() {
-                _selectedTab = index;
-              });
             }
           },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.info),
-              title: Text('Details'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.track_changes),
-              title: Text('Tasks'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.done),
-              title: Text('Comments'),
-            ),
-          ],
         ),
       ),
     );

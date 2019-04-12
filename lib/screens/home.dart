@@ -15,64 +15,66 @@ class _MyhomeState extends State<Myhome> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            backgroundColor: bgColor,
-            appBar: AppBar(
-              title: Text('SPM Connect'),
-              backgroundColor: barColor,
-              actions: <Widget>[
-                // action button
-                // overflow menu
-                PopupMenuButton<Choice>(
-                  onSelected: (choices) {
-                    navigateToprivacy();
-                  },
-                  itemBuilder: (BuildContext context) {
-                    return choices.map((Choice choice) {
-                      return PopupMenuItem<Choice>(
-                        value: choice,
-                        child: Text(choice.title),
-                      );
-                    }).toList();
-                  },
-                ),
-              ],
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: bgColor,
+        appBar: AppBar(
+          title: Text('SPM Connect'),
+          backgroundColor: barColor,
+          actions: <Widget>[
+            PopupMenuButton<Choice>(
+              onSelected: (choices) {
+                navigateToprivacy();
+              },
+              itemBuilder: (BuildContext context) {
+                return choices.map((Choice choice) {
+                  return PopupMenuItem<Choice>(
+                    value: choice,
+                    child: Text(choice.title),
+                  );
+                }).toList();
+              },
             ),
-            body: Column(
-              children: <Widget>[
-               Padding(
-                 padding: EdgeInsets.all(2.0),
-                child :Center(
-                  child: Card(
-                    elevation: 10.0,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const ListTile(
-                          leading: Icon(Icons.description),
-                          title: Text('Service Reports',textScaleFactor: 2.0,),
-                          subtitle: Text(
-                              'Access all you service reports.'),
-                        ),
-                        ButtonTheme.bar(
-                          // make buttons use the appropriate styles for cards
-                          child: ButtonBar(
-                            children: <Widget>[
-                              FlatButton(
-                                child: const Text('View Reports'),
-                                onPressed: () {navigateToDetail();},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Container(
+            height: 150.0,
+            child: Material(
+              type: MaterialType.transparency,
+              color: Colors.transparent,
+              child: new InkWell(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                splashColor: Colors.deepOrange,
+                onTap: () {
+                  navigateToDetail();
+                },
+                child: new Card(
+                  margin: EdgeInsets.all(10.0),
+                  color: Colors.lightBlueAccent,
+                  elevation: 10.0,
+                  child: Center(
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.description,
+                        color: Colors.white,
+                        size: 45.0,
+                      ),
+                      title: Text(
+                        'Service Reports',
+                        textScaleFactor: 2.5,
+                      ),
+                      subtitle: Text(' - Access all you service reports.'),
                     ),
                   ),
-                )
-               )
-              ],
-            )));
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void navigateToDetail() async {
