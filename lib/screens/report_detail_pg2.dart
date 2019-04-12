@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:intl/intl.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
@@ -50,7 +51,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   TextEditingController starttimeController = TextEditingController();
   TextEditingController endtimeController = TextEditingController();
   TextEditingController workperfrmController = TextEditingController();
-  TextEditingController hoursController = TextEditingController();
+  MaskedTextController hoursController = MaskedTextController(mask: '00:00');
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
@@ -107,7 +108,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(5.0),
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: Row(
                 children: <Widget>[
                   Expanded(
@@ -156,7 +157,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 keyboardType: TextInputType.multiline,
-                maxLines: 5,
+                maxLines: 8,
                 controller: workperfrmController,
                 style: textStyle,
                 //focusNode: wrkperfrmFocusNode,
@@ -191,6 +192,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                 decoration: InputDecoration(
                     labelText: 'Hours',
                     labelStyle: textStyle,
+                    hintText: '00\:00',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),

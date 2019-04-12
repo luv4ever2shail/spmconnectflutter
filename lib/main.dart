@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:spmconnectapp/Maps.dart';
-import 'package:spmconnectapp/screens/home.dart';
+//import 'package:spmconnectapp/screens/home.dart';
+import 'package:spmconnectapp/screens/login.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Service Reports',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Myhome(),
+      home:MyLoginPage(title : 'SPM Connect Login'),
     );
   }
 }

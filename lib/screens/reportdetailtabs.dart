@@ -3,6 +3,7 @@ import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/report_detail_pg1.dart';
 import 'package:spmconnectapp/screens/task_list.dart';
 import 'package:spmconnectapp/screens/report_detail_pg3.dart';
+import 'package:spmconnectapp/screens/report_detail_pg4.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:intl/intl.dart';
 
@@ -24,6 +25,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
   Report report;
   _ReportDetTabState(this.report, this.appBarTitle);
   PageController controller = PageController();
+  int _selectedTab = 0;
   @override
   Widget build(BuildContext context) {
 
@@ -47,6 +49,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
              ReportDetail(report),
              TaskList(report.reportmapid),
              ReportDetail3(report),
+             ReportDetail4(report),
           ],
           onPageChanged: (int index){
              if (report.projectno.length == 0 && index == 1) {
@@ -56,8 +59,49 @@ class _ReportDetTabState extends State<ReportDetTab> {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';
               else if (index == 0) this.appBarTitle = 'Edit Report';
+               else if (index == 3) this.appBarTitle = 'Customer Info';
+              else this.appBarTitle = 'Report Comments';
+              setState(() {
+                _selectedTab = index;
+              });
             }
           },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedTab,
+           onTap: (int index) {
+            if (report.projectno.length == 0 && (index == 1 || index == 2 || index == 3) ) {
+              _showAlertDialog('Project No', 'Cant be Empty');
+            } else {
+              if (index == 1)
+                this.appBarTitle = 'Edit Tasks';
+              else if (index == 0) this.appBarTitle = 'Edit Report';
+              else this.appBarTitle = 'Comments';
+              setState(() {
+                _selectedTab = index;
+                controller.jumpToPage(index);
+              });
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info),
+              title: Text('Details'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.track_changes),
+              title: Text('Tasks'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.comment),
+              title: Text('Comments'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              title: Text('Customer'),
+            ),
+          ],
         ),
       ),
     );

@@ -53,20 +53,21 @@ class _TaskListState extends State<TaskList> {
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
         return Dismissible(
-          background: stackBehindDismiss2(),
-          secondaryBackground: stackBehindDismiss(),
+          background: stackBehindDismiss(),
           key: ObjectKey(tasklist[position]),
           child: Card(
             color: Colors.white,
             elevation: 2.0,
             child: ListTile(
-              leading: CircleAvatar(child: Icon(Icons.description),),
+              leading: CircleAvatar(
+                child: Icon(Icons.description),
+              ),
               title: Text(
                 this.tasklist[position].item,
                 style: titleStyle.apply(fontSizeFactor: 1.5),
               ),
               subtitle: Text(
-                'Added on :-'+this.tasklist[position].date,
+                'Added on :-' + this.tasklist[position].date,
               ),
               onTap: () {
                 debugPrint("ListTile Tapped");
@@ -77,22 +78,18 @@ class _TaskListState extends State<TaskList> {
           ),
           direction: DismissDirection.horizontal,
           onDismissed: (direction) {
-            if (direction == DismissDirection.startToEnd) {
-              navigateToDetail(this.tasklist[position], 'Edit Item', reportid);
-            } else {
-              var item = tasklist.elementAt(position);
-              //To delete
-              deleteItem(position);
-              //To show a snackbar with the UNDO button
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Task deleted"),
-                  action: SnackBarAction(
-                      label: "UNDO",
-                      onPressed: () {
-                        //To undo deletion
-                        undoDeletion(item);
-                      })));
-            }
+            var item = tasklist.elementAt(position);
+            //To delete
+            deleteItem(position);
+            //To show a snackbar with the UNDO button
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Task deleted"),
+                action: SnackBarAction(
+                    label: "UNDO",
+                    onPressed: () {
+                      //To undo deletion
+                      undoDeletion(item);
+                    })));
           },
         );
       },
@@ -111,25 +108,13 @@ class _TaskListState extends State<TaskList> {
 
   Widget stackBehindDismiss() {
     return Container(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       padding: EdgeInsets.only(right: 20.0),
       color: Colors.red,
       child: Icon(
         Icons.delete,
         color: Colors.white,
       ),
-    );
-  }
-
-  Widget stackBehindDismiss2() {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(right: 20.0),
-      child: Icon(
-        Icons.mode_edit,
-        color: Colors.white,
-      ),
-      color: Colors.green,
     );
   }
 

@@ -11,6 +11,8 @@ class Report {
   String _furtheractions;
   String _custcomments;
   String _custrep;
+  String _custemail;
+  String _custcontact;
   int _reportmapid;
 
   Report(
@@ -37,6 +39,8 @@ class Report {
       this._furtheractions,
       this._custcomments,
       this._custrep,
+      this._custemail,
+      this._custcontact,
       this._reportmapid);
 
   int get id => _id;
@@ -64,6 +68,11 @@ class Report {
   String get custcomments => _custcomments;
 
   String get custrep => _custrep;
+
+  String get custemail => _custemail;
+
+  String get custcontact => _custcontact;
+
 
   set reportmapid(int newReportid) {
     this._reportmapid = newReportid;
@@ -115,6 +124,14 @@ class Report {
     this._custrep = custrep;
   }
 
+   set custemail(String custemail) {
+    this._custemail = custemail;
+  }
+
+   set custcontact(String custcontact) {
+    this._custcontact = custcontact;
+  }
+
 // Convert a Report object into a Map object
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -132,6 +149,8 @@ class Report {
     map['furtheractions'] = _furtheractions;
     map['custcomments'] = _custcomments;
     map['custrep'] = _custrep;
+    map['custemail'] = _custemail;
+    map['custcontact'] = _custcontact;
     map['reportmapid'] = _reportmapid;
 
     return map;
@@ -151,6 +170,8 @@ class Report {
     this._furtheractions = map['furtheractions'];
     this._custcomments = map['custcomments'];
     this._custrep = map['custrep'];
+    this._custemail = map['custemail'];
+    this._custcontact = map['custcontact'];
     this._reportmapid = map['reportmapid'];
   }
 }
