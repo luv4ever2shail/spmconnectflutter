@@ -32,7 +32,7 @@ class _TaskListState extends State<TaskList> {
         movetolastscreen();
       },
       child: Scaffold(
-        body: getReportListView(),
+        body: Scrollbar(child: getReportListView()),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
@@ -55,25 +55,28 @@ class _TaskListState extends State<TaskList> {
         return Dismissible(
           background: stackBehindDismiss(),
           key: ObjectKey(tasklist[position]),
-          child: Card(
-            color: Colors.white,
-            elevation: 2.0,
-            child: ListTile(
-              leading: CircleAvatar(
-                child: Icon(Icons.description),
+          child: Padding(
+            padding: EdgeInsets.all(3),
+            child: Card(
+              color: Colors.white,
+              elevation: 2.0,
+              child: ListTile(
+                leading: CircleAvatar(
+                  child: Icon(Icons.description),
+                ),
+                title: Text(
+                  this.tasklist[position].item,
+                  style: titleStyle.apply(fontSizeFactor: 1.5),
+                ),
+                subtitle: Text(
+                  'Added on :-' + this.tasklist[position].date,
+                ),
+                onTap: () {
+                  debugPrint("ListTile Tapped");
+                  navigateToDetail(
+                      this.tasklist[position], 'Edit Item', reportid);
+                },
               ),
-              title: Text(
-                this.tasklist[position].item,
-                style: titleStyle.apply(fontSizeFactor: 1.5),
-              ),
-              subtitle: Text(
-                'Added on :-' + this.tasklist[position].date,
-              ),
-              onTap: () {
-                debugPrint("ListTile Tapped");
-                navigateToDetail(
-                    this.tasklist[position], 'Edit Item', reportid);
-              },
             ),
           ),
           direction: DismissDirection.horizontal,

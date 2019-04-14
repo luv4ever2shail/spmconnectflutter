@@ -26,41 +26,68 @@ class _ReportDetTabState extends State<ReportDetTab> {
   _ReportDetTabState(this.report, this.appBarTitle);
   PageController controller = PageController();
   int _selectedTab = 0;
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Are you sure?'),
+                content: new Text('Save Changes?'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: new Text('No'),
+                  ),
+                  new FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      movetolastscreen();
+                    },
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
-      onWillPop: () {
-        movetolastscreen();
-      },
+      onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle + ' - ' + report.reportmapid.toString()),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              movetolastscreen();
+              _onWillPop();
             },
           ),
         ),
         body: PageView(
           controller: controller,
           children: <Widget>[
-             ReportDetail(report),
-             TaskList(report.reportmapid),
-             ReportDetail3(report),
-             ReportDetail4(report),
+            ReportDetail(report),
+            TaskList(report.reportmapid),
+            ReportDetail3(report),
+            ReportDetail4(report),
           ],
-          onPageChanged: (int index){
-             if (report.projectno.length == 0 && index == 1) {
+          onPageChanged: (int index) {
+            if (report.projectno.length == 0 && index == 1) {
               _showAlertDialog('Project No', 'Cant be Empty');
-              controller.jumpToPage(0);              
+              controller.jumpToPage(0);
             } else {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';
-              else if (index == 0) this.appBarTitle = 'Edit Report';
-               else if (index == 3) this.appBarTitle = 'Customer Info';
-              else this.appBarTitle = 'Report Comments';
+              else if (index == 0)
+                this.appBarTitle = 'Edit Report';
+              else if (index == 3)
+                this.appBarTitle = 'Customer Info';
+              else
+                this.appBarTitle = 'Report Comments';
               setState(() {
                 _selectedTab = index;
               });
@@ -70,14 +97,17 @@ class _ReportDetTabState extends State<ReportDetTab> {
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedTab,
-           onTap: (int index) {
-            if (report.projectno.length == 0 && (index == 1 || index == 2 || index == 3) ) {
+          onTap: (int index) {
+            if (report.projectno.length == 0 &&
+                (index == 1 || index == 2 || index == 3)) {
               _showAlertDialog('Project No', 'Cant be Empty');
             } else {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';
-              else if (index == 0) this.appBarTitle = 'Edit Report';
-              else this.appBarTitle = 'Comments';
+              else if (index == 0)
+                this.appBarTitle = 'Edit Report';
+              else
+                this.appBarTitle = 'Comments';
               setState(() {
                 _selectedTab = index;
                 controller.jumpToPage(index);

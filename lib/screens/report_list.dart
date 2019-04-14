@@ -45,7 +45,7 @@ class _ReportList extends State<ReportList> {
             },
           ),
         ),
-        body: getReportListView(),
+        body: Scrollbar(child: getReportListView()),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -74,43 +74,45 @@ class _ReportList extends State<ReportList> {
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
-        return Card(
-          color: Colors.white,
-          elevation: 10.0,
-          child: ListTile(
-            isThreeLine: true,
-            leading: CircleAvatar(child: Icon(Icons.receipt),),
-            title: Text(
-              'Report No - ' +
-                  this.reportlist[position].reportmapid.toString() ,
-              style:  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
-            ),
-            subtitle: Text(
-              'Project - ' +
-                  this.reportlist[position].projectno +
-                  " ( " +
-                  this.reportlist[position].customer +
-                  ' )' +
-                  '\nCreated On (' +
-                  this.reportlist[position].date +
-                  ')',
-              style: titleStyle,
-            ),
-            trailing: GestureDetector(
-              child: Icon(
-                Icons.delete,
-                size: 40,
-                color: Colors.grey,
+        return Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Card(
+            elevation: 10.0,
+            child: ListTile(
+              isThreeLine: true,
+              leading: CircleAvatar(child: Icon(Icons.receipt),),
+              title: Text(
+                'Report No - ' +
+                    this.reportlist[position].reportmapid.toString() ,
+                style:  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+              ),
+              subtitle: Text(
+                'Project - ' +
+                    this.reportlist[position].projectno +
+                    " ( " +
+                    this.reportlist[position].customer +
+                    ' )' +
+                    '\nCreated On (' +
+                    this.reportlist[position].date +
+                    ')',
+                style: titleStyle,
+              ),
+              trailing: GestureDetector(
+                child: Icon(
+                  Icons.delete,
+                  size: 40,
+                  color: Colors.grey,
+                ),
+                onTap: () {
+                  //_delete(context, reportlist[position]);
+                  _neverSatisfied(position);
+                },
               ),
               onTap: () {
-                //_delete(context, reportlist[position]);
-                _neverSatisfied(position);
+                debugPrint("ListTile Tapped");
+                navigateToDetail(this.reportlist[position], 'Edit Report');
               },
             ),
-            onTap: () {
-              debugPrint("ListTile Tapped");
-              navigateToDetail(this.reportlist[position], 'Edit Report');
-            },
           ),
         );
       },
