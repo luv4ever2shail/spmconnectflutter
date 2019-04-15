@@ -72,6 +72,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   logout();
                 },
               ),
+              // adding raised button to retrieve data from rest api
               RaisedButton(
                 onPressed: getData,
                 child: Text('Get Data'),
