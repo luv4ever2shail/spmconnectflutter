@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 // import 'package:spmconnectapp/Maps.dart';
 //import 'package:spmconnectapp/screens/home.dart';
 import 'package:spmconnectapp/screens/login.dart';
-
 void main() => runApp(MyApp());
 
 //*Main widget called MyApp
