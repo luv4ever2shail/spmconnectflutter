@@ -2,6 +2,9 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/screens/home.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 class MyLoginPage extends StatefulWidget {
   MyLoginPage({Key key, this.title}) : super(key: key);
@@ -22,6 +25,26 @@ class _MyLoginPageState extends State<MyLoginPage> {
       "47367b96-9640-40ff-912f-73e75cd333f1",
       "openid profile offline_access");
   final AadOAuth oauth = AadOAuth(config);
+
+  String accessToken;
+
+
+  Future<String> getData() async{
+    http.Response response = await http.get(
+      Uri.encodeFull("http://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('TestListApp')"),
+      headers: {
+        "Authorization" : "Bearer " + accessToken,
+        "Accept" : "application/json;odata=verbose"
+
+      },
+      );
+
+      var data = json.decode(response.body);
+      print(data);
+
+      return response.body;
+
+  }
 
   Widget build(BuildContext context) {
     // adjust window size for browser login
@@ -49,6 +72,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   logout();
                 },
               ),
+              RaisedButton(
+                onPressed: getData,
+                child: Text('Get Data'),
+              ),
             ],
           ),
           constraints: BoxConstraints(
@@ -63,7 +90,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void showError(dynamic ex) {
     // showMessage(ex.toString(),false);
-    showMessage('Login Interrupted by the user.',false);
+    showMessage('Login Interrupted by the user.', false);
   }
 
   void showMessage(String text, bool login) {
@@ -72,11 +99,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
           child: const Text("Ok"),
           onPressed: () {
             Navigator.pop(context);
-            if(login){
-               Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return Myhome();
-            }));
-            }           
+            if (login) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Myhome();
+              }));
+            }
           })
     ]);
     showDialog(context: context, builder: (BuildContext context) => alert);
@@ -85,10 +112,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
   void login() async {
     try {
       await oauth.login();
-      String accessToken = await oauth.getAccessToken();
+      accessToken = await oauth.getAccessToken();
       //showMessage("Logged in successfully, your access token: $accessToken",true);
       print('$accessToken');
-      showMessage('Logged in successfully',true);
+      showMessage('Logged in successfully', false);
     } catch (e) {
       showError(e);
     }
@@ -96,6 +123,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void logout() async {
     await oauth.logout();
-    showMessage("Logged out",false);
+    showMessage("Logged out", false);
   }
 }
