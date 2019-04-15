@@ -1,0 +1,429 @@
+//ToDO: import library
+//ToDo: create a main function
+//ToDo: Create a widget  
+//ToDo: Run that widget on a mobile device
+//ToDo: Create a widget
+
+//* Write => and remove curly braces if the function executes only one statement
+
+
+/*
+
+class _MyAppState extends State<MyApp> {
+  List<String> _products = ['Food Tester'];
+
+  final barColor = const Color(0xFF192A56);
+  final bgColor = const Color(0xFFEAF0F1);
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _products.add('Advance Food Tester');
+                });                
+              },
+              backgroundColor: Colors.red,
+            ),
+            backgroundColor: bgColor,
+            appBar:
+                AppBar(title: Text('SPM Connect'), backgroundColor: barColor),
+            body: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(10.0),
+                  child: RaisedButton(
+                    onPressed: () {},
+                    child: Text('Add New'),
+                  ),
+                ),
+                Column(
+                  children: _products
+                      .map(
+                        (element) => Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Image.asset('assets/auto.jpg'),
+                                  Text(element)
+                                ],
+                              ),
+                            ),
+                      )
+                      .toList(),
+                )
+              ],
+            )));
+  }
+}
+
+class SliverApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        home: Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.add),
+        tooltip: 'Create New Request',
+      ),
+      body: new CustomScrollView(
+        slivers: <Widget>[
+          new SliverAppBar(
+            //expandedHeight: 80.0,
+            floating: true,
+            pinned: true,
+            snap: false,
+            flexibleSpace: new FlexibleSpaceBar(
+              title: new Text('SPM Connect - Service Reports'),
+              centerTitle: true,
+            ),
+          ),
+          new SliverList(
+            delegate:
+                new SliverChildBuilderDelegate((context, index) => new ListTile(
+                      title: new Text('List item $index'),
+                    )),
+          ),
+        ],
+      ),
+    ));
+  }
+}
+*/
+
+
+
+
+
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:spmconnectapp/models/tasks.dart';
+import 'package:spmconnectapp/utils/database_helper.dart';
+// import 'package:flutter_duration_picker/flutter_duration_picker.dart';
+// import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+
+class ReportDetail2 extends StatefulWidget {
+  final String appBarTitle;
+  final Tasks task;
+  final int reportid;
+
+  ReportDetail2(this.task, this.appBarTitle, this.reportid);
+  @override
+  State<StatefulWidget> createState() {
+    return _ReportDetail2(this.task, this.appBarTitle, this.reportid);
+  }
+}
+
+class _ReportDetail2 extends State<ReportDetail2> {
+  DatabaseHelper helper = DatabaseHelper();
+
+  String appBarTitle;
+  int reportid;
+  Tasks task;
+
+  FocusNode starttimeFocusNode;
+  FocusNode endtimeFocusNode;
+  FocusNode wrkperfrmFocusNode;
+  FocusNode hoursFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    starttimeFocusNode = FocusNode();
+    endtimeFocusNode = FocusNode();
+    wrkperfrmFocusNode = FocusNode();
+    hoursFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed
+    starttimeFocusNode.dispose();
+    endtimeFocusNode.dispose();
+    wrkperfrmFocusNode.dispose();
+    hoursFocusNode.dispose();
+
+    super.dispose();
+  }
+
+  TextEditingController itemController = TextEditingController();
+  var starttimeController = new MaskedTextController(mask: '00:00');
+  var endtimeController = new MaskedTextController(mask: '00:00');
+  TextEditingController workperfrmController = TextEditingController();
+  TextEditingController hoursController = TextEditingController();
+
+  _ReportDetail2(this.task, this.appBarTitle, this.reportid);
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle textStyle = Theme.of(context).textTheme.title;
+
+    itemController.text = task.item;
+    starttimeController.text = task.starttime;
+    endtimeController.text = task.endtime;
+    workperfrmController.text = task.workperformed;
+    hoursController.text = task.hours;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(appBarTitle),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            _save(reportid);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+        child: ListView(
+          children: <Widget>[
+            // First Element - Item Number
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: TextField(
+                textInputAction: TextInputAction.next,
+                autofocus: true,
+                controller: itemController,
+                style: textStyle,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(starttimeFocusNode),
+                onChanged: (value) {
+                  debugPrint('Something changed in Item Text Field');
+                  updateItem();
+                },
+                decoration: InputDecoration(
+                    labelText: 'Item No.',
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.numberWithOptions(),
+                      controller: starttimeController,
+                      focusNode: starttimeFocusNode,
+                      style: textStyle,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).requestFocus(endtimeFocusNode),
+                      onChanged: (value) {
+                        debugPrint('Something changed in Item Text Field');
+                        updateStartTime();
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'HH\:MM',
+                        labelText: 'Start Time',
+                        icon: Icon(Icons.date_range),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 5.0,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.numberWithOptions(),
+                      controller: endtimeController,
+                      focusNode: endtimeFocusNode,
+                      style: textStyle,
+                      onEditingComplete: () => FocusScope.of(context)
+                          .requestFocus(wrkperfrmFocusNode),
+                      onChanged: (value) {
+                        debugPrint('Something changed in Item Text Field');
+                        updateEndTime();
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'HH\:MM',
+                        labelText: 'End Time',
+                        icon: Icon(Icons.date_range),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            // Padding(
+            //   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            //   child: TextField(
+            //     textInputAction: TextInputAction.next,
+            //     keyboardType: TextInputType.numberWithOptions(),
+            //     controller: starttimeController,
+            //     focusNode: starttimeFocusNode,
+            //     style: textStyle,
+            //     onEditingComplete: () =>
+            //         FocusScope.of(context).requestFocus(endtimeFocusNode),
+            //     onChanged: (value) {
+            //       debugPrint('Something changed in Item Text Field');
+            //       updateStartTime();
+            //     },
+            //     decoration: InputDecoration(
+            //       hintText: 'HH\:MM',
+            //       labelText: 'Start Time',
+            //       icon: Icon(Icons.date_range),
+            //     ),
+            //   ),
+            // ),
+
+            // Padding(
+            //   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            //   child: TextField(
+            //     textInputAction: TextInputAction.next,
+            //     keyboardType: TextInputType.numberWithOptions(),
+            //     controller: endtimeController,
+            //     //focusNode: endtimeFocusNode,
+            //     style: textStyle,
+            //     //onEditingComplete: () =>
+            //         //FocusScope.of(context).requestFocus(wrkperfrmFocusNode),
+            //     onChanged: (value) {
+            //       debugPrint('Something changed in Item Text Field');
+            //       updateEndTime();
+            //     },
+            //     decoration: InputDecoration(
+            //       hintText: 'HH\:MM',
+            //       labelText: 'End Time',
+            //       icon: Icon(Icons.date_range),
+            //     ),
+            //   ),
+            // ),
+
+            // Third Element - Work Performed
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+                controller: workperfrmController,
+                style: textStyle,
+                focusNode: wrkperfrmFocusNode,
+                textInputAction: TextInputAction.newline,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(hoursFocusNode),
+                onChanged: (value) {
+                  debugPrint('Something changed in Work Performed Text Field');
+                  updateWorkperformed();
+                },
+                decoration: InputDecoration(
+                    labelText: 'Work Performed',
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+              ),
+            ),
+
+            //Fourth Element - Hours
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: TextField(
+                controller: hoursController,
+                keyboardType: TextInputType.numberWithOptions(),
+                style: textStyle,
+                focusNode: hoursFocusNode,
+                textInputAction: TextInputAction.done,
+                onChanged: (value) {
+                  debugPrint('Something changed in Hours Text Field');
+                  updateHours();
+                },
+                decoration: InputDecoration(
+                    labelText: 'Hours',
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void movetolastscreen() {
+    Navigator.pop(context, true);
+  }
+
+  void _save(int reportid) async {
+    movetolastscreen();
+    task.reportid = reportid;
+    int result = 0;
+    if (task.id != null) {
+      // Case 1: Update operation
+      result = await helper.updateTask(task);
+    } else {
+      // Case 2: Insert Operation
+      if (task.item.length > 0) {
+        task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+        result = await helper.inserTask(task);
+      }
+    }
+
+    if (result != 0) {
+      // Success
+      String message = 'Task added To ' + reportid.toString();
+      if (appBarTitle == 'Edit Item')
+        message = 'Task Updated To ' + reportid.toString();
+      _showAlertDialog('SPM Connect', message);
+    } else {
+      // Failure
+      // _showAlertDialog(
+      //     'SPM Connect', 'Problem Saving Task To ' + reportid.toString());
+    }
+  }
+
+  void _showAlertDialog(String title, String message) {
+    // AlertDialog alertDialog = AlertDialog(
+    //   title: Text(title),
+    //   content: Text(message),
+    // );
+    // showDialog(context: context, builder: (_) => alertDialog);
+
+    Flushbar(
+      title: title,
+      message: message,
+      animationDuration: Duration(seconds: 1),
+      duration: Duration(seconds: 2),
+      icon: Icon(
+        Icons.info_outline,
+        size: 35.0,
+        color: Colors.blue[300],
+      ),
+      aroundPadding: EdgeInsets.all(8),
+      borderRadius: 8,
+      leftBarIndicatorColor: Colors.blue[300],
+    ).show(context);
+  }
+
+// Update the project no.
+  void updateItem() {
+    task.item = itemController.text;
+  }
+
+  // Update the customer namme of Note object
+  void updateStartTime() {
+    task.starttime = starttimeController.text;
+  }
+
+  void updateEndTime() {
+    task.endtime = endtimeController.text;
+  }
+
+  // Update the plant location namme of Note object
+  void updateWorkperformed() {
+    task.workperformed = workperfrmController.text;
+  }
+
+  // Update the customer namme of Note object
+  void updateHours() {
+    task.hours = hoursController.text;
+  }
+}
