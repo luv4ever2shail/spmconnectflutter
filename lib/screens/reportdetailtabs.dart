@@ -31,19 +31,20 @@ class _ReportDetTabState extends State<ReportDetTab> {
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Save Changes?'),
+                title: new Text('Save Changes?'),
+                content: new Text('Do you want to save changes?'),
                 actions: <Widget>[
                   new FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pop(false);
+                      Navigator.of(context).pop(true);
+                      movetolastscreen(false);
                     },
                     child: new Text('No'),
                   ),
                   new FlatButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
-                      movetolastscreen();
+                      movetolastscreen(true);
                     },
                     child: new Text('Yes'),
                   ),
@@ -137,8 +138,11 @@ class _ReportDetTabState extends State<ReportDetTab> {
     );
   }
 
-  void movetolastscreen() {
-    _save();
+  void movetolastscreen(bool save) {
+    if (save) _save();
+    else{
+      
+    }
     Navigator.pop(context, true);
   }
 
