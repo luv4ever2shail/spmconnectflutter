@@ -27,4 +27,5 @@ class MyApp extends StatelessWidget {
 // TODO: Sync Method to upload data
 // TODO: Clean up sharepoint and azure app create new accounts
 // TODO: Google GeoLocation (create spmconnect email gmail)
+// TODO: Figure out gesture bug while swiping between pages on task list page when it goes longer
 

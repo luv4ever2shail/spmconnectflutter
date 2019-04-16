@@ -22,7 +22,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   static final Config config = new Config(
       Apikeys.tenantid, Apikeys.clientid, "openid profile offline_access");
-      
+
   final AadOAuth oauth = AadOAuth(config);
 
   bool _saving = false;
@@ -57,23 +57,24 @@ class _MyLoginPageState extends State<MyLoginPage> {
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(16.0, 175.0, 0.0, 0.0),
-                child: Text('There',
-                    style:
-                        TextStyle(fontSize: 80.0, fontWeight: FontWeight.bold)),
+                child: Row(
+                  children: <Widget>[
+                    Text('There',
+                        style: TextStyle(
+                            fontSize: 80.0, fontWeight: FontWeight.bold)),
+                    Text('.',
+                        style: TextStyle(
+                            fontSize: 80.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue)),
+                  ],
+                ),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(220.0, 175.0, 0.0, 0.0),
-                child: Text('.',
-                    style: TextStyle(
-                        fontSize: 80.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue)),
-              )
             ],
           ),
         ),
         Container(
-            padding: EdgeInsets.only(top: 35.0, left: 30.0, right: 30.0),
+            padding: EdgeInsets.only(top: 60.0, left: 30.0, right: 30.0),
             child: Column(
               children: <Widget>[
                 SizedBox(height: 40.0),
