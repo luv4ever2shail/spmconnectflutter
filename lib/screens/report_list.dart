@@ -18,6 +18,7 @@ class _ReportList extends State<ReportList> {
   List<Report> reportlist;
   List<Report> reportmapid;
   int count = 0;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,11 @@ class _ReportList extends State<ReportList> {
             },
           ),
         ),
-        body: Scrollbar(child: getReportListView()),
+        body: RefreshIndicator(
+          key: refreshKey,
+          onRefresh: _handleRefresh,
+          child: getReportListView(),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -80,11 +85,15 @@ class _ReportList extends State<ReportList> {
             elevation: 10.0,
             child: ListTile(
               isThreeLine: true,
-              leading: CircleAvatar(child: Icon(Icons.receipt),),
+              leading: CircleAvatar(
+                child: Icon(Icons.receipt),
+              ),
               title: Text(
                 'Report No - ' +
-                    this.reportlist[position].reportmapid.toString() ,
-                style:  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 1.5),
+                    this.reportlist[position].reportmapid.toString(),
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .apply(fontSizeFactor: 1.5),
               ),
               subtitle: Text(
                 'Project - ' +
@@ -105,7 +114,9 @@ class _ReportList extends State<ReportList> {
                 ),
                 onTap: () {
                   //_delete(context, reportlist[position]);
-                  _neverSatisfied(position);
+                  _neverSatisfied(
+                    position,
+                  );
                 },
               ),
               onTap: () {
@@ -119,6 +130,13 @@ class _ReportList extends State<ReportList> {
     );
   }
 
+  Future<Null> _handleRefresh() async {
+    refreshKey.currentState?.show(atTop: false);
+    await new Future.delayed(new Duration(seconds: 1));
+    updateListView();
+    return null;
+  }
+
   void movetolastscreen() {
     Navigator.pop(context, true);
   }
@@ -127,7 +145,6 @@ class _ReportList extends State<ReportList> {
     int result = await databaseHelper.deleteReport(report.id);
     if (result != 0) {
       debugPrint('deleted report');
-      // _showSnackBar(context, 'Report Deleted Successfully');
       updateListView();
       reportmapid.clear();
       getReportmapId();
@@ -135,14 +152,8 @@ class _ReportList extends State<ReportList> {
     int result2 = await databaseHelper.deleteAllTasks(report.reportmapid);
     if (result2 != 0) {
       debugPrint('deleted all tasks');
-      //_showSnackBar(context, 'Report Deleted Successfully');
     }
   }
-
-  // void _showSnackBar(BuildContext context, String message) {
-  //   final snackBar = SnackBar(content: Text(message));
-  //   Scaffold.of(context).showSnackBar(snackBar);
-  // }
 
   void navigateToDetail(Report report, String title) async {
     bool result =
@@ -152,7 +163,6 @@ class _ReportList extends State<ReportList> {
     if (result == true) {
       updateListView();
     }
-    reportmapid.clear();
     getReportmapId();
   }
 
