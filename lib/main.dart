@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 // TODO: save as png signature pad
 // TODO: create extra columns as backup on sql database
 // TODO: Delete tasks for not save report (created new and never got saved but created tasks for it.)
-// TODO: Pull to refresh
+///// TODO: Pull to refresh
 // TODO: Sync Method to retrieve list
 // TODO: Sync Method to upload data
 // TODO: Clean up sharepoint and azure app create new accounts
@@ -30,4 +30,5 @@ class MyApp extends StatelessWidget {
 // TODO: Figure out gesture bug while swiping between pages on task list page when it goes longer
 // TODO: azure active directory retrieve username
 // TODO: sharepoint  create a new list 
+// TODO: 
 

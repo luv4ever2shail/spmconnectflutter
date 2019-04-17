@@ -3,6 +3,7 @@ import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/api.dart';
 import 'package:spmconnectapp/screens/home.dart';
+import 'package:spmconnectapp/screens/restapi.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:async';
 
@@ -24,6 +25,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
       Apikeys.tenantid, Apikeys.clientid, "openid profile offline_access");
 
   final AadOAuth oauth = AadOAuth(config);
+
+  final Myrestapi restapi = Myrestapi();
 
   bool _saving = false;
 
@@ -157,6 +160,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         ),
                       ),
                     ),
+                    RaisedButton(
+                      child: Text('GetData'),
+                      onPressed:accesstoke,
+                    ),
+                    RaisedButton(
+                      child: Text('Logout'),
+                      onPressed:removetoken,
+                    )
                   ],
                 )),
           ],
@@ -190,6 +201,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
+  void accesstoke() async{
+      await restapi.login();
+      String accessToken = await restapi.getAccessToken();
+      print('Access Token Sharepoint $accessToken');
+    }
+
+     void removetoken() async{
+      await restapi.logout();
+    }
+
   void login() async {
     try {
       setState(() {
@@ -198,7 +219,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       await oauth.login();
       String accessToken = await oauth.getAccessToken();
       //showMessage("Logged in successfully, your access token: $accessToken",true);
-      //print('$accessToken');
+      print('$accessToken');
       if (accessToken.length > 0) {
         new Future.delayed(new Duration(seconds: 2), () {
           setState(() {

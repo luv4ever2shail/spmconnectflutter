@@ -1,38 +1,35 @@
-import 'package:flutter/material.dart';
+library my_restapi;
+
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:spmconnectapp/API_Keys/api.dart';
+import 'package:spmconnectapp/models/token.dart';
+import 'package:spmconnectapp/models/token_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+class Myrestapi {
 
-class Myrestapipage extends StatefulWidget {
-  @override
-  _MyrestapipageState createState() => new _MyrestapipageState();
-}
+  Token _token;
+  TokenStorage _tokenStorage;
 
-class _MyrestapipageState extends State<Myrestapipage> {
-  Future<String> getData() async {
-    http.Response response = await http.get(
-      Uri.encodeFull(
-          "http://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('TestList')"),
-      headers: {
-        "Authorization": "Bearer ",
-        "Accept": "application/json;odata=verbose"
-      },
-    );
-
-    List data = json.decode(response.body);
-    print(data[1]['title']);
-
-    return response.body;
+  factory Myrestapi() {
+    if (Myrestapi._instance == null)
+      Myrestapi._instance = new Myrestapi._internal();
+    return _instance;
   }
 
-  Future getListData() async {
+  static Myrestapi _instance;
+
+  Myrestapi._internal() {
+    _tokenStorage = _tokenStorage ?? new TokenStorage();
+  }
+
+  Future getListData(String accesstoken) async {
     try {
       http.Response response = await http.get(
         Uri.encodeFull(Apikeys.sharepointListUrl),
         headers: {
-          "Authorization": "Bearer " + getSharepointToken().toString(),
+          "Authorization": "Bearer " + accesstoken,
           "Accept": "application/json"
         },
       );
@@ -42,12 +39,12 @@ class _MyrestapipageState extends State<Myrestapipage> {
         print(items['Customer']);
       }
     } catch (e) {
-      showError(e);
+      print(e);
     }
   }
 
-  Future<String> getSharepointToken() async {
-    String accesstoken = "";
+  Future<Token> getSharepointToken() async {
+    Token token;
     try {
       http.Response response = await http.post(
         Uri.encodeFull(Apikeys.sharepointTokenurl),
@@ -61,6 +58,7 @@ class _MyrestapipageState extends State<Myrestapipage> {
           "resource": Apikeys.sharepointResource,
         },
       );
+
       var data = json.decode(response.body);
       print('Token Type : ' + data["token_type"]);
       print('Expires In : ' + data["expires_in"]);
@@ -68,40 +66,68 @@ class _MyrestapipageState extends State<Myrestapipage> {
       print('Expires On : ' + data["expires_on"]);
       print('Resource : ' + data["resource"]);
       print('Access Token : ' + data["access_token"]);
-      accesstoken = data["access_token"];
+      Map<String, dynamic> tokenJson = json.decode(response.body);
+       token = new Token.fromJson(tokenJson);
+      
     } catch (e) {
-      showError(e);
+      print(e);
     }
-    return accesstoken;
+
+    return token;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Testing'),
-      ),
-      body: Center(
-          child: RaisedButton(
-        onPressed: getData,
-        child: Text('Get Data'),
-      )),
-    );
+  Future<void> login() async {
+    await _removeOldTokenOnFirstLogin();
+    if (!Token.tokenIsValid(_token)) await _performAuthorization();
   }
 
-  void showError(dynamic ex) {
-    showMessage(ex.toString());
-    //showMessage('Login Interrupted by the user.', false);
+  Future<String> getAccessToken() async {
+    if (!Token.tokenIsValid(_token))
+      await _performAuthorization();
+      else print('token exits');
+   return  _token.accessToken;
   }
 
-  void showMessage(String text) {
-    var alert = new AlertDialog(content: new Text(text), actions: <Widget>[
-      new FlatButton(
-          child: const Text("Ok"),
-          onPressed: () {
-            Navigator.pop(context);
-          })
-    ]);
-    showDialog(context: context, builder: (BuildContext context) => alert);
+
+  bool tokenIsValid() {
+    return Token.tokenIsValid(_token);
+  }
+
+  Future<void> _performAuthorization() async {
+    // load token from cache
+    _token = await _tokenStorage.loadTokenToCache();
+
+    //still have refreh token / try to get new access token with refresh token
+    if (_token == null) {
+      try {
+        await _performFullAuthFlow();
+      } catch (e) {
+        rethrow;
+      }
+    } else {} //save token to cache
+    await _tokenStorage.saveTokenToCache(_token);
+  }
+
+  Future<void> _performFullAuthFlow() async {
+    try {
+      _token = await getSharepointToken();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> _removeOldTokenOnFirstLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final _keyFreshInstall = "freshInstall";
+    if (!prefs.getKeys().contains(_keyFreshInstall)) {
+      logout();
+      await prefs.setBool(_keyFreshInstall, false);
+    }
+  }
+
+  Future<void> logout() async {
+    await _tokenStorage.clear();
+    _token = null;
+    Myrestapi();
   }
 }
