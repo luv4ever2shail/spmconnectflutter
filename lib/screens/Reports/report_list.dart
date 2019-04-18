@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:spmconnectapp/screens/reportdetailtabs.dart';
+import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
 import 'package:flushbar/flushbar.dart';
 
 class ReportList extends StatefulWidget {

@@ -31,4 +31,5 @@ class MyApp extends StatelessWidget {
 // TODO: azure active directory retrieve username
 // TODO: sharepoint  create a new list 
 // TODO: GEO Location for the plant
+// TODO: Arrange screen files and group them accordingly
 

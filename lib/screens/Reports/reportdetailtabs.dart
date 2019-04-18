@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
-import 'package:spmconnectapp/screens/report_detail_pg1.dart';
-import 'package:spmconnectapp/screens/task_list.dart';
-import 'package:spmconnectapp/screens/report_detail_pg3.dart';
-import 'package:spmconnectapp/screens/report_detail_pg4.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg1.dart';
+import 'package:spmconnectapp/screens/Reports/task_list.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg3.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg4.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:intl/intl.dart';
 

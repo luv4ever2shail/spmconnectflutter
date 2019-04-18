@@ -1,7 +1,7 @@
 import 'dart:async';
 import "dart:convert" as Convert;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:spmconnectapp/models/token.dart';
+import 'package:spmconnectapp/Sharepoint_auth/token.dart';
 
 class TokenStorage {
   static TokenStorage shared = new TokenStorage();
