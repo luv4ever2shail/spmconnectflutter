@@ -1,12 +1,10 @@
-
 class Config {
-  
   final String sharepointClientId;
-  String tenantidUrl;
-  String tokenUrl;
+  String sharepointtenantidUrl;
+  String sharepointtokenUrl;
   final String sharepointClientSecret;
   final String sharepointSite;
-  final String redirectUri;
+  final String clientId;
   final String responseType;
   final String contentType;
   final String sharepointResource;
@@ -15,14 +13,14 @@ class Config {
     this.sharepointClientId,
     this.sharepointClientSecret,
     this.sharepointResource,
-    this.sharepointSite, {
-    this.redirectUri = "https://login.live.com/oauth20_desktop.srf",
+    this.sharepointSite,
+    this.clientId, {
     this.responseType = "code",
     this.contentType = "application/x-www-form-urlencoded",
   }) {
-    this.tenantidUrl =
+    this.sharepointtenantidUrl =
         "https://$sharepointSite/sharepoint.com/_vti_bin/client.svc/";
-    this.tokenUrl =
+    this.sharepointtokenUrl =
         "https://accounts.accesscontrol.windows.net/$sharepointClientId/tokens/OAuth/2";
   }
 }

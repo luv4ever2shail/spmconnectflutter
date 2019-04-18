@@ -1,4 +1,4 @@
-library my_restapi;
+library sharepoint_auth;
 
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -7,20 +7,20 @@ import 'package:spmconnectapp/API_keys/keys.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-class Myrestapi {
+class Sharepointauth {
 
   Token _token;
   TokenStorage _tokenStorage;
 
-  factory Myrestapi() {
-    if (Myrestapi._instance == null)
-      Myrestapi._instance = new Myrestapi._internal();
+  factory Sharepointauth() {
+    if (Sharepointauth._instance == null)
+      Sharepointauth._instance = new Sharepointauth._internal();
     return _instance;
   }
 
-  static Myrestapi _instance;
+  static Sharepointauth _instance;
 
-  Myrestapi._internal() {
+  Sharepointauth._internal() {
     _tokenStorage = _tokenStorage ?? new TokenStorage();
   }
 
@@ -123,6 +123,6 @@ class Myrestapi {
   Future<void> logout() async {
     await _tokenStorage.clear();
     _token = null;
-    Myrestapi();
+    Sharepointauth();
   }
 }

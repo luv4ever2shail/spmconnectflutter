@@ -26,7 +26,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   final AadOAuth oauth = AadOAuth(config);
 
-  final Myrestapi restapi = Myrestapi();
+  final Sharepointauth restapi = Sharepointauth();
 
   bool _saving = false;
 
