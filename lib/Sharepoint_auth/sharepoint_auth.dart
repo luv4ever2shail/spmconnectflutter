@@ -3,7 +3,7 @@ library my_restapi;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:spmconnectapp/Api/keys.dart';
+import 'package:spmconnectapp/API_keys/keys.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
