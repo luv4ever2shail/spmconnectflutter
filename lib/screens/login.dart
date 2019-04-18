@@ -128,45 +128,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       ),
                     ),
                     SizedBox(height: 40.0),
-                    Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.grey,
-                      child: MaterialButton(
-                        minWidth: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: () {
-                          logout();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Center(
-                              child: Icon(
-                                Icons.exit_to_app,
-                                size: 35,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text("Log Out",
-                                textAlign: TextAlign.center,
-                                style: style.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ),
                     RaisedButton(
                       child: Text('GetData'),
-                      onPressed:accesstoke,
+                      onPressed: getSharepointToken,
                     ),
                     RaisedButton(
                       child: Text('Logout'),
-                      onPressed:removetoken,
+                      onPressed: removeSharepointToken,
                     )
                   ],
                 )),
@@ -201,15 +169,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
-  void accesstoke() async{
-      await restapi.login();
-      String accessToken = await restapi.getAccessToken();
-      print('Access Token Sharepoint $accessToken');
-    }
+  void getSharepointToken() async {
+    await restapi.login();
+    String accessToken = await restapi.getAccessToken();
+    print('Access Token Sharepoint $accessToken');
+  }
 
-     void removetoken() async{
-      await restapi.logout();
-    }
+  void removeSharepointToken() async {
+    await restapi.logout();
+  }
 
   void login() async {
     try {
@@ -228,7 +196,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
           });
         });
       }
-
       //showMessage('Logged in successfully', true);
     } catch (e) {
       setState(() {

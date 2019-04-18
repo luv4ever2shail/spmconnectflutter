@@ -44,8 +44,7 @@ class Myrestapi {
   }
 
   Future<Token> getSharepointToken() async {
-    Token token;
-    try {
+    
       http.Response response = await http.post(
         Uri.encodeFull(Apikeys.sharepointTokenurl),
         headers: {
@@ -58,22 +57,18 @@ class Myrestapi {
           "resource": Apikeys.sharepointResource,
         },
       );
-
-      var data = json.decode(response.body);
-      print('Token Type : ' + data["token_type"]);
-      print('Expires In : ' + data["expires_in"]);
-      print('Not Before : ' + data["not_before"]);
-      print('Expires On : ' + data["expires_on"]);
-      print('Resource : ' + data["resource"]);
-      print('Access Token : ' + data["access_token"]);
       Map<String, dynamic> tokenJson = json.decode(response.body);
-       token = new Token.fromJson(tokenJson);
-      
-    } catch (e) {
-      print(e);
-    }
+      print('Token Type : ' + tokenJson["token_type"]);
+      print('Expires In : ' + tokenJson["expires_in"]);
+      print('Not Before : ' + tokenJson["not_before"]);
+      print('Expires On : ' + tokenJson["expires_on"]);
+      print('Resource : ' + tokenJson["resource"]);
+      print('Access Token : ' + tokenJson["access_token"]);
 
-    return token;
+      Token token = new Token.fromJson(tokenJson);
+      return token;
+
+    
   }
 
   Future<void> login() async {

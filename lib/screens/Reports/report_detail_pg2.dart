@@ -91,7 +91,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 textInputAction: TextInputAction.next,
-                autofocus: true,
                 controller: itemController,
                 style: textStyle,
                 onEditingComplete: () =>
@@ -199,6 +198,11 @@ class _ReportDetail2 extends State<ReportDetail2> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.save),
+        tooltip: "Save Task Performed",
+        onPressed: (){ _save(reportid);},
       ),
     );
   }

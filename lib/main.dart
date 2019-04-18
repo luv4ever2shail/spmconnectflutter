@@ -33,6 +33,6 @@ class MyApp extends StatelessWidget {
 // TODO: GEO Location for the plant
 ///// TODO: Arrange screen files and group them accordingly
 // TODO: Auto login and put the logout button under privacy list view
-// TODO: Save floating button on task list
+///// TODO: Save floating button on task list
 // TODO: Try to achieve the hours worked by subtracting the time
 

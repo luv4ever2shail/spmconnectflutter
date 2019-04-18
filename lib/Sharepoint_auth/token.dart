@@ -1,14 +1,14 @@
 class Token {
 
   //offset is subtracted from expire time
-  final expireOffSet = 5;
+  final expireOffSet = 1800;
 
   String accessToken;
   String tokenType;
   String expiresOn;
   DateTime issueTimeStamp;
   DateTime expireTimeStamp;
-  int expiresIn;
+  String expiresIn;
 
   Token();
 
@@ -51,11 +51,12 @@ class Token {
     model.expiresIn = map["expires_in"];
     model.expiresOn = map["expires_on"];
     model.issueTimeStamp = new DateTime.now();
-    model.expireTimeStamp = model.issueTimeStamp.add(new Duration(seconds: model.expiresIn-model.expireOffSet));
+    model.expireTimeStamp = model.issueTimeStamp.add(new Duration(seconds:  int.parse(model.expiresIn)-model.expireOffSet));
     return model;
   }
 
   static bool isExpired(Token token) {
+    print(token.expireTimeStamp);
     return token.expireTimeStamp.isBefore(new DateTime.now());
   }
 

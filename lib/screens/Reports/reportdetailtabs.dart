@@ -30,7 +30,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: movetolastscreen,
+      onWillPop:(){movetolastscreen();} ,
       child: Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle + ' - ' + report.reportmapid.toString()),
