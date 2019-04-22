@@ -1,74 +1,30 @@
 library sharepoint_auth;
 
-import 'package:http/http.dart' as http;
+import 'package:spmconnectapp/Sharepoint_auth/config.dart';
+import 'package:spmconnectapp/Sharepoint_auth/request_token.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'package:spmconnectapp/API_keys/keys.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Sharepointauth {
-
+  
+  static SharepointConfig _config;
   Token _token;
   TokenStorage _tokenStorage;
+  RequestToken _requestToken;
 
-  factory Sharepointauth() {
+  factory Sharepointauth(config) {
     if (Sharepointauth._instance == null)
-      Sharepointauth._instance = new Sharepointauth._internal();
+      Sharepointauth._instance = new Sharepointauth._internal(config);
     return _instance;
   }
 
   static Sharepointauth _instance;
 
-  Sharepointauth._internal() {
+  Sharepointauth._internal(config) {
+    Sharepointauth._config = config;
     _tokenStorage = _tokenStorage ?? new TokenStorage();
-  }
-
-  Future getListData(String accesstoken) async {
-    try {
-      http.Response response = await http.get(
-        Uri.encodeFull(Apikeys.sharepointListUrl),
-        headers: {
-          "Authorization": "Bearer " + accesstoken,
-          "Accept": "application/json"
-        },
-      );
-      var data = json.decode(response.body);
-      List rest = data["value"] as List;
-      for (var items in rest) {
-        print(items['Customer']);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<Token> getSharepointToken() async {
-    
-      http.Response response = await http.post(
-        Uri.encodeFull(Apikeys.sharepointTokenurl),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: {
-          "grant_type": "client_credentials",
-          "client_id": Apikeys.sharepointClientId,
-          "client_secret": Apikeys.sharepointClientSecret,
-          "resource": Apikeys.sharepointResource,
-        },
-      );
-      Map<String, dynamic> tokenJson = json.decode(response.body);
-      print('Token Type : ' + tokenJson["token_type"]);
-      print('Expires In : ' + tokenJson["expires_in"]);
-      print('Not Before : ' + tokenJson["not_before"]);
-      print('Expires On : ' + tokenJson["expires_on"]);
-      print('Resource : ' + tokenJson["resource"]);
-      print('Access Token : ' + tokenJson["access_token"]);
-
-      Token token = new Token.fromJson(tokenJson);
-      return token;
-
-    
+    _requestToken = new RequestToken(_config);
   }
 
   Future<void> login() async {
@@ -82,8 +38,7 @@ class Sharepointauth {
       else print('token exits');
    return  _token.accessToken;
   }
-
-
+  
   bool tokenIsValid() {
     return Token.tokenIsValid(_token);
   }
@@ -91,8 +46,7 @@ class Sharepointauth {
   Future<void> _performAuthorization() async {
     // load token from cache
     _token = await _tokenStorage.loadTokenToCache();
-
-    //still have refreh token / try to get new access token with refresh token
+    
     if (_token == null) {
       try {
         await _performFullAuthFlow();
@@ -105,7 +59,8 @@ class Sharepointauth {
 
   Future<void> _performFullAuthFlow() async {
     try {
-      _token = await getSharepointToken();
+      //_token = await getSharepointToken();
+      _token = await _requestToken.requestToken();
     } catch (e) {
       rethrow;
     }
@@ -123,6 +78,7 @@ class Sharepointauth {
   Future<void> logout() async {
     await _tokenStorage.clear();
     _token = null;
-    Sharepointauth();
+    Sharepointauth(_config);
+    print("Logged out. Token Cleared.");
   }
 }

@@ -5,7 +5,7 @@ class TokenRequestDetails {
   Map<String, String> params;
   Map<String, String> headers;
 
-  TokenRequestDetails(Config config, String code) {
+  TokenRequestDetails(SharepointConfig config) {
     this.url = config.sharepointtokenUrl;
     this.params = {
       "grant_type": "client_credentials",

@@ -427,3 +427,52 @@ class _ReportDetail2 extends State<ReportDetail2> {
     task.hours = hoursController.text;
   }
 }
+
+
+// sharepoint rest api urls
+
+
+ Future getListData(String accesstoken) async {
+    try {
+      http.Response response = await http.get(
+        Uri.encodeFull(Apikeys.sharepointListUrl),
+        headers: {
+          "Authorization": "Bearer " + accesstoken,
+          "Accept": "application/json"
+        },
+      );
+      var data = json.decode(response.body);
+      List rest = data["value"] as List;
+      for (var items in rest) {
+        print(items['Customer']);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Token> getSharepointToken() async {
+    
+      http.Response response = await http.post(
+        Uri.encodeFull(Apikeys.sharepointTokenurl),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {
+          "grant_type": "client_credentials",
+          "client_id": Apikeys.sharepointClientId,
+          "client_secret": Apikeys.sharepointClientSecret,
+          "resource": Apikeys.sharepointResource,
+        },
+      );
+      Map<String, dynamic> tokenJson = json.decode(response.body);
+      print('Token Type : ' + tokenJson["token_type"]);
+      print('Expires In : ' + tokenJson["expires_in"]);
+      print('Not Before : ' + tokenJson["not_before"]);
+      print('Expires On : ' + tokenJson["expires_on"]);
+      print('Resource : ' + tokenJson["resource"]);
+      print('Access Token : ' + tokenJson["access_token"]);
+
+      Token token = new Token.fromJson(tokenJson);
+      return token;    
+  }

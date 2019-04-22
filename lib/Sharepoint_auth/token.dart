@@ -56,7 +56,7 @@ class Token {
   }
 
   static bool isExpired(Token token) {
-    print(token.expireTimeStamp);
+    //print(token.expireTimeStamp);
     return token.expireTimeStamp.isBefore(new DateTime.now());
   }
 

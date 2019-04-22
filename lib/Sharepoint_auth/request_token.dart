@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:spmconnectapp/Sharepoint_auth/accesstoken_request.dart';
 import 'package:spmconnectapp/Sharepoint_auth/config.dart';
-import 'package:spmconnectapp/Sharepoint_auth/tenantid_request.dart';
 import 'package:spmconnectapp/Sharepoint_auth/token.dart';
 
 class RequestToken {
-  final Config config;
+  final SharepointConfig config;
   TokenRequestDetails _tokenRequest;
 
   RequestToken(this.config);
 
-  Future<Token> requestToken(String code) async {
-    _generateTokenRequest(code);
+  Future<Token> requestToken() async {
+    _generateTokenRequest();
     return await _sendTokenRequest(_tokenRequest.params, _tokenRequest.headers);
   }
 
@@ -21,11 +21,19 @@ class RequestToken {
     Response response =
         await post("${_tokenRequest.url}", body: params, headers: headers);
     Map<String, dynamic> tokenJson = json.decode(response.body);
+    // print('Token Type : ' + tokenJson["token_type"]);
+    // print('Expires In : ' + tokenJson["expires_in"]);
+    // print('Not Before : ' + tokenJson["not_before"]);
+    // print('Expires On : ' + tokenJson["expires_on"]);
+    // print('Resource : ' + tokenJson["resource"]);
+    // print('Access Token : ' + tokenJson["access_token"]);
+
     Token token = new Token.fromJson(tokenJson);
+
     return token;
   }
 
-  void _generateTokenRequest(String code) {
-    _tokenRequest = new TokenRequestDetails(config, code);
+  void _generateTokenRequest() {
+    _tokenRequest = new TokenRequestDetails(config);
   }
 }
