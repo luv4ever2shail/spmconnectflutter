@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/screens/login.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -8,8 +9,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Service Reports',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue,),
-      home:MyLoginPage(title : 'SPM Connect Login'),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyLoginPage(title: 'SPM Connect Login'),
     );
   }
 }
@@ -29,10 +32,9 @@ class MyApp extends StatelessWidget {
 ///// TODO: Google GeoLocation (create spmconnect email gmail)
 // TODO: Figure out gesture bug while swiping between pages on task list page when it goes longer
 // TODO: azure active directory retrieve username
-// TODO: sharepoint  create a new list 
+// TODO: sharepoint  create a new list
 // TODO: GEO Location for the plant location
 ///// TODO: Arrange screen files and group them accordingly
-// TODO: Auto login and put the logout button under privacy list view
+///// TODO: Auto login and put the logout button under privacy list view
 ///// TODO: Save floating button on task list
 // TODO: Try to achieve the hours worked by subtracting the time
-

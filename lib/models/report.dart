@@ -73,7 +73,6 @@ class Report {
 
   String get custcontact => _custcontact;
 
-
   set reportmapid(int newReportid) {
     this._reportmapid = newReportid;
   }
@@ -124,11 +123,11 @@ class Report {
     this._custrep = custrep;
   }
 
-   set custemail(String custemail) {
+  set custemail(String custemail) {
     this._custemail = custemail;
   }
 
-   set custcontact(String custcontact) {
+  set custcontact(String custcontact) {
     this._custcontact = custcontact;
   }
 

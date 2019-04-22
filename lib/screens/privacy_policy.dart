@@ -5,7 +5,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {Navigator.pop(context, true);},
+      onWillPop: () {
+        Navigator.pop(context, true);
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(

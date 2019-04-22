@@ -55,7 +55,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
-
   final formats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
     InputType.date: DateFormat('yyyy-MM-dd'),
@@ -202,7 +201,9 @@ class _ReportDetail2 extends State<ReportDetail2> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
         tooltip: "Save Task Performed",
-        onPressed: (){ _save(reportid);},
+        onPressed: () {
+          _save(reportid);
+        },
       ),
     );
   }

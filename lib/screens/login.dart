@@ -2,10 +2,10 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
-import 'package:spmconnectapp/Sharepoint_auth/config.dart';
 import 'package:spmconnectapp/screens/home.dart';
-import 'package:spmconnectapp/Sharepoint_auth/sharepoint_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:sharepoint_auth/model/config.dart';
+import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'dart:async';
 
 class MyLoginPage extends StatefulWidget {
@@ -27,8 +27,12 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   final AadOAuth oauth = AadOAuth(config);
 
-  static final SharepointConfig _config = new SharepointConfig(Apikeys.sharepointClientId,
-  Apikeys.sharepointClientSecret,Apikeys.sharepointResource,Apikeys.sharepointSite,Apikeys.sharepointTenanttId);
+  static final SharepointConfig _config = new SharepointConfig(
+      Apikeys.sharepointClientId,
+      Apikeys.sharepointClientSecret,
+      Apikeys.sharepointResource,
+      Apikeys.sharepointSite,
+      Apikeys.sharepointTenanttId);
 
   final Sharepointauth restapi = Sharepointauth(_config);
 

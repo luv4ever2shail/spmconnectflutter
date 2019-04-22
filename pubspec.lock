@@ -84,7 +84,7 @@ packages:
     source: hosted
     version: "0.8.0"
   flutter_secure_storage:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_secure_storage
       url: "https://pub.dartlang.org"
@@ -186,6 +186,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.2"
+  sharepoint_auth:
+    dependency: "direct main"
+    description:
+      name: sharepoint_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   sky_engine:
     dependency: transitive
     description: flutter

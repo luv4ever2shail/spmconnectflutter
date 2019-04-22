@@ -14,8 +14,7 @@ class Myhome extends StatefulWidget {
 }
 
 class _MyhomeState extends State<Myhome> {
-
-   static final Config config = new Config(
+  static final Config config = new Config(
       Apikeys.tenantid, Apikeys.clientid, "openid profile offline_access");
 
   final AadOAuth oauth = AadOAuth(config);
@@ -131,15 +130,13 @@ class _MyhomeState extends State<Myhome> {
     }));
   }
 
-   void logout() async {
+  void logout() async {
     try {
       await oauth.logout();
       Navigator.pop(context);
       //showMessage("Logged out", false);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
-
 }
 
 class Choice {

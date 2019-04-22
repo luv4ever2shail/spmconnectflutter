@@ -66,7 +66,6 @@ class DatabaseHelper {
     return reportDatabase;
   }
 
-
   void _createDb(Database db, int newVersion) async {
     await db.execute(
         'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
