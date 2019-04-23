@@ -1,8 +1,7 @@
 import 'package:intl/intl.dart';
 
 class DateTimeUtils {
-  
-static String get currentDay {
+  static String get currentDay {
     DateTime now = DateTime.now();
     return DateFormat('EEEE').format(now);
   }
@@ -16,5 +15,4 @@ static String get currentDay {
     DateTime now = DateTime.now();
     return DateFormat('d').format(now);
   }
-
 }

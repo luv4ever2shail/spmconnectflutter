@@ -110,5 +110,4 @@ class _ReportDetail3 extends State<ReportDetail3> {
   void updateCustcomments() {
     report.custcomments = custcommentsController.text;
   }
-
 }

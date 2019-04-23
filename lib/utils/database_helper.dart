@@ -10,6 +10,7 @@ class DatabaseHelper {
   static DatabaseHelper _databaseHelper;
   static Database _database; // Singleton Database
 
+// ** Table column names for Report
   String reportTable = 'servicerpt_tbl';
   String colId = 'id';
   String colProjectno = 'projectno';
@@ -26,7 +27,13 @@ class DatabaseHelper {
   String colcustemail = 'custemail';
   String colcustcontact = 'custcontact';
   String colreportmapid = 'reportmapid';
+  String colspare1 = 'spare1';
+  String colspare2 = 'spare2';
+  String colspare3 = 'spare3';
+  String colspare4 = 'spare4';
+  String colspare5 = 'spare5';
 
+// ** Table column names for tasks
   String taskTable = 'tasks_tbl';
   String coltaskId = 'id';
   String coltaskreportid = 'reportid';
@@ -36,6 +43,11 @@ class DatabaseHelper {
   String coltaskWork = 'workperformed';
   String coltaskHours = 'hours';
   String coltaskDate = 'date';
+  String coltaskspare1 = 'taskspare1';
+  String coltaskspare2 = 'taskspare2';
+  String coltaskspare3 = 'taskspare3';
+  String coltaskspare4 = 'taskspare4';
+  String coltaskspare5 = 'taskspare5';
 
   DatabaseHelper._createInstance();
 
@@ -66,15 +78,16 @@ class DatabaseHelper {
     return reportDatabase;
   }
 
-
   void _createDb(Database db, int newVersion) async {
     await db.execute(
         'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
         '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
-        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER)');
+        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER, '
+        '$colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
     await db.execute(
         'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid INTEGER, '
-        '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT)');
+        '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,'
+        '$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT, $coltaskspare4 TEXT, $coltaskspare5 TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database

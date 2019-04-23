@@ -55,7 +55,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
-
   final formats = {
     InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
     InputType.date: DateFormat('yyyy-MM-dd'),
@@ -78,7 +77,8 @@ class _ReportDetail2 extends State<ReportDetail2> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            _save(reportid);
+            //_save(reportid);
+            movetolastscreen();
           },
         ),
       ),
@@ -91,7 +91,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 textInputAction: TextInputAction.next,
-                autofocus: true,
                 controller: itemController,
                 style: textStyle,
                 onEditingComplete: () =>
@@ -199,6 +198,13 @@ class _ReportDetail2 extends State<ReportDetail2> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.save),
+        tooltip: "Save Task Performed",
+        onPressed: () {
+          _save(reportid);
+        },
       ),
     );
   }

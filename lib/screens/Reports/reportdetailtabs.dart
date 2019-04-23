@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
-import 'package:spmconnectapp/screens/report_detail_pg1.dart';
-import 'package:spmconnectapp/screens/task_list.dart';
-import 'package:spmconnectapp/screens/report_detail_pg3.dart';
-import 'package:spmconnectapp/screens/report_detail_pg4.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg1.dart';
+import 'package:spmconnectapp/screens/Reports/task_list.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg3.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg4.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:intl/intl.dart';
 
@@ -27,45 +27,18 @@ class _ReportDetTabState extends State<ReportDetTab> {
   PageController controller = PageController();
   int _selectedTab = 0;
 
-  Future<bool> _onWillPop() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-                title: new Text('Save Changes?'),
-                content: new Text('Do you want to save changes?'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      movetolastscreen(false);
-                    },
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      movetolastscreen(true);
-                    },
-                    child: new Text('Yes'),
-                  ),
-                ],
-              ),
-        ) ??
-        false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () {
+        movetolastscreen();
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle + ' - ' + report.reportmapid.toString()),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              _onWillPop();
-            },
+            onPressed: movetolastscreen,
           ),
         ),
         body: PageView(
@@ -138,11 +111,8 @@ class _ReportDetTabState extends State<ReportDetTab> {
     );
   }
 
-  void movetolastscreen(bool save) {
-    if (save) _save();
-    else{
-      
-    }
+  void movetolastscreen() {
+    _save();
     Navigator.pop(context, true);
   }
 

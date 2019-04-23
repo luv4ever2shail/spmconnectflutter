@@ -3,7 +3,6 @@
 
 // import 'package:flutter/material.dart';
 
-
 // class Testpage extends StatefulWidget {
 //   @override
 //   _TestpageState createState() => new _TestpageState();
@@ -53,9 +52,7 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
-
 
 class Testpage extends StatefulWidget {
   @override
@@ -85,10 +82,11 @@ class _TestpageState extends State<Testpage>
 
   void _showPicker() {
     showDatePicker(
-        context: context,
-        firstDate: new DateTime(1900),
-        initialDate: new DateTime(2018),
-        lastDate: DateTime.now()).then((DateTime dt) {
+            context: context,
+            firstDate: new DateTime(1900),
+            initialDate: new DateTime(2018),
+            lastDate: DateTime.now())
+        .then((DateTime dt) {
       selectedYear = dt.year;
       calculateAge();
     });
@@ -172,7 +170,7 @@ class _TestpageState extends State<Testpage>
 //         new SizedBox(
 //           height: 30.0,
 //         ),
-        
+
 //         selected != null
 //             ? new Text(
 //                 new DateFormat('yyyy-MMMM-dd').format(selected),

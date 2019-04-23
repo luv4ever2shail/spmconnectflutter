@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:spmconnectapp/screens/report_detail_pg2.dart';
+import 'package:spmconnectapp/screens/Reports/report_detail_pg2.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
