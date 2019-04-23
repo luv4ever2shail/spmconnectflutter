@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
 // TODO: sharepoint  create a new list
 // TODO: GEO Location for the plant location
 // TODO: Design screen to update and receive data off sharepoint
+
 ///// TODO: Arrange screen files and group them accordingly
 ///// TODO: Auto login and put the logout button under privacy list view
 ///// TODO: Save floating button on task list
