@@ -69,6 +69,7 @@ class _ReportDetail extends State<ReportDetail> {
     technameController.text = report.techname;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(

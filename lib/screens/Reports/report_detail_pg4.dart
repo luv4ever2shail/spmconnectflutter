@@ -58,6 +58,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custcontactController.text = report.custcontact;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(

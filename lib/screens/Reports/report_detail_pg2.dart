@@ -72,6 +72,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
     hoursController.text = task.hours;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(appBarTitle),
         leading: IconButton(
