@@ -143,7 +143,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     RaisedButton(
                       child: Text('Logout'),
                       onPressed: removeSharepointToken,
-                    )
+                    ),
                   ],
                 )),
           ],
@@ -154,7 +154,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void showError(dynamic ex) {
     //showMessage(ex.toString(), false);
-    showMessage('Login Interrupted by the user.', false);
+    //showMessage('Login Interrupted by the user.', false);
   }
 
   void showMessage(String text, bool login) {
