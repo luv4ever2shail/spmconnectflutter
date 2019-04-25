@@ -197,7 +197,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       //showMessage("Logged in successfully, your access token: $accessToken",true);
       print('$accessToken');
       if (accessToken.length > 0) {
-        new Future.delayed(new Duration(seconds: 2), () {
+        new Future.delayed(new Duration(seconds: 1), () {
           setState(() {
             _saving = false;
             navigateToDetail();

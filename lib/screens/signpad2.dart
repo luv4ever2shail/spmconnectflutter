@@ -162,27 +162,30 @@ class _ColorPickerButtonState extends State<ColorPickerButton> {
         tooltip: widget._background
             ? 'Change background color'
             : 'Change draw color',
-        onPressed: _pickColor);
+        onPressed: _pickcolor);
   }
 
-  void _pickColor() {
+  void _pickcolor() {
     Color pickerColor = _color;
-    Navigator.of(context)
-        .push(new MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (BuildContext context) {
-              return new Scaffold(
-                  appBar: new AppBar(
-                    title: const Text('Pick color'),
-                  ),
-                  body: new Container(
-                      alignment: Alignment.center,
-                      child: new ColorPicker(
-                        pickerColor: pickerColor,
-                        onColorChanged: (Color c) => pickerColor = c,
-                      )));
-            }))
-        .then((_) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.all(0.0),
+          contentPadding: const EdgeInsets.all(0.0),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: pickerColor,
+              onColorChanged: (Color c) => pickerColor = c,
+              colorPickerWidth: 1000.0,
+              pickerAreaHeightPercent: 0.8,
+              enableAlpha: true,
+              enableLabel: true,
+            ),
+          ),
+        );
+      },
+    ).then((_) {
       setState(() {
         _color = pickerColor;
       });
