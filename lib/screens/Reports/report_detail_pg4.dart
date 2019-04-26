@@ -3,6 +3,8 @@ import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/signpad2.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:printing/printing.dart';
+import 'package:spmconnectapp/screens/pdf.dart';
 
 class ReportDetail4 extends StatefulWidget {
   final Report report;
@@ -57,6 +59,8 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepController.text = report.custrep;
     custemailController.text = report.custemail;
     custcontactController.text = report.custcontact;
+
+    MyPdf myPdf = new MyPdf(report);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -136,7 +140,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
               padding:
                   EdgeInsets.only(top: 15.0, bottom: 15.0, left: 40, right: 40),
               child: Material(
-                elevation: 5.0,
+                elevation: 20.0,
                 borderRadius: BorderRadius.circular(30.0),
                 color: Colors.blue,
                 child: MaterialButton(
@@ -172,6 +176,22 @@ class _ReportDetail4 extends State<ReportDetail4> {
                 ),
               ),
             ),
+            Center(
+              child: RaisedButton(
+                onPressed: () {
+                  Printing.layoutPdf(onLayout: myPdf.buildPdf);
+                },
+                elevation: 20.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Print Report',
+                  textScaleFactor: 1.5,
+                ),
+                color: Colors.amber,
+              ),
+            )
           ],
         ),
       ),

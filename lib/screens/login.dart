@@ -136,14 +136,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       ),
                     ),
                     SizedBox(height: 40.0),
-                    RaisedButton(
-                      child: Text('GetData'),
-                      onPressed: getSharepointToken,
-                    ),
-                    RaisedButton(
-                      child: Text('Logout'),
-                      onPressed: removeSharepointToken,
-                    ),
+                    // RaisedButton(
+                    //   child: Text('GetData'),
+                    //   onPressed: getSharepointToken,
+                    // ),
+                    // RaisedButton(
+                    //   child: Text('Logout'),
+                    //   onPressed: removeSharepointToken,
+                    // ),
                   ],
                 )),
           ],
