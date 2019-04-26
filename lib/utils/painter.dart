@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/widgets.dart' hide Image;
 import 'dart:ui';
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+
+const directoryName = 'Signature';
 
 class Painter extends StatefulWidget {
   final PainterController painterController;
@@ -156,12 +160,40 @@ class PictureDetails {
 
   const PictureDetails(this.picture, this.width, this.height);
 
+  String formattedDate(String reportno) {
+    DateTime dateTime = DateTime.now();
+    String dateTimeString = '$reportno' +
+        dateTime.year.toString() +
+        dateTime.month.toString() +
+        dateTime.day.toString() +
+        dateTime.hour.toString() +
+        ':' +
+        dateTime.minute.toString() +
+        ':' +
+        dateTime.second.toString() +
+        ':' +
+        dateTime.millisecond.toString() +
+        ':' +
+        dateTime.microsecond.toString();
+    return dateTimeString;
+  }
+
+
   Future<Image> toImage() {
     return picture.toImage(width, height);
   }
 
-  Future<Uint8List> toPNG() async {
+  Future<Uint8List> toPNG(String reportno) async {
     final image = await toImage();
+
+    var pngBytes = await image.toByteData(format: ImageByteFormat.png);
+    // Use plugin [path_provider] to export image to storage
+    Directory directory = await getExternalStorageDirectory();
+    String path = directory.path;
+    print(path);
+    await Directory('$path/$directoryName').create(recursive: true);
+    File('$path/$directoryName/$reportno.png')
+        .writeAsBytesSync(pngBytes.buffer.asInt8List());
     return (await image.toByteData(format: ImageByteFormat.png))
         .buffer
         .asUint8List();

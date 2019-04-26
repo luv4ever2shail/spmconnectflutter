@@ -4,14 +4,18 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:spmconnectapp/utils/painter.dart';
 
 class Signpad2 extends StatefulWidget {
+  final String reportno;
+
+  Signpad2(this.reportno);
   @override
-  _Signpad2State createState() => new _Signpad2State();
+  _Signpad2State createState() => new _Signpad2State(reportno);
 }
 
 class _Signpad2State extends State<Signpad2> {
   bool _finished;
   PainterController _controller;
-
+  String reportno;
+  _Signpad2State(this.reportno);
   @override
   void initState() {
     super.initState();
@@ -86,7 +90,7 @@ class _Signpad2State extends State<Signpad2> {
         body: new Container(
             alignment: Alignment.center,
             child: new FutureBuilder<Uint8List>(
-              future: picture.toPNG(),
+              future: picture.toPNG('1001'),
               builder:
                   (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
                 switch (snapshot.connectionState) {

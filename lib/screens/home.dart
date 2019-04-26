@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
+import 'package:spmconnectapp/utils/permissions.dart';
 
 class Myhome extends StatefulWidget {
   @override
@@ -62,9 +63,10 @@ class _MyhomeState extends State<Myhome> {
               onSelected: (choices) {
                 if (choices.title == 'Privacy') {
                   navigateToprivacy();
-                } else {
-                  //logout
+                } else if (choices.title == 'Logout') {
                   logout();
+                } else {
+                  navigateToPermissions();
                 }
               },
               itemBuilder: (BuildContext context) {
@@ -130,6 +132,12 @@ class _MyhomeState extends State<Myhome> {
     }));
   }
 
+  void navigateToPermissions() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return MyPermissions();
+    }));
+  }
+
   void logout() async {
     try {
       await oauth.logout();
@@ -148,4 +156,5 @@ class Choice {
 const List<Choice> choices = const <Choice>[
   const Choice(title: 'Privacy'),
   const Choice(title: 'Logout'),
+  const Choice(title: 'Permissions'),
 ];
