@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 ///// TODO: complete api key list
 ///// TODO: arrange sharepoint access token retrieval method
 ///// TODO: figure out similar way to store access token from sharepoint as the add auth
-// TODO: save as png signature pad
+///// TODO: save as png signature pad
 ///// TODO: create extra columns as backup on sql database
 ///// TODO: Delete tasks for not save report (created new and never got saved but created tasks for it.) ** Get rid of the dialog box
 ///// TODO: Pull to refresh

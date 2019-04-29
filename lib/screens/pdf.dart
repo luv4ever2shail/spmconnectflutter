@@ -42,7 +42,7 @@ class MyPdf {
                         mainAxisAlignment: Pdf.MainAxisAlignment.spaceBetween,
                         children: <Pdf.Widget>[
                           Pdf.Text('SPM Service Report', textScaleFactor: 2),
-                          Pdf.PdfLogo()
+                          Pdf.PdfLogo(),
                         ])),
                 Pdf.Header(level: 1, text: 'Report Details'),
                 Pdf.Paragraph(
