@@ -19,11 +19,15 @@ class MyLoginPage extends StatefulWidget {
 class _MyLoginPageState extends State<MyLoginPage> {
   initState() {
     super.initState();
-    //login();
+    login();
   }
 
   static final Config config = new Config(
-      Apikeys.tenantid, Apikeys.clientid, "openid profile offline_access");
+    Apikeys.tenantid,
+    Apikeys.clientid,
+    "openid profile offline_access",
+    Apikeys.redirectUrl,
+  );
 
   final AadOAuth oauth = AadOAuth(config);
 
@@ -37,11 +41,15 @@ class _MyLoginPageState extends State<MyLoginPage> {
   final Sharepointauth restapi = Sharepointauth(_config);
 
   bool _saving = false;
+  String accessToken;
 
   @override
   Widget build(BuildContext context) {
     // adjust window size for browser login
-    oauth.setWebViewScreenSize(MediaQuery.of(context).size);
+    var screenSize = MediaQuery.of(context).size;
+    var rectSize =
+        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+    oauth.setWebViewScreenSize(rectSize);
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: ModalProgressHUD(
@@ -169,7 +177,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 Navigator.pop(context);
                 if (login) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Myhome();
+                    return Myhome(accessToken);
                   }));
                 }
               })
@@ -193,9 +201,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
         _saving = true;
       });
       await oauth.login();
-      String accessToken = await oauth.getAccessToken();
+      accessToken = await oauth.getAccessToken();
       //showMessage("Logged in successfully, your access token: $accessToken",true);
-      print('$accessToken');
+      print("Logged in successfully, your access token: $accessToken");
+
       if (accessToken.length > 0) {
         new Future.delayed(new Duration(seconds: 1), () {
           setState(() {
@@ -219,7 +228,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         _saving = true;
       });
       await oauth.logout();
-      new Future.delayed(new Duration(seconds: 2), () {
+      new Future.delayed(new Duration(seconds: 1), () {
         setState(() {
           _saving = false;
         });
@@ -232,7 +241,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void navigateToDetail() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Myhome();
+      return Myhome(accessToken);
     }));
   }
 }

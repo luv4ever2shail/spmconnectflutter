@@ -1,24 +1,47 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/models/users.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
 import 'package:spmconnectapp/utils/permissions.dart';
 
 class Myhome extends StatefulWidget {
+  final String accessToken;
+
+  Myhome(this.accessToken);
   @override
   State<StatefulWidget> createState() {
-    return _MyhomeState();
+    return _MyhomeState(this.accessToken);
   }
 }
 
 class _MyhomeState extends State<Myhome> {
-  static final Config config = new Config(
-      Apikeys.tenantid, Apikeys.clientid, "openid profile offline_access");
+  String accessToken;
+  _MyhomeState(this.accessToken);
+  Users _users;
+  Image image;
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo(accessToken);
+  }
+
+  static final Config config = new Config(Apikeys.tenantid, Apikeys.clientid,
+      "openid profile offline_access", Apikeys.redirectUrl);
 
   final AadOAuth oauth = AadOAuth(config);
+  var drawerIcons = [
+    Icon(Icons.person),
+    Icon(Icons.security),
+    Icon(Icons.lock),
+    Icon(Icons.exit_to_app)
+  ];
+  var drawerText = ["Profile", "Privacy", "Permissions", "Log Out"];
 
   final barColor = const Color(0xFF192A56);
   final bgColor = const Color(0xFFEAF0F1);
@@ -49,6 +72,11 @@ class _MyhomeState extends State<Myhome> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        drawer: _users == null
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : _getMailAccountDrawerr(),
         backgroundColor: bgColor,
         appBar: AppBar(
           title: Center(
@@ -57,28 +85,6 @@ class _MyhomeState extends State<Myhome> {
             style: TextStyle(fontSize: 35.0, fontStyle: FontStyle.italic),
           )),
           backgroundColor: barColor,
-          leading: Container(),
-          actions: <Widget>[
-            PopupMenuButton<Choice>(
-              onSelected: (choices) {
-                if (choices.title == 'Privacy') {
-                  navigateToprivacy();
-                } else if (choices.title == 'Logout') {
-                  logout();
-                } else {
-                  navigateToPermissions();
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return choices.map((Choice choice) {
-                  return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Text(choice.title),
-                  );
-                }).toList();
-              },
-            ),
-          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -106,7 +112,7 @@ class _MyhomeState extends State<Myhome> {
                       ),
                       title: Text(
                         'Service Reports',
-                        textScaleFactor: 2.5,
+                        textScaleFactor: 2.0,
                       ),
                       subtitle: Text(' - Access all you service reports.'),
                     ),
@@ -118,6 +124,67 @@ class _MyhomeState extends State<Myhome> {
         ),
       ),
     );
+  }
+
+  Drawer _getMailAccountDrawerr() {
+    Text email = new Text(
+      _users.mail == null ? '' : _users.mail,
+      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
+    );
+
+    Text name = new Text(
+      _users.displayName == null ? '' : _users.displayName,
+      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
+    );
+
+    return Drawer(
+        child: Column(
+      children: <Widget>[
+        UserAccountsDrawerHeader(
+          decoration: BoxDecoration(color: barColor),
+          accountName: name,
+          accountEmail: email,
+          currentAccountPicture: image == null
+              ? Icon(
+                  Icons.account_circle,
+                  size: 60.0,
+                  color: Colors.white,
+                )
+              : ImageIcon(
+                  AssetImage('assets/officelogo.png'),
+                  size: 35,
+                  color: Colors.deepOrange,
+                ),
+        ),
+        Expanded(
+          flex: 2,
+          child: ListView.builder(
+              padding: EdgeInsets.only(top: 0.0),
+              itemCount: drawerText.length,
+              itemBuilder: (context, position) {
+                return ListTile(
+                  leading: drawerIcons[position],
+                  title: Text(drawerText[position],
+                      style: TextStyle(fontSize: 15.0)),
+                  onTap: () {
+                    this.setState(() {
+                      Navigator.pop(context);
+                      if (drawerText[position] == "Profile") {
+                        print('profile');
+                      } else if (drawerText[position] == 'Privacy') {
+                        navigateToprivacy();
+                      } else if (drawerText[position] == 'Permissions') {
+                        navigateToPermissions();
+                      } else if (drawerText[position] == 'Log Out') {
+                        logout();
+                      }
+                    });
+                  },
+                );
+              }),
+        )
+      ],
+    ));
   }
 
   void navigateToDetail() async {
@@ -145,16 +212,39 @@ class _MyhomeState extends State<Myhome> {
       //showMessage("Logged out", false);
     } catch (e) {}
   }
-}
 
-class Choice {
-  const Choice({this.title, this.icon});
-  final String title;
-  final IconData icon;
-}
+  Future getUserInfo(String accesstoken) async {
+    Future.delayed(new Duration(seconds: 5), () {});
+    try {
+      Response response = await get(
+        Uri.encodeFull("https://graph.microsoft.com/v1.0/me"),
+        headers: {
+          "Authorization": "Bearer " + accesstoken,
+          "Accept": "application/json"
+        },
+      );
+      var data = json.decode(response.body);
+      _users = Users.fromJson(data);
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
 
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Privacy'),
-  const Choice(title: 'Logout'),
-  const Choice(title: 'Permissions'),
-];
+  Future getUserPic(String accesstoken) async {
+    try {
+      Response response = await get(
+        Uri.encodeFull("https://graph.microsoft.com/v1.0/me/photo/\$value"),
+        headers: {
+          "Authorization": "Bearer " + accesstoken,
+          "Accept": "application/json"
+        },
+      );
+
+      image = json.decode(response.body);
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
+}
