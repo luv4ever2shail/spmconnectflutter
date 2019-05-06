@@ -24,6 +24,8 @@ class _ReportDetail2 extends State<ReportDetail2> {
   String appBarTitle;
   int reportid;
   Tasks task;
+  DateTime _starttime;
+  DateTime _endtime;
 
   FocusNode timeFocusNode;
   FocusNode wrkperfrmFocusNode;
@@ -52,6 +54,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   TextEditingController endtimeController = TextEditingController();
   TextEditingController workperfrmController = TextEditingController();
   MaskedTextController hoursController = MaskedTextController(mask: '00:00');
+  bool _validate = false;
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
@@ -123,6 +126,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                       ),
                       onChanged: (value) {
                         setState(() {
+                          _starttime = value;
                           updateStartTime();
                         });
                       },
@@ -143,6 +147,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                       ),
                       onChanged: (dt) {
                         setState(() {
+                          _endtime = dt;
                           updateEndTime();
                         });
                       },
@@ -180,6 +185,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                enabled: false,
                 controller: hoursController,
                 keyboardType: TextInputType.numberWithOptions(),
                 style: textStyle,
@@ -192,6 +198,8 @@ class _ReportDetail2 extends State<ReportDetail2> {
                 decoration: InputDecoration(
                     labelText: 'Hours',
                     labelStyle: textStyle,
+                    errorText:
+                        _validate == false ? 'Hours Can\'t Be Empty' : null,
                     hintText: '00\:00',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
@@ -273,10 +281,43 @@ class _ReportDetail2 extends State<ReportDetail2> {
   // Update the customer namme of Note object
   void updateStartTime() {
     task.starttime = starttimeController.text;
+    calculateHours();
   }
 
   void updateEndTime() {
     task.endtime = endtimeController.text;
+    calculateHours();
+  }
+
+  void calculateHours() {
+    if (_starttime != null && _endtime != null) {
+      final difference = _endtime.difference(_starttime).inMinutes;
+      int hours = difference ~/ 60;
+      int minutes = difference % 60;
+      print('minutes $minutes');
+      print('hours $hours');
+
+      String _hours = hours.toString();
+      String _mins = minutes.toString();
+      if (hours >= 0 && hours < 10) {
+        _hours = '0' + hours.toString();
+      }
+      if (minutes > 0 && minutes < 10) {
+        _mins = '0' + minutes.toString();
+      }
+      if (minutes == 0) {
+        _mins = '00';
+      }
+      if (hours <= 0) {
+        _hours = '';
+        _mins = '';
+        _validate = true;
+      } else {
+        _validate = false;
+      }
+      hoursController.text = '$_hours:$_mins';
+      updateHours();
+    }
   }
 
   // Update the plant location namme of Note object
