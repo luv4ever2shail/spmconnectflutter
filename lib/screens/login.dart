@@ -203,8 +203,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       await oauth.login();
       accessToken = await oauth.getAccessToken();
       //showMessage("Logged in successfully, your access token: $accessToken",true);
-      print("Logged in successfully, your access token: $accessToken");
-
+      //print("Logged in successfully, your access token: $accessToken");
       if (accessToken.length > 0) {
         new Future.delayed(new Duration(seconds: 1), () {
           setState(() {

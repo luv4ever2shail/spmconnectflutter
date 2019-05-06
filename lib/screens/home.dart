@@ -9,6 +9,7 @@ import 'package:spmconnectapp/models/users.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
 import 'package:spmconnectapp/utils/permissions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Myhome extends StatefulWidget {
   final String accessToken;
@@ -24,11 +25,14 @@ class _MyhomeState extends State<Myhome> {
   String accessToken;
   _MyhomeState(this.accessToken);
   Users _users;
-  Image image;
+  NetworkImage image;
+  String sfName;
+  String sfEmail;
   @override
   void initState() {
     super.initState();
     getUserInfo(accessToken);
+    getUserInfoSF();
   }
 
   static final Config config = new Config(Apikeys.tenantid, Apikeys.clientid,
@@ -73,9 +77,11 @@ class _MyhomeState extends State<Myhome> {
       onWillPop: _onWillPop,
       child: Scaffold(
         drawer: _users == null
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
+            ? sfEmail == null && sfName == null
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : _getMailAccountDrawerr()
             : _getMailAccountDrawerr(),
         backgroundColor: bgColor,
         appBar: AppBar(
@@ -128,12 +134,12 @@ class _MyhomeState extends State<Myhome> {
 
   Drawer _getMailAccountDrawerr() {
     Text email = new Text(
-      _users.mail == null ? '' : _users.mail,
+      sfEmail,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
     Text name = new Text(
-      _users.displayName == null ? '' : _users.displayName,
+      sfName,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
@@ -213,8 +219,27 @@ class _MyhomeState extends State<Myhome> {
     } catch (e) {}
   }
 
+  storeUserInfoToSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('Name', _users.displayName);
+    prefs.setString('Email', _users.mail);
+  }
+
+  removeUserInfoFromSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Remove String
+    prefs.remove("Name");
+    prefs.remove("Email");
+  }
+
+  getUserInfoSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    sfName = prefs.getString('Name');
+    sfEmail = prefs.getString('Email');
+    setState(() {});
+  }
+
   Future getUserInfo(String accesstoken) async {
-    Future.delayed(new Duration(seconds: 5), () {});
     try {
       Response response = await get(
         Uri.encodeFull("https://graph.microsoft.com/v1.0/me"),
@@ -226,6 +251,8 @@ class _MyhomeState extends State<Myhome> {
       var data = json.decode(response.body);
       _users = Users.fromJson(data);
       setState(() {});
+      removeUserInfoFromSF();
+      storeUserInfoToSF();
     } catch (e) {
       print(e);
     }
@@ -241,7 +268,7 @@ class _MyhomeState extends State<Myhome> {
         },
       );
 
-      image = json.decode(response.body);
+      image = NetworkImage(response.body);
       setState(() {});
     } catch (e) {
       print(e);
