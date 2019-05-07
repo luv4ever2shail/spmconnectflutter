@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:sharepoint_auth/model/config.dart';
-import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'dart:async';
 
 class MyLoginPage extends StatefulWidget {
@@ -19,7 +17,7 @@ class MyLoginPage extends StatefulWidget {
 class _MyLoginPageState extends State<MyLoginPage> {
   initState() {
     super.initState();
-    login();
+    //login();
   }
 
   static final Config config = new Config(
@@ -30,15 +28,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
   );
 
   final AadOAuth oauth = AadOAuth(config);
-
-  static final SharepointConfig _config = new SharepointConfig(
-      Apikeys.sharepointClientId,
-      Apikeys.sharepointClientSecret,
-      Apikeys.sharepointResource,
-      Apikeys.sharepointSite,
-      Apikeys.sharepointTenanttId);
-
-  final Sharepointauth restapi = Sharepointauth(_config);
 
   bool _saving = false;
   String accessToken;
@@ -143,15 +132,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 40.0),
-                    // RaisedButton(
-                    //   child: Text('GetData'),
-                    //   onPressed: getSharepointToken,
-                    // ),
-                    // RaisedButton(
-                    //   child: Text('Logout'),
-                    //   onPressed: removeSharepointToken,
-                    // ),
                   ],
                 )),
           ],
@@ -183,16 +163,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
               })
         ]);
     showDialog(context: context, builder: (BuildContext context) => alert);
-  }
-
-  void getSharepointToken() async {
-    await restapi.login();
-    String accessToken = await restapi.getAccessToken();
-    print('Access Token Sharepoint $accessToken');
-  }
-
-  void removeSharepointToken() async {
-    await restapi.logout();
   }
 
   void login() async {

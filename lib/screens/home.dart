@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/models/users.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
+import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
 import 'package:spmconnectapp/utils/permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,9 +44,16 @@ class _MyhomeState extends State<Myhome> {
     Icon(Icons.person),
     Icon(Icons.security),
     Icon(Icons.lock),
+    Icon(Icons.sync),
     Icon(Icons.exit_to_app)
   ];
-  var drawerText = ["Profile", "Privacy", "Permissions", "Log Out"];
+  var drawerText = [
+    "Profile",
+    "Privacy",
+    "Permissions",
+    "Sync Data",
+    "Log Out"
+  ];
 
   final barColor = const Color(0xFF192A56);
   final bgColor = const Color(0xFFEAF0F1);
@@ -103,7 +111,7 @@ class _MyhomeState extends State<Myhome> {
                 borderRadius: BorderRadius.all(Radius.circular(5)),
                 splashColor: Colors.deepOrange,
                 onTap: () {
-                  navigateToDetail();
+                  navigateToReports();
                 },
                 child: new Card(
                   margin: EdgeInsets.all(10.0),
@@ -185,6 +193,8 @@ class _MyhomeState extends State<Myhome> {
                         navigateToprivacy();
                       } else if (drawerText[position] == 'Permissions') {
                         navigateToPermissions();
+                      } else if (drawerText[position] == 'Sync Data') {
+                        navigateToReportsUnpublished();
                       } else if (drawerText[position] == 'Log Out') {
                         logout();
                       }
@@ -197,9 +207,15 @@ class _MyhomeState extends State<Myhome> {
     ));
   }
 
-  void navigateToDetail() async {
+  void navigateToReports() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportList();
+    }));
+  }
+
+  void navigateToReportsUnpublished() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ReportListUnpublished();
     }));
   }
 

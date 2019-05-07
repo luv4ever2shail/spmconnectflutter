@@ -232,4 +232,29 @@ class DatabaseHelper {
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }
+
+  //*! Sharepoint REST API QUERIES
+
+  Future<List<Report>> getReportListUnpublished() async {
+    var reportMapList =
+        await getReportMapListUnpublished(); // Get 'Map List' from database
+    int count =
+        reportMapList.length; // Count the number of map entries in db table
+
+    List<Report> reportList = List<Report>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      reportList.add(Report.fromMapObject(reportMapList[i]));
+    }
+
+    return reportList;
+  }
+
+  Future<List<Map<String, dynamic>>> getReportMapListUnpublished() async {
+    Database db = await this.database;
+    int published = 0;
+    var result = await db.rawQuery(
+        'SELECT * FROM $reportTable where $colreportpublished = $published order by $colreportmapid ASC');
+    return result;
+  }
 }
