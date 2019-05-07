@@ -45,7 +45,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
     timeFocusNode.dispose();
     wrkperfrmFocusNode.dispose();
     hoursFocusNode.dispose();
-
     super.dispose();
   }
 
@@ -55,6 +54,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   TextEditingController workperfrmController = TextEditingController();
   MaskedTextController hoursController = MaskedTextController(mask: '00:00');
   bool _validate = false;
+  bool _hrsEnable = false;
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
@@ -185,7 +185,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                enabled: false,
+                enabled: _hrsEnable,
                 controller: hoursController,
                 keyboardType: TextInputType.numberWithOptions(),
                 style: textStyle,
@@ -199,7 +199,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                     labelText: 'Hours',
                     labelStyle: textStyle,
                     errorText:
-                        _validate == false ? 'Hours Can\'t Be Empty' : null,
+                        _validate ? 'Hours can\'t be zero or less ' : null,
                     hintText: '00\:00',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
@@ -223,30 +223,32 @@ class _ReportDetail2 extends State<ReportDetail2> {
   }
 
   void _save(int reportid) async {
-    movetolastscreen();
-    task.reportid = reportid;
-    int result = 0;
-    if (task.id != null) {
-      // Case 1: Update operation
-      result = await helper.updateTask(task);
-    } else {
-      // Case 2: Insert Operation
-      if (task.item.length > 0) {
-        task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
-        result = await helper.inserTask(task);
+    if (!(_validate)) {
+      movetolastscreen();
+      task.reportid = reportid;
+      int result = 0;
+      if (task.id != null) {
+        // Case 1: Update operation
+        result = await helper.updateTask(task);
+      } else {
+        // Case 2: Insert Operation
+        if (task.item.length > 0) {
+          task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+          result = await helper.inserTask(task);
+        }
       }
-    }
 
-    if (result != 0) {
-      // Success
-      String message = 'Task added To ' + reportid.toString();
-      if (appBarTitle == 'Edit Item')
-        message = 'Task Updated To ' + reportid.toString();
-      _showAlertDialog('SPM Connect', message);
-    } else {
-      // Failure
-      // _showAlertDialog(
-      //     'SPM Connect', 'Problem Saving Task To ' + reportid.toString());
+      if (result != 0) {
+        // Success
+        String message = 'Task added To ' + reportid.toString();
+        if (appBarTitle == 'Edit Item')
+          message = 'Task Updated To ' + reportid.toString();
+        _showAlertDialog('SPM Connect', message);
+      } else {
+        // Failure
+        // _showAlertDialog(
+        //     'SPM Connect', 'Problem Saving Task To ' + reportid.toString());
+      }
     }
   }
 
@@ -294,9 +296,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
       final difference = _endtime.difference(_starttime).inMinutes;
       int hours = difference ~/ 60;
       int minutes = difference % 60;
-      print('minutes $minutes');
-      print('hours $hours');
-
       String _hours = hours.toString();
       String _mins = minutes.toString();
       if (hours >= 0 && hours < 10) {
@@ -309,11 +308,14 @@ class _ReportDetail2 extends State<ReportDetail2> {
         _mins = '00';
       }
       if (hours <= 0) {
-        _hours = '';
-        _mins = '';
+        _hours = '00';
+      }
+      if (minutes == 0 && hours == 0) {
+        _hrsEnable = true;
         _validate = true;
       } else {
         _validate = false;
+        _hrsEnable = false;
       }
       hoursController.text = '$_hours:$_mins';
       updateHours();

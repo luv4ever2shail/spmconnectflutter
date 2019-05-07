@@ -25,7 +25,7 @@ class _MyhomeState extends State<Myhome> {
   String accessToken;
   _MyhomeState(this.accessToken);
   Users _users;
-  NetworkImage image;
+  Image image;
   String sfName;
   String sfEmail;
   @override
@@ -134,12 +134,12 @@ class _MyhomeState extends State<Myhome> {
 
   Drawer _getMailAccountDrawerr() {
     Text email = new Text(
-      sfEmail,
+      sfEmail == null ? '' : sfEmail,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
     Text name = new Text(
-      sfName,
+      sfName == null ? '' : sfName,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
@@ -161,6 +161,8 @@ class _MyhomeState extends State<Myhome> {
                   size: 35,
                   color: Colors.deepOrange,
                 ),
+          onDetailsPressed: () => showDialog(
+              context: context, builder: (context) => _userprofile(context)),
         ),
         Expanded(
           flex: 2,
@@ -176,7 +178,9 @@ class _MyhomeState extends State<Myhome> {
                     this.setState(() {
                       Navigator.pop(context);
                       if (drawerText[position] == "Profile") {
-                        print('profile');
+                        showDialog(
+                            context: context,
+                            builder: (context) => _userprofile(context));
                       } else if (drawerText[position] == 'Privacy') {
                         navigateToprivacy();
                       } else if (drawerText[position] == 'Permissions') {
@@ -223,6 +227,10 @@ class _MyhomeState extends State<Myhome> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('Name', _users.displayName);
     prefs.setString('Email', _users.mail);
+    var id = _users.id.split('-');
+    print(id[1]);
+    prefs.setString('Id', id[1]);
+    setState(() {});
   }
 
   removeUserInfoFromSF() async {
@@ -230,6 +238,7 @@ class _MyhomeState extends State<Myhome> {
     //Remove String
     prefs.remove("Name");
     prefs.remove("Email");
+    prefs.remove("Id");
   }
 
   getUserInfoSF() async {
@@ -264,14 +273,54 @@ class _MyhomeState extends State<Myhome> {
         Uri.encodeFull("https://graph.microsoft.com/v1.0/me/photo/\$value"),
         headers: {
           "Authorization": "Bearer " + accesstoken,
-          "Accept": "application/json"
+          "Content-Type": "image/jpg",
         },
       );
-
-      image = NetworkImage(response.body);
-      setState(() {});
+      return response;
     } catch (e) {
       print(e);
     }
+  }
+
+  Widget _userprofile(BuildContext context) {
+    ThemeData localtheme = Theme.of(context);
+    return SimpleDialog(
+      contentPadding: EdgeInsets.zero,
+      elevation: 10.0,
+      title: Text('User Information'),
+      shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(
+                _users.displayName,
+                style: localtheme.textTheme.headline,
+              ),
+              Text(
+                _users.mail,
+                style: localtheme.textTheme.subhead
+                    .copyWith(fontStyle: FontStyle.italic),
+              ),
+              SizedBox(
+                height: 2.0,
+              ),
+              Text(
+                _users.jobtitle == null ? 'Job Title' : _users.jobtitle,
+                style: localtheme.textTheme.subhead
+                    .copyWith(fontStyle: FontStyle.italic),
+              ),
+              Text(
+                _users.id,
+                style: localtheme.textTheme.body2,
+              )
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

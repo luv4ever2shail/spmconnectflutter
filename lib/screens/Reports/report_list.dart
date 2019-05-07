@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
@@ -19,6 +20,13 @@ class _ReportList extends State<ReportList> {
   List<Report> reportmapid;
   int count = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
+  String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserInfoSF();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +70,7 @@ class _ReportList extends State<ReportList> {
             } else {
               mapid = reportmapid[0].reportmapid + 1;
             }
-            navigateToDetail(Report('', '', '', '', '', '', '', '', mapid),
+            navigateToDetail(Report('', '', '', '', '', '', '', '', mapid, 0),
                 'Add New Report');
           },
           tooltip: 'Create New Report',
@@ -233,5 +241,11 @@ class _ReportList extends State<ReportList> {
         );
       },
     );
+  }
+
+  getUserInfoSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('Id');
+    setState(() {});
   }
 }

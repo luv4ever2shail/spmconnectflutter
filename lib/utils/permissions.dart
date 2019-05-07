@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MyPermissions extends StatelessWidget {
+  final barColor = const Color(0xFF192A56);
+  final bgColor = const Color(0xFFEAF0F1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,9 @@ class MyPermissions extends StatelessWidget {
             },
           )
         ],
+        backgroundColor: barColor,
       ),
+      backgroundColor: bgColor,
       body: Center(
         child: ListView(
             children: PermissionGroup.values

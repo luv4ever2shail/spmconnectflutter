@@ -14,6 +14,7 @@ class Report {
   String _custemail;
   String _custcontact;
   int _reportmapid;
+  int _published;
 
   Report(
       this._projectno,
@@ -24,7 +25,8 @@ class Report {
       this._equipment,
       this._techname,
       this._date,
-      this._reportmapid);
+      this._reportmapid,
+      this._published);
 
   Report.withId(
       this._id,
@@ -41,11 +43,14 @@ class Report {
       this._custrep,
       this._custemail,
       this._custcontact,
-      this._reportmapid);
+      this._reportmapid,
+      this._published);
 
   int get id => _id;
 
   int get reportmapid => _reportmapid;
+
+  int get reportpublished => _published;
 
   String get projectno => _projectno;
 
@@ -75,6 +80,10 @@ class Report {
 
   set reportmapid(int newReportid) {
     this._reportmapid = newReportid;
+  }
+
+  set reportpublished(int newPublishid) {
+    this._published = newPublishid;
   }
 
   set projectno(String newTitle) {
@@ -151,6 +160,7 @@ class Report {
     map['custemail'] = _custemail;
     map['custcontact'] = _custcontact;
     map['reportmapid'] = _reportmapid;
+    map['reportpublished'] = _published;
 
     return map;
   }
@@ -172,5 +182,6 @@ class Report {
     this._custemail = map['custemail'];
     this._custcontact = map['custcontact'];
     this._reportmapid = map['reportmapid'];
+    this._published = map['reportpublished'];
   }
 }

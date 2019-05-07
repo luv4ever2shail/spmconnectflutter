@@ -27,6 +27,7 @@ class DatabaseHelper {
   String colcustemail = 'custemail';
   String colcustcontact = 'custcontact';
   String colreportmapid = 'reportmapid';
+  String colreportpublished = 'reportpublished';
   String colspare1 = 'spare1';
   String colspare2 = 'spare2';
   String colspare3 = 'spare3';
@@ -43,6 +44,7 @@ class DatabaseHelper {
   String coltaskWork = 'workperformed';
   String coltaskHours = 'hours';
   String coltaskDate = 'date';
+  String coltaskPublished = 'taskpublished';
   String coltaskspare1 = 'taskspare1';
   String coltaskspare2 = 'taskspare2';
   String coltaskspare3 = 'taskspare3';
@@ -82,11 +84,11 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
         '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
-        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER, '
+        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,$colreportpublished INTEGER, '
         '$colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
     await db.execute(
         'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid INTEGER, '
-        '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,'
+        '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,$coltaskPublished INTEGER,'
         '$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT, $coltaskspare4 TEXT, $coltaskspare5 TEXT)');
   }
 
