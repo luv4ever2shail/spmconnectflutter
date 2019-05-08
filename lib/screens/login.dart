@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:sharepoint_auth/model/config.dart';
-import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'dart:async';
 
 class MyLoginPage extends StatefulWidget {
@@ -17,31 +15,30 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  String loggedin;
   initState() {
     super.initState();
-    //login();
   }
 
   static final Config config = new Config(
-      Apikeys.tenantid, Apikeys.clientid, "openid profile offline_access");
+    Apikeys.tenantid,
+    Apikeys.clientid,
+    "openid profile offline_access",
+    Apikeys.redirectUrl,
+  );
 
   final AadOAuth oauth = AadOAuth(config);
 
-  static final SharepointConfig _config = new SharepointConfig(
-      Apikeys.sharepointClientId,
-      Apikeys.sharepointClientSecret,
-      Apikeys.sharepointResource,
-      Apikeys.sharepointSite,
-      Apikeys.sharepointTenanttId);
-
-  final Sharepointauth restapi = Sharepointauth(_config);
-
   bool _saving = false;
+  String accessToken;
 
   @override
   Widget build(BuildContext context) {
     // adjust window size for browser login
-    oauth.setWebViewScreenSize(MediaQuery.of(context).size);
+    var screenSize = MediaQuery.of(context).size;
+    var rectSize =
+        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+    oauth.setWebViewScreenSize(rectSize);
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
       body: ModalProgressHUD(
@@ -135,15 +132,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 40.0),
-                    RaisedButton(
-                      child: Text('GetData'),
-                      onPressed: getSharepointToken,
-                    ),
-                    RaisedButton(
-                      child: Text('Logout'),
-                      onPressed: removeSharepointToken,
-                    )
                   ],
                 )),
           ],
@@ -154,7 +142,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void showError(dynamic ex) {
     //showMessage(ex.toString(), false);
-    showMessage('Login Interrupted by the user.', false);
+    //showMessage('Login Interrupted by the user.', false);
   }
 
   void showMessage(String text, bool login) {
@@ -169,22 +157,12 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 Navigator.pop(context);
                 if (login) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Myhome();
+                    return Myhome(accessToken);
                   }));
                 }
               })
         ]);
     showDialog(context: context, builder: (BuildContext context) => alert);
-  }
-
-  void getSharepointToken() async {
-    await restapi.login();
-    String accessToken = await restapi.getAccessToken();
-    print('Access Token Sharepoint $accessToken');
-  }
-
-  void removeSharepointToken() async {
-    await restapi.logout();
   }
 
   void login() async {
@@ -193,11 +171,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
         _saving = true;
       });
       await oauth.login();
-      String accessToken = await oauth.getAccessToken();
+      accessToken = await oauth.getAccessToken();
       //showMessage("Logged in successfully, your access token: $accessToken",true);
-      print('$accessToken');
+      //print("Logged in successfully, your access token: $accessToken");
       if (accessToken.length > 0) {
-        new Future.delayed(new Duration(seconds: 2), () {
+        new Future.delayed(new Duration(seconds: 1), () {
           setState(() {
             _saving = false;
             navigateToDetail();
@@ -219,7 +197,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         _saving = true;
       });
       await oauth.logout();
-      new Future.delayed(new Duration(seconds: 2), () {
+      new Future.delayed(new Duration(seconds: 1), () {
         setState(() {
           _saving = false;
         });
@@ -232,7 +210,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   void navigateToDetail() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Myhome();
+      return Myhome(accessToken);
     }));
   }
 }

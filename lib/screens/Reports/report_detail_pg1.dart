@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ReportDetail extends StatefulWidget {
   final Report report;
@@ -16,7 +18,7 @@ class _ReportDetail extends State<ReportDetail> {
   DatabaseHelper helper = DatabaseHelper();
 
   Report report;
-
+  Position _position;
   FocusNode customerFocusNode;
   FocusNode plantlocFocusNode;
   FocusNode contactnameFocusNode;
@@ -33,6 +35,66 @@ class _ReportDetail extends State<ReportDetail> {
     authorbyFocusNode = FocusNode();
     technameFocusNode = FocusNode();
     equipFocusNode = FocusNode();
+
+    _initPlatformState();
+    _onLookupAddressPressed();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> _initPlatformState() async {
+    Position position;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      final Geolocator geolocator = Geolocator()
+        ..forceAndroidLocationManager = true;
+      position = await geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.bestForNavigation);
+    } on PlatformException {
+      position = null;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _position = position;
+    });
+
+    _onLookupAddressPressed();
+  }
+
+  String _placemark = '';
+  Geolocator _geolocator = Geolocator();
+
+  Future<void> _onLookupAddressPressed() async {
+    try {
+      String cordinates =
+          _position.latitude.toString() + ',' + _position.longitude.toString();
+      final List<String> coords = cordinates.split(',');
+      final double latitude = double.parse(coords[0]);
+      final double longitude = double.parse(coords[1]);
+      final List<Placemark> placemarks =
+          await _geolocator.placemarkFromCoordinates(latitude, longitude);
+
+      if (placemarks != null && placemarks.isNotEmpty) {
+        final Placemark pos = placemarks[0];
+        setState(() {
+          _placemark = pos.name +
+              ', ' +
+              pos.subThoroughfare +
+              ' ' +
+              pos.thoroughfare +
+              ', ' +
+              pos.locality +
+              ', ' +
+              pos.administrativeArea +
+              ' ' +
+              pos.postalCode +
+              ', ' +
+              pos.country;
+        });
+      }
+    } catch (e) {}
   }
 
   @override
@@ -56,6 +118,7 @@ class _ReportDetail extends State<ReportDetail> {
   TextEditingController technameController = TextEditingController();
   bool _validate = false;
   _ReportDetail(this.report);
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -69,6 +132,7 @@ class _ReportDetail extends State<ReportDetail> {
     technameController.text = report.techname;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
@@ -128,23 +192,49 @@ class _ReportDetail extends State<ReportDetail> {
 
             // Third Element - Plant Location
             Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: planlocController,
-                style: textStyle,
-                focusNode: plantlocFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(contactnameFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Plant Location Text Field');
-                  updatePlantloc();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Plant Location',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              padding: EdgeInsets.only(top: 15.0, bottom: 0.0),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: planlocController,
+                    style: textStyle,
+                    focusNode: plantlocFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context)
+                        .requestFocus(contactnameFocusNode),
+                    // onChanged: (value) {
+                    //   updatePlantloc();
+                    // },
+                    onTap: () {
+                      _initPlatformState();
+                      planlocController.text = _placemark;
+                      updatePlantloc();
+                    },
+                    decoration: InputDecoration(
+                        labelText: 'Plant Location',
+                        labelStyle: textStyle,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0))),
+                  ),
+                  FutureBuilder<GeolocationStatus>(
+                      future: Geolocator().checkGeolocationPermissionStatus(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<GeolocationStatus> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (snapshot.data == GeolocationStatus.denied) {
+                          return const Text(
+                              'Allow access to the location services for this App using the device settings.');
+                        }
+                        if (_position == null) {
+                          return Text('');
+                        }
+                        return Text(_position.toString());
+                      }),
+                  Text(_placemark),
+                ],
               ),
             ),
 
@@ -159,7 +249,6 @@ class _ReportDetail extends State<ReportDetail> {
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(authorbyFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Contact Name Text Field');
                   updateContactname();
                 },
                 decoration: InputDecoration(
@@ -181,7 +270,6 @@ class _ReportDetail extends State<ReportDetail> {
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(equipFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Authorized by Text Field');
                   updateAuthorby();
                 },
                 decoration: InputDecoration(
@@ -203,7 +291,6 @@ class _ReportDetail extends State<ReportDetail> {
                 onEditingComplete: () =>
                     FocusScope.of(context).requestFocus(technameFocusNode),
                 onChanged: (value) {
-                  debugPrint('Something changed in Equipment Text Field');
                   updateEquipment();
                 },
                 decoration: InputDecoration(
@@ -222,7 +309,6 @@ class _ReportDetail extends State<ReportDetail> {
                 style: textStyle,
                 focusNode: technameFocusNode,
                 onChanged: (value) {
-                  debugPrint('Something changed in SPM Tech Name Text Field');
                   updateTechname();
                 },
                 decoration: InputDecoration(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
-import 'package:spmconnectapp/screens/signpad.dart';
+import 'package:spmconnectapp/screens/signpad2.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:printing/printing.dart';
+import 'package:spmconnectapp/screens/pdf.dart';
 
 class ReportDetail4 extends StatefulWidget {
   final Report report;
@@ -52,12 +54,16 @@ class _ReportDetail4 extends State<ReportDetail4> {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
     custrepController.text = report.custrep;
     custemailController.text = report.custemail;
     custcontactController.text = report.custcontact;
 
+    MyPdf myPdf = new MyPdf(report);
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(
@@ -131,28 +137,61 @@ class _ReportDetail4 extends State<ReportDetail4> {
 
             // Fourth Element -
             Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                style: textStyle,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return SignApp();
-                    }),
-                  );
-                },
-                onChanged: (value) {
-                  debugPrint('Something changed in Cust sign Text Field');
-                  //updateCustrep();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Customer Signature',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              padding:
+                  EdgeInsets.only(top: 15.0, bottom: 15.0, left: 40, right: 40),
+              child: Material(
+                elevation: 20.0,
+                borderRadius: BorderRadius.circular(30.0),
+                color: Colors.blue,
+                child: MaterialButton(
+                  minWidth: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return Signpad2(report.reportmapid.toString(), report);
+                      }),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Icon(
+                          Icons.assignment_turned_in,
+                          size: 40,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text("Customer Sign Off",
+                          textAlign: TextAlign.center,
+                          style: style.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
               ),
             ),
+            Center(
+              child: RaisedButton(
+                onPressed: () {
+                  Printing.layoutPdf(onLayout: myPdf.buildPdf);
+                },
+                elevation: 20.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'Print Report',
+                  textScaleFactor: 1.5,
+                ),
+                color: Colors.amber,
+              ),
+            )
           ],
         ),
       ),

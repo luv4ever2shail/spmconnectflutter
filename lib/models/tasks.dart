@@ -1,6 +1,7 @@
 class Tasks {
   int _id;
   int _reportid;
+  int _published;
   String _item;
   String _starttime;
   String _endtime;
@@ -9,14 +10,24 @@ class Tasks {
   String _date;
 
   Tasks(this._reportid, this._item, this._starttime, this._endtime,
-      this._workperformed, this._hours, this._date);
+      this._workperformed, this._hours, this._date, this._published);
 
-  Tasks.withId(this._id, this._reportid, this._item, this._starttime,
-      this._endtime, this._workperformed, this._hours, this._date);
+  Tasks.withId(
+      this._id,
+      this._reportid,
+      this._item,
+      this._starttime,
+      this._endtime,
+      this._workperformed,
+      this._hours,
+      this._date,
+      this._published);
 
   int get id => _id;
 
   int get reportid => _reportid;
+
+  int get published => _published;
 
   String get item => _item;
 
@@ -32,6 +43,10 @@ class Tasks {
 
   set reportid(int newReportid) {
     this._reportid = newReportid;
+  }
+
+  set published(int newPublishid) {
+    this._published = newPublishid;
   }
 
   set item(String newItem) {
@@ -71,6 +86,7 @@ class Tasks {
     map['workperformed'] = _workperformed;
     map['hours'] = _hours;
     map['date'] = _date;
+    map['taskpublished'] = _published;
     return map;
   }
 
@@ -84,5 +100,6 @@ class Tasks {
     this._workperformed = map['workperformed'];
     this._hours = map['hours'];
     this._date = map['date'];
+    this._published = map['taskpublished'];
   }
 }

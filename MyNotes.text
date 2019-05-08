@@ -84,3 +84,8 @@ class RequestTenantId {
     return code;
   }
 }
+
+
+permission:
+    git:
+      url: https://github.com/devadrianapostol/permission

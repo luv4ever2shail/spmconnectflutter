@@ -46,6 +46,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
     custcommentsController.text = report.custcomments;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
         child: ListView(

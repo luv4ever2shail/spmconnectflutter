@@ -37,8 +37,8 @@ class _TaskListState extends State<TaskList> {
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               debugPrint('FAB clicked');
-              navigateToDetail(
-                  Tasks(0, '', '', '', '', '', ''), 'Add New Item', reportid);
+              navigateToDetail(Tasks(0, '', '', '', '', '', '', 0),
+                  'Add New Item', reportid);
             },
             icon: Icon(Icons.add),
             label: Text('Add a new task')),

@@ -1,5 +1,61 @@
-// import 'dart:async';
-// import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+
+class CurrentLocationWidget extends StatefulWidget {
+  @override
+  _LocationState createState() => _LocationState();
+}
+
+class _LocationState extends State<CurrentLocationWidget> {
+  Position _position;
+
+  @override
+  void initState() {
+    super.initState();
+    _initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> _initPlatformState() async {
+    Position position;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      final Geolocator geolocator = Geolocator()
+        ..forceAndroidLocationManager = true;
+      position = await geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.bestForNavigation);
+    } on PlatformException {
+      position = null;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _position = position;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<GeolocationStatus>(
+          future: Geolocator().checkGeolocationPermissionStatus(),
+          builder: (BuildContext context,
+              AsyncSnapshot<GeolocationStatus> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.data == GeolocationStatus.denied) {
+              return const Text(
+                  'Allow access to the location services for this App using the device settings.');
+            }
+            return Text(_position.toString());
+          }),
+    );
+  }
+}
 
 // import 'package:flutter/material.dart';
 
@@ -8,138 +64,87 @@
 //   _TestpageState createState() => new _TestpageState();
 // }
 
-// class _TestpageState extends State<Testpage> {
-//   var list;
-//   var random;
-
-//   var refreshKey = GlobalKey<RefreshIndicatorState>();
+// class _TestpageState extends State<Testpage>
+//     with SingleTickerProviderStateMixin {
+//   double age = 0.0;
+//   var selectedYear;
+//   Animation animation;
+//   AnimationController animationController;
 
 //   @override
 //   void initState() {
+//     animationController = new AnimationController(
+//         vsync: this, duration: new Duration(milliseconds: 1500));
+//     animation = animationController;
 //     super.initState();
-//     random = Random();
-//     refreshList();
 //   }
 
-//   Future<Null> refreshList() async {
-//     refreshKey.currentState?.show(atTop: true);
-//     await Future.delayed(Duration(seconds: 2));
+//   @override
+//   void dispose() {
+//     animationController.dispose();
+//     super.dispose();
+//   }
 
-//     setState(() {
-//       list = List.generate(random.nextInt(10), (i) => "Item $i");
+//   void _showPicker() {
+//     showDatePicker(
+//             context: context,
+//             firstDate: new DateTime(1900),
+//             initialDate: new DateTime(2018),
+//             lastDate: DateTime.now())
+//         .then((DateTime dt) {
+//       selectedYear = dt.year;
+//       calculateAge();
 //     });
+//   }
 
-//     return null;
+//   void calculateAge() {
+//     setState(() {
+//       age = (2018 - selectedYear).toDouble();
+//       animation = new Tween<double>(begin: animation.value, end: age).animate(
+//           new CurvedAnimation(
+//               curve: Curves.fastOutSlowIn, parent: animationController));
+
+//       animationController.forward(from: 0.0);
+//     });
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Pull to refresh"),
+//     return new Scaffold(
+//       appBar: new AppBar(
+//         title: new Text("Age Calculator"),
 //       ),
-//       body: RefreshIndicator(
-//         key: refreshKey,
-//         child: ListView.builder(
-//           itemCount: list?.length,
-//           itemBuilder: (context, i) => ListTile(
-//                 title: Text(list[i]),
-//               ),
+//       body: new Center(
+//         child: new Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             new OutlineButton(
+//               child: new Text(selectedYear != null
+//                   ? selectedYear.toString()
+//                   : "Select your year of birth"),
+//               borderSide: new BorderSide(color: Colors.black, width: 3.0),
+//               color: Colors.white,
+//               onPressed: _showPicker,
+//             ),
+//             new Padding(
+//               padding: const EdgeInsets.all(20.0),
+//             ),
+//             new AnimatedBuilder(
+//               animation: animation,
+//               builder: (context, child) => new Text(
+//                     "Your Age is ${animation.value.toStringAsFixed(0)}",
+//                     style: new TextStyle(
+//                         fontSize: 30.0,
+//                         fontWeight: FontWeight.bold,
+//                         fontStyle: FontStyle.italic),
+//                   ),
+//             )
+//           ],
 //         ),
-//         onRefresh: refreshList,
 //       ),
 //     );
 //   }
 // }
-
-import 'package:flutter/material.dart';
-
-class Testpage extends StatefulWidget {
-  @override
-  _TestpageState createState() => new _TestpageState();
-}
-
-class _TestpageState extends State<Testpage>
-    with SingleTickerProviderStateMixin {
-  double age = 0.0;
-  var selectedYear;
-  Animation animation;
-  AnimationController animationController;
-
-  @override
-  void initState() {
-    animationController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 1500));
-    animation = animationController;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
-
-  void _showPicker() {
-    showDatePicker(
-            context: context,
-            firstDate: new DateTime(1900),
-            initialDate: new DateTime(2018),
-            lastDate: DateTime.now())
-        .then((DateTime dt) {
-      selectedYear = dt.year;
-      calculateAge();
-    });
-  }
-
-  void calculateAge() {
-    setState(() {
-      age = (2018 - selectedYear).toDouble();
-      animation = new Tween<double>(begin: animation.value, end: age).animate(
-          new CurvedAnimation(
-              curve: Curves.fastOutSlowIn, parent: animationController));
-
-      animationController.forward(from: 0.0);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Age Calculator"),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new OutlineButton(
-              child: new Text(selectedYear != null
-                  ? selectedYear.toString()
-                  : "Select your year of birth"),
-              borderSide: new BorderSide(color: Colors.black, width: 3.0),
-              color: Colors.white,
-              onPressed: _showPicker,
-            ),
-            new Padding(
-              padding: const EdgeInsets.all(20.0),
-            ),
-            new AnimatedBuilder(
-              animation: animation,
-              builder: (context, child) => new Text(
-                    "Your Age is ${animation.value.toStringAsFixed(0)}",
-                    style: new TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic),
-                  ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';

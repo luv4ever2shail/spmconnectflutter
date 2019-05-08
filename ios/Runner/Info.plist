@@ -41,5 +41,36 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is required for this app</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is required for this app</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+ 	<string>Your storage is required</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Always and when in use!</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Older devices need location.</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Music!</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>bluetooth</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>Calendars</string>
+    <key>NSCameraUsageDescription</key>
+    <string>camera</string>
+    <key>NSContactsUsageDescription</key>
+    <string>contacts</string>
+    <key>kTCCServiceMediaLibrary</key>
+    <string>media</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>microphone</string>
+    <key>NSMotionUsageDescription</key>
+    <string>motion</string>
+    <key>NSRemindersUsageDescription</key>
+    <string>reminders</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>speech</string>
 </dict>
 </plist>
