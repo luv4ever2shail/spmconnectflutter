@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -23,6 +22,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   int count = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   bool _saving = false;
+  int list = 0;
 
   static final SharepointConfig _config = new SharepointConfig(
       Apikeys.sharepointClientId,
@@ -60,6 +60,27 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               movetolastscreen();
             },
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.sync,
+                color: Colors.white,
+                size: 38,
+              ),
+              onPressed: () {
+                if (count > 0) {
+                  print('sync tapped');
+                  setState(() {
+                    _saving = true;
+                  });
+                  for (final i in reportlist) {
+                    postItemToSharepoint(
+                        i, accessToken, getReportToJSON(i), count);
+                  }
+                }
+              },
+            )
+          ],
         ),
         body: ModalProgressHUD(
           inAsyncCall: _saving,
@@ -106,25 +127,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                     ')',
                 style: titleStyle,
               ),
-              trailing: GestureDetector(
-                child: Icon(
-                  Icons.cloud_upload,
-                  size: 40,
-                  color: Colors.grey,
-                ),
-                onTap: () {
-                  print('tappedcloud');
-                  setState(() {
-                    _saving = true;
-                  });
-
-                  String reporttojson =
-                      getReportToJSON(this.reportlist[position]);
-
-                  postItemToSharepoint(
-                      this.reportlist[position], accessToken, reporttojson);
-                },
-              ),
             ),
           ),
         );
@@ -153,6 +155,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         setState(() {
           this.reportlist = reportlist;
           this.count = reportlist.length;
+          list = 0;
           _saving = false;
         });
       });
@@ -162,7 +165,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   String getReportToJSON(Report report) {
     String reporttojson =
         ('{"__metadata": { "type": "SP.Data.TestListListItem" },"ReportNo": "${report.projectno}","Title": "${report.customer}"}');
-    print(reporttojson);
+    // print(reporttojson);
     return reporttojson;
   }
 
@@ -177,38 +180,45 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
   Future postItemToSharepoint(
-      Report report, String accesstoken, String _body) async {
+      Report report, String accesstoken, var _body, int count) async {
+    await new Future.delayed(new Duration(seconds: 3));
     try {
-      Map<String, String> data = {
-        "ReportNo": "${report.projectno}",
-        "Title": "${report.customer}"
-      };
-      var data1 = json.encode(data);
-      print(data1);
       http.Response response = await http.post(
-          Uri.encodeFull(Apikeys.sharepointListUrl),
+          Uri.encodeFull(
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('TestList')/items"),
           headers: {
             "Authorization": "Bearer " + accesstoken,
-            'Content-Type': "application/json"
+            "Content-Type": "application/json;odata=verbose",
+            "Accept": "application/json"
           },
-          body: data1);
-      print(response.body);
+          body: _body);
+      print(response.statusCode);
+      new Future.delayed(new Duration(seconds: 2), () {
+        if (response.statusCode == 201) {
+          _save(report, count);
+        } else {
+          setState(() {
+            _saving = false;
+          });
+        }
+      });
     } catch (e) {
       print(e);
     }
-    new Future.delayed(new Duration(seconds: 3), () {
-      _save(report);
-    });
   }
 
-  void _save(Report report) async {
+  void _save(Report report, int count) async {
     int result;
     if (report.id != null) {
       report.reportpublished = 1;
       result = await databaseHelper.updateReport(report);
     }
     if (result != 0) {
+      list++;
       print('Success');
+      if (list == count) {
+        updateListView();
+      }
     } else {
       print('failure');
     }

@@ -254,9 +254,9 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getReportMapListUnpublished() async {
     Database db = await this.database;
     int published = 0;
-    int signed = 1;
+    //int signed = 1;
     var result = await db.rawQuery(
-        'SELECT * FROM $reportTable where $colreportpublished = $published AND $colreportsigned = $signed order by $colreportmapid ASC');
+        'SELECT * FROM $reportTable where $colreportpublished = $published  order by $colreportmapid ASC');
     return result;
   }
 }
