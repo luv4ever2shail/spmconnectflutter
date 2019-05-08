@@ -15,9 +15,9 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  String loggedin;
   initState() {
     super.initState();
-    //login();
   }
 
   static final Config config = new Config(

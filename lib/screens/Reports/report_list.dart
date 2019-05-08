@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/screens/home.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
@@ -70,7 +71,8 @@ class _ReportList extends State<ReportList> {
             } else {
               mapid = reportmapid[0].reportmapid + 1;
             }
-            navigateToDetail(Report('', '', '', '', '', '', '', '', mapid, 0),
+            navigateToDetail(
+                Report('', '', '', '', '', '', '', '', mapid, 0, 0),
                 'Add New Report');
           },
           tooltip: 'Create New Report',
@@ -145,8 +147,10 @@ class _ReportList extends State<ReportList> {
     return null;
   }
 
-  void movetolastscreen() {
-    Navigator.pop(context, true);
+  void movetolastscreen() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Myhome(null);
+    }));
   }
 
   void _delete(BuildContext context, Report report) async {
@@ -164,14 +168,17 @@ class _ReportList extends State<ReportList> {
   }
 
   void navigateToDetail(Report report, String title) async {
-    bool result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ReportDetTab(report, title);
-    }));
-    if (result == true) {
-      updateListView();
+    if (report.reportsigned == 1) {
+    } else {
+      bool result =
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ReportDetTab(report, title);
+      }));
+      if (result == true) {
+        updateListView();
+      }
+      getReportmapId();
     }
-    getReportmapId();
   }
 
   void updateListView() {

@@ -28,6 +28,7 @@ class DatabaseHelper {
   String colcustcontact = 'custcontact';
   String colreportmapid = 'reportmapid';
   String colreportpublished = 'reportpublished';
+  String colreportsigned = 'reportsigned';
   String colspare1 = 'spare1';
   String colspare2 = 'spare2';
   String colspare3 = 'spare3';
@@ -84,8 +85,8 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
         '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
-        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,$colreportpublished INTEGER, '
-        '$colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
+        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,'
+        '$colreportpublished INTEGER,$colreportsigned INTEGER, $colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
     await db.execute(
         'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid INTEGER, '
         '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,$coltaskPublished INTEGER,'
@@ -253,8 +254,9 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getReportMapListUnpublished() async {
     Database db = await this.database;
     int published = 0;
+    int signed = 1;
     var result = await db.rawQuery(
-        'SELECT * FROM $reportTable where $colreportpublished = $published order by $colreportmapid ASC');
+        'SELECT * FROM $reportTable where $colreportpublished = $published AND $colreportsigned = $signed order by $colreportmapid ASC');
     return result;
   }
 }

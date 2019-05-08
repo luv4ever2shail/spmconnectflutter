@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/screens/Reports/report_list.dart';
+import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:spmconnectapp/utils/painter.dart';
 
 class Signpad2 extends StatefulWidget {
   final String reportno;
+  final Report report;
 
-  Signpad2(this.reportno);
+  Signpad2(this.reportno, this.report);
   @override
-  _Signpad2State createState() => new _Signpad2State(reportno);
+  _Signpad2State createState() => new _Signpad2State(reportno, report);
 }
 
 class _Signpad2State extends State<Signpad2> {
+  DatabaseHelper helper = DatabaseHelper();
+  Report report;
   bool _finished;
   PainterController _controller;
   String reportno;
-  _Signpad2State(this.reportno);
+  _Signpad2State(this.reportno, this.report);
   @override
   void initState() {
     super.initState();
@@ -83,37 +89,67 @@ class _Signpad2State extends State<Signpad2> {
     });
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (BuildContext context) {
-      return new Scaffold(
-        appBar: new AppBar(
-          title: const Text('View your image'),
-        ),
-        body: new Container(
-            alignment: Alignment.center,
-            child: new FutureBuilder<Uint8List>(
-              future: picture.toPNG('1001'),
-              builder:
-                  (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.done:
-                    if (snapshot.hasError) {
-                      return new Text('Error: ${snapshot.error}');
-                    } else {
-                      return Image.memory(snapshot.data);
+      return WillPopScope(
+          onWillPop: () {
+            _save();
+          },
+          child: Scaffold(
+            appBar: new AppBar(
+              title: const Text('View your image'),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  _save();
+                },
+              ),
+            ),
+            body: new Container(
+                alignment: Alignment.center,
+                child: new FutureBuilder<Uint8List>(
+                  future: picture.toPNG('1001'),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<Uint8List> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.done:
+                        if (snapshot.hasError) {
+                          return new Text('Error: ${snapshot.error}');
+                        } else {
+                          return Image.memory(snapshot.data);
+                        }
+                        break;
+                      default:
+                        return new Container(
+                            child: new FractionallySizedBox(
+                          widthFactor: 0.1,
+                          child: new AspectRatio(
+                              aspectRatio: 1.0,
+                              child: new CircularProgressIndicator()),
+                          alignment: Alignment.center,
+                        ));
                     }
-                    break;
-                  default:
-                    return new Container(
-                        child: new FractionallySizedBox(
-                      widthFactor: 0.1,
-                      child: new AspectRatio(
-                          aspectRatio: 1.0,
-                          child: new CircularProgressIndicator()),
-                      alignment: Alignment.center,
-                    ));
-                }
-              },
-            )),
-      );
+                  },
+                )),
+          ));
+    }));
+  }
+
+  void _save() async {
+    int result;
+    if (report.id != null) {
+      report.reportsigned = 1;
+      result = await helper.updateReport(report);
+    }
+    if (result != 0) {
+      print('Success signed');
+    } else {
+      print('Failure signing');
+    }
+    navigateToReports();
+  }
+
+  void navigateToReports() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ReportList();
     }));
   }
 }

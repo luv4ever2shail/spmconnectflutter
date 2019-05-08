@@ -150,7 +150,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return Signpad2(report.reportmapid.toString());
+                        return Signpad2(report.reportmapid.toString(), report);
                       }),
                     );
                   },

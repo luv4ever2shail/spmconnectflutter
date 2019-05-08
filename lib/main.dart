@@ -50,7 +50,8 @@ class MyApp extends StatelessWidget {
 // TODO: SPM Logo
 // TODO: Sharepoint update method with rest api
 // TODO: Locking down of report once signed off
-
+///// TODO: Database column to signify its been signed off and cant access it anymore, instead show pdf
+///// TODO: Report list page needs to prevent from users to access the report if its signed off
 /*
 TODO: Step to post data to sharepoint list
   - Gather the list of rows where published report and task == 0

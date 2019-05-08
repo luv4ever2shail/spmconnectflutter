@@ -8,6 +8,7 @@ import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/models/users.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
+import 'package:spmconnectapp/screens/login.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
 import 'package:spmconnectapp/utils/permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,9 @@ class _MyhomeState extends State<Myhome> {
   @override
   void initState() {
     super.initState();
-    getUserInfo(accessToken);
+    if (accessToken != null) {
+      getUserInfo(accessToken);
+    }
     getUserInfoSF();
   }
 
@@ -234,8 +237,9 @@ class _MyhomeState extends State<Myhome> {
   void logout() async {
     try {
       await oauth.logout();
-      Navigator.pop(context);
-      //showMessage("Logged out", false);
+      await Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MyLoginPage();
+      }));
     } catch (e) {}
   }
 
@@ -243,10 +247,6 @@ class _MyhomeState extends State<Myhome> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('Name', _users.displayName);
     prefs.setString('Email', _users.mail);
-    var id = _users.id.split('-');
-    print(id[1]);
-    prefs.setString('Id', id[1]);
-    setState(() {});
   }
 
   removeUserInfoFromSF() async {
@@ -312,25 +312,25 @@ class _MyhomeState extends State<Myhome> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text(
-                _users.displayName,
+              new Text(
+                _users == null ? sfName : _users.displayName,
                 style: localtheme.textTheme.headline,
               ),
-              Text(
-                _users.mail,
+              new Text(
+                _users == null ? sfEmail : _users.mail,
                 style: localtheme.textTheme.subhead
                     .copyWith(fontStyle: FontStyle.italic),
               ),
               SizedBox(
                 height: 2.0,
               ),
-              Text(
-                _users.jobtitle == null ? 'Job Title' : _users.jobtitle,
+              new Text(
+                _users == null ? 'Job Title (not found)' : _users.jobtitle,
                 style: localtheme.textTheme.subhead
                     .copyWith(fontStyle: FontStyle.italic),
               ),
-              Text(
-                _users.id,
+              new Text(
+                _users == null ? 'ID (not found)' : _users.id,
                 style: localtheme.textTheme.body2,
               )
             ],
