@@ -1,4 +1,4 @@
-# spmconnectapp
+# SPM Connect Service Report App
 
 A new Flutter project.
 
