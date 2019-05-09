@@ -185,8 +185,8 @@ class _ReportDetail4 extends State<ReportDetail4> {
             ),
             Center(
               child: RaisedButton(
-                onPressed: () {
-                  Printing.layoutPdf(onLayout: myPdf.buildPdf);
+                onPressed: () async {
+                  await Printing.layoutPdf(onLayout: myPdf.buildPdf);
                 },
                 elevation: 20.0,
                 shape: RoundedRectangleBorder(

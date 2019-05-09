@@ -10,7 +10,6 @@ import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
 import 'package:spmconnectapp/screens/login.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
-import 'package:spmconnectapp/utils/permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Myhome extends StatefulWidget {
@@ -200,7 +199,6 @@ class _MyhomeState extends State<Myhome> {
                       } else if (drawerText[position] == 'Privacy') {
                         navigateToprivacy();
                       } else if (drawerText[position] == 'Permissions') {
-                        navigateToPermissions();
                       } else if (drawerText[position] == 'Sync Data') {
                         navigateToReportsUnpublished();
                       } else if (drawerText[position] == 'Log Out') {
@@ -230,12 +228,6 @@ class _MyhomeState extends State<Myhome> {
   void navigateToprivacy() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return PrivacyPolicyScreen();
-    }));
-  }
-
-  void navigateToPermissions() async {
-    await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return MyPermissions();
     }));
   }
 

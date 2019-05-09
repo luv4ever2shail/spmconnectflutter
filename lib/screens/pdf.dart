@@ -67,15 +67,17 @@ class MyPdf {
                       <String>['1999', 'PDF 1.3', 'Acrobat 4'],
                     ]),
               ]));
-    savepdf(pdf);
+    print('Started creating pdf');
+    await savepdf(pdf);
+    print('PDF Creation finished');
     return pdf.save();
   }
 
-  Future savepdf(PdfDoc pdf) async {
+  Future<void> savepdf(PdfDoc pdf) async {
     Directory directory = await getExternalStorageDirectory();
     String path = directory.path;
     print(path);
     await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/1001.pdf').writeAsBytesSync(pdf.save());    
+    File('$path/$directoryName/1001.pdf').writeAsBytesSync(pdf.save());
   }
 }

@@ -49,17 +49,21 @@ class MyApp extends StatelessWidget {
 ///// TODO: Report list page needs to prevent from users to access the report if its signed off
 // TODO: Clean up sharepoint and azure app create new accounts
 // TODO: pdf creation with all the fields
-// TODO: figure out saving of pdf first before displaying it
+///// TODO: figure out saving of pdf first before displaying it
 // TODO: SPM splash screen
 // TODO: Storage issues with ios
 // TODO: SPM Logo
 // TODO: Fix the bug on plant location
 // TODO: Fix bugs on getting user infos
+// TODO: Remove permission screen
+// TODO: Implement uploading tasks
+// TODO: Implement way to publish pdf and signatures
+// TODO: Implement pdf viewer to view files from local source
 
 /*
-TODO: Step to post data to sharepoint list
-  - Gather the list of rows where published report and task == 0
-  - Convert each row to JSON
-  - post each item to sharepoint
-  - update sql table that particular row has been posted  ---- repeat  
+/TODO: Step to post data to sharepoint list.
+// TODO: Gather the list of rows where published report and task == 0
+//TODO: Convert each row to JSON
+// TODO: post each item to sharepoint
+// TODO: update sql table that particular row has been posted  ---- repeat  
 */

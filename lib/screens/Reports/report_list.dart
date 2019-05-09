@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/home.dart';
@@ -7,6 +9,9 @@ import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
+
+const directoryName = 'Pdfs';
 
 class ReportList extends StatefulWidget {
   @override
@@ -22,6 +27,8 @@ class _ReportList extends State<ReportList> {
   int count = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   String empId;
+  bool _isLoading = true;
+  PDFDocument document;
 
   @override
   void initState() {
@@ -129,10 +136,16 @@ class _ReportList extends State<ReportList> {
                         size: 40,
                         color: Colors.grey,
                       )
-                    : SizedBox(
-                        width: 1,
-                        height: 1,
-                      ),
+                    : this.reportlist[position].reportpublished == 0
+                        ? SizedBox(
+                            width: 1,
+                            height: 1,
+                          )
+                        : Icon(
+                            Icons.check_circle,
+                            size: 40,
+                            color: Colors.green,
+                          ),
                 onTap: () {
                   _neverSatisfied(
                     position,
@@ -264,5 +277,14 @@ class _ReportList extends State<ReportList> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getString('EmpId');
     setState(() {});
+  }
+
+  loadDocument() async {
+    Directory directory = await getExternalStorageDirectory();
+    String path = directory.path;
+    print("$path/$directoryName/1001.pdf");
+    File file = File("$path/$directoryName/1001.pdf");
+    PDFDocument doc = await PDFDocument.fromFile(file);
+    setState(() => _isLoading = false);
   }
 }
