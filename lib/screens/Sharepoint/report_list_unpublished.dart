@@ -70,14 +70,15 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 color: Colors.white,
                 size: 38,
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (count > 0) {
                   print('sync tapped');
                   setState(() {
+                    list = count;
                     _saving = true;
                   });
                   for (final i in reportlist) {
-                    postItemToSharepoint(
+                    await postItemToSharepoint(
                         i, accessToken, getReportToJSON(i), count);
                   }
                 }
@@ -111,7 +112,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               isThreeLine: true,
               leading: CircleAvatar(
                 backgroundColor: Colors.green,
-                child: Icon(Icons.receipt),
+                child: Icon(
+                  Icons.receipt,
+                  color: Colors.white,
+                ),
               ),
               title: Text(
                 'Report No - ' +
@@ -159,11 +163,13 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         setState(() {
           this.reportlist = reportlist;
           this.count = reportlist.length;
-          if (list == count) {
+        });
+        if (list <= count) {
+          setState(() {
             list = 0;
             _saving = false;
-          }
-        });
+          });
+        }
       });
     });
   }
@@ -175,7 +181,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             '"Authorizedby": "${report.authorby}","Equipment": "${report.equipment}","TechName": "${report.techname}","DateCreated": "${report.date}",'
             '"FurtherActions": "${report.furtheractions}","CustComments": "${report.custcomments}","CustRep": "${report.custrep}","CustEmail": "${report.custemail}",'
             '"CustContact": "${report.custcontact}","Published": "${report.reportpublished}","Signed": "${report.reportsigned}","Uploadedby": "$empName"}');
-    print(reporttojson);
+    // print(reporttojson);
     return reporttojson;
   }
 
@@ -189,9 +195,11 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     await restapi.logout();
   }
 
-  Future postItemToSharepoint(
+  Future<void> postItemToSharepoint(
       Report report, String accesstoken, var _body, int count) async {
     try {
+      print('post started : list value $list');
+
       http.Response response = await http.post(
           Uri.encodeFull(
               "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/items"),
@@ -201,29 +209,31 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             "Accept": "application/json"
           },
           body: _body);
+
       print(response.statusCode);
-      new Future.delayed(new Duration(seconds: 2), () {
-        if (response.statusCode == 201) {
-          _saveReport(report, count);
-        } else {
-          setState(() {
-            _saving = false;
-          });
-        }
-      });
+      print('started');
+      if (response.statusCode == 201) {
+        await _saveReport(report);
+      } else {
+        setState(() {
+          _saving = false;
+        });
+      }
+      print('ended');
     } catch (e) {
       print(e);
     }
   }
 
-  void _saveReport(Report report, int count) async {
+  Future<void> _saveReport(Report report) async {
     int result;
     if (report.id != null) {
       report.reportpublished = 1;
       result = await databaseHelper.updateReport(report);
     }
     if (result != 0) {
-      list++;
+      list--;
+      print(list);
       print('Success Saving');
       updateListView();
     } else {

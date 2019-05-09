@@ -63,9 +63,8 @@ class _ReportDetail extends State<ReportDetail> {
 
     setState(() {
       _position = position;
+      _onLookupAddressPressed();
     });
-
-    _onLookupAddressPressed();
   }
 
   Future<void> _onLookupAddressPressed() async {
@@ -208,6 +207,8 @@ class _ReportDetail extends State<ReportDetail> {
                     },
                     onTap: () {
                       if (planlocController.text.length <= 0) {
+                        _initPlatformState();
+                        _onLookupAddressPressed();
                         planlocController.text = _placemark;
                         updatePlantloc();
                       }
