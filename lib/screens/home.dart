@@ -30,6 +30,10 @@ class _MyhomeState extends State<Myhome> {
   Image image;
   String sfName;
   String sfEmail;
+  String sfID;
+  String sfPosition;
+  String sfEmpid;
+
   @override
   void initState() {
     super.initState();
@@ -189,6 +193,7 @@ class _MyhomeState extends State<Myhome> {
                     this.setState(() {
                       Navigator.pop(context);
                       if (drawerText[position] == "Profile") {
+                        getUserInfoSF();
                         showDialog(
                             context: context,
                             builder: (context) => _userprofile(context));
@@ -247,6 +252,10 @@ class _MyhomeState extends State<Myhome> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('Name', _users.displayName);
     prefs.setString('Email', _users.mail);
+    prefs.setString('Position', _users.jobtitle);
+    prefs.setString('Id', _users.id);
+    prefs.setString('EmpId', _users.empid);
+    setState(() {});
   }
 
   removeUserInfoFromSF() async {
@@ -254,20 +263,25 @@ class _MyhomeState extends State<Myhome> {
     //Remove String
     prefs.remove("Name");
     prefs.remove("Email");
+    prefs.remove("Position");
     prefs.remove("Id");
+    prefs.remove("EmpId");
   }
 
   getUserInfoSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     sfName = prefs.getString('Name');
     sfEmail = prefs.getString('Email');
+    sfPosition = prefs.getString('Position');
+    sfID = prefs.getString('Id');
+    sfEmpid = prefs.getString('EmpId');
     setState(() {});
   }
 
   Future getUserInfo(String accesstoken) async {
     try {
       Response response = await get(
-        Uri.encodeFull("https://graph.microsoft.com/v1.0/me"),
+        Uri.encodeFull("https://graph.microsoft.com/beta/me/"),
         headers: {
           "Authorization": "Bearer " + accesstoken,
           "Accept": "application/json"
@@ -317,7 +331,7 @@ class _MyhomeState extends State<Myhome> {
                 style: localtheme.textTheme.headline,
               ),
               new Text(
-                _users == null ? sfEmail : _users.mail,
+                _users == null ? sfEmail : 'Email : ${_users.mail}',
                 style: localtheme.textTheme.subhead
                     .copyWith(fontStyle: FontStyle.italic),
               ),
@@ -325,12 +339,20 @@ class _MyhomeState extends State<Myhome> {
                 height: 2.0,
               ),
               new Text(
-                _users == null ? 'Job Title (not found)' : _users.jobtitle,
+                _users == null
+                    ? 'Job Tile : $sfPosition'
+                    : 'Job Tile : ${_users.jobtitle}',
                 style: localtheme.textTheme.subhead
                     .copyWith(fontStyle: FontStyle.italic),
               ),
               new Text(
-                _users == null ? 'ID (not found)' : _users.id,
+                _users == null ? 'Id : $sfID' : 'Id : ${_users.id}',
+                style: localtheme.textTheme.body2,
+              ),
+              new Text(
+                _users == null
+                    ? 'Emp Id : $sfEmpid'
+                    : 'Emp Id : ${_users.empid}',
                 style: localtheme.textTheme.body2,
               )
             ],

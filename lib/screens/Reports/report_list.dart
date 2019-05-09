@@ -21,7 +21,7 @@ class _ReportList extends State<ReportList> {
   List<Report> reportmapid;
   int count = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  String userId;
+  String empId;
 
   @override
   void initState() {
@@ -72,7 +72,8 @@ class _ReportList extends State<ReportList> {
               mapid = reportmapid[0].reportmapid + 1;
             }
             navigateToDetail(
-                Report('', '', '', '', '', '', '', '', mapid, 0, 0),
+                Report('$empId - ${mapid.toString()}', '', '', '', '', '', '',
+                    '', '', mapid, 0, 0),
                 'Add New Report');
           },
           tooltip: 'Create New Report',
@@ -96,11 +97,16 @@ class _ReportList extends State<ReportList> {
             child: ListTile(
               isThreeLine: true,
               leading: CircleAvatar(
-                child: Icon(Icons.receipt),
+                backgroundColor: this.reportlist[position].reportsigned == 0
+                    ? Colors.blue
+                    : Colors.green,
+                child: Icon(
+                  Icons.receipt,
+                  color: Colors.white,
+                ),
               ),
               title: Text(
-                'Report No - ' +
-                    this.reportlist[position].reportmapid.toString(),
+                'Report No - ' + this.reportlist[position].reportno,
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.5),
@@ -117,13 +123,17 @@ class _ReportList extends State<ReportList> {
                 style: titleStyle,
               ),
               trailing: GestureDetector(
-                child: Icon(
-                  Icons.delete,
-                  size: 40,
-                  color: Colors.grey,
-                ),
+                child: this.reportlist[position].reportsigned == 0
+                    ? Icon(
+                        Icons.delete,
+                        size: 40,
+                        color: Colors.grey,
+                      )
+                    : SizedBox(
+                        width: 1,
+                        height: 1,
+                      ),
                 onTap: () {
-                  //_delete(context, reportlist[position]);
                   _neverSatisfied(
                     position,
                   );
@@ -232,7 +242,7 @@ class _ReportList extends State<ReportList> {
                 Flushbar(
                   title: "Report Deleted Successfully",
                   message: "All tasks associated with report got trashed.",
-                  duration: Duration(seconds: 3),
+                  duration: Duration(seconds: 2),
                   icon: Icon(
                     Icons.delete_forever,
                     size: 28.0,
@@ -252,7 +262,7 @@ class _ReportList extends State<ReportList> {
 
   getUserInfoSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('Id');
+    empId = prefs.getString('EmpId');
     setState(() {});
   }
 }

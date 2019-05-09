@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharepoint_auth/model/config.dart';
 import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
@@ -23,6 +24,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   bool _saving = false;
   int list = 0;
+  String empName;
 
   static final SharepointConfig _config = new SharepointConfig(
       Apikeys.sharepointClientId,
@@ -38,6 +40,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   void initState() {
     super.initState();
     getSharepointToken();
+    getUserInfoSF();
   }
 
   @override
@@ -107,6 +110,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             child: ListTile(
               isThreeLine: true,
               leading: CircleAvatar(
+                backgroundColor: Colors.green,
                 child: Icon(Icons.receipt),
               ),
               title: Text(
@@ -155,8 +159,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         setState(() {
           this.reportlist = reportlist;
           this.count = reportlist.length;
-          list = 0;
-          _saving = false;
+          if (list == count) {
+            list = 0;
+            _saving = false;
+          }
         });
       });
     });
@@ -164,8 +170,12 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   String getReportToJSON(Report report) {
     String reporttojson =
-        ('{"__metadata": { "type": "SP.Data.TestListListItem" },"ReportNo": "${report.projectno}","Title": "${report.customer}"}');
-    // print(reporttojson);
+        ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.reportno}","ReportMapId": "${report.reportmapid}","Report_Id": "${report.id}",'
+            '"ProjectNo": "${report.projectno}","Customer": "${report.customer}","PlantLoc": "${report.plantloc}","ContactName": "${report.contactname}",'
+            '"Authorizedby": "${report.authorby}","Equipment": "${report.equipment}","TechName": "${report.techname}","DateCreated": "${report.date}",'
+            '"FurtherActions": "${report.furtheractions}","CustComments": "${report.custcomments}","CustRep": "${report.custrep}","CustEmail": "${report.custemail}",'
+            '"CustContact": "${report.custcontact}","Published": "${report.reportpublished}","Signed": "${report.reportsigned}","Uploadedby": "$empName"}');
+    print(reporttojson);
     return reporttojson;
   }
 
@@ -181,11 +191,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future postItemToSharepoint(
       Report report, String accesstoken, var _body, int count) async {
-    await new Future.delayed(new Duration(seconds: 3));
     try {
       http.Response response = await http.post(
           Uri.encodeFull(
-              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('TestList')/items"),
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/items"),
           headers: {
             "Authorization": "Bearer " + accesstoken,
             "Content-Type": "application/json;odata=verbose",
@@ -195,7 +204,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print(response.statusCode);
       new Future.delayed(new Duration(seconds: 2), () {
         if (response.statusCode == 201) {
-          _save(report, count);
+          _saveReport(report, count);
         } else {
           setState(() {
             _saving = false;
@@ -207,7 +216,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
   }
 
-  void _save(Report report, int count) async {
+  void _saveReport(Report report, int count) async {
     int result;
     if (report.id != null) {
       report.reportpublished = 1;
@@ -215,12 +224,16 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
     if (result != 0) {
       list++;
-      print('Success');
-      if (list == count) {
-        updateListView();
-      }
+      print('Success Saving');
+      updateListView();
     } else {
       print('failure');
     }
+  }
+
+  getUserInfoSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    empName = prefs.getString('Name');
+    setState(() {});
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/signpad2.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
@@ -20,6 +21,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
   DatabaseHelper helper = DatabaseHelper();
 
   Report report;
+  PermissionStatus _permissionStatus = PermissionStatus.unknown;
 
   FocusNode custrepFocusNode;
   FocusNode custemailFocusNode;
@@ -31,6 +33,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode = FocusNode();
     custemailFocusNode = FocusNode();
     custcontactFocusNode = FocusNode();
+    requestPermission();
   }
 
   @override
@@ -39,7 +42,6 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode.dispose();
     custemailFocusNode.dispose();
     custcontactFocusNode.dispose();
-
     super.dispose();
   }
 
@@ -147,12 +149,17 @@ class _ReportDetail4 extends State<ReportDetail4> {
                   minWidth: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return Signpad2(report.reportmapid.toString(), report);
-                      }),
-                    );
+                    if (_permissionStatus.value == 2) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Signpad2(
+                              report.reportmapid.toString(), report);
+                        }),
+                      );
+                    } else {
+                      requestPermission();
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -196,6 +203,16 @@ class _ReportDetail4 extends State<ReportDetail4> {
         ),
       ),
     );
+  }
+
+  Future<void> requestPermission() async {
+    final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
+        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+    setState(() {
+      print(permissionRequestResult);
+      _permissionStatus = permissionRequestResult[PermissionGroup.storage];
+      print(_permissionStatus);
+    });
   }
 
 // Update the project no.

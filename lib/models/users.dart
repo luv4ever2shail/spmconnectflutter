@@ -13,7 +13,7 @@ class Users {
   String givenName;
   String mail;
   String surname;
-  String userPrincipalName;
+  String empid;
   String id;
   String jobtitle;
 
@@ -22,7 +22,7 @@ class Users {
     this.givenName,
     this.mail,
     this.surname,
-    this.userPrincipalName,
+    this.empid,
     this.id,
     this.jobtitle,
   });
@@ -32,7 +32,7 @@ class Users {
         givenName: json["givenName"],
         mail: json["mail"],
         surname: json["surname"],
-        userPrincipalName: json["userPrincipalName"],
+        empid: json["employeeId"],
         id: json["id"],
         jobtitle: json["jobTitle"],
       );
@@ -42,7 +42,7 @@ class Users {
         "givenName": givenName,
         "mail": mail,
         "surname": surname,
-        "userPrincipalName": userPrincipalName,
+        "employeeId": empid,
         "id": id,
         "jobTitle": jobtitle,
       };

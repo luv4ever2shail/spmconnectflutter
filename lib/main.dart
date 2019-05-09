@@ -26,32 +26,36 @@ class MyApp extends StatelessWidget {
 ///// TODO: create extra columns as backup on sql database
 ///// TODO: Delete tasks for not save report (created new and never got saved but created tasks for it.) ** Get rid of the dialog box
 ///// TODO: Pull to refresh
-// TODO: Sync Method to retrieve list
-// TODO: Sync Method to upload data
-// TODO: Clean up sharepoint and azure app create new accounts
-// TODO: pdf creation with all the fields
-// TODO: figure out saving of pdf first before displaying it
+///// TODO: Sync Method to retrieve list
+///// TODO: Sync Method to upload data
 ///// TODO: Google GeoLocation (create spmconnect email gmail)
 ///// TODO: Figure out gesture bug while swiping between pages on task list page when it goes longer - Not Required
 ///// TODO: azure active directory retrieve username
-// TODO: sharepoint  create a new list
+///// TODO: sharepoint  create a new list
 ///// TODO: GEO Location for the plant location
-// TODO: Design screen to update and receive data off sharepoint
+///// TODO: Design screen to update and receive data off sharepoint
 ///// TODO: Fix bug -  when typing on textbox keyboard covers it resigetoavoid scafold
 ///// TODO: Arrange screen files and group them accordingly
 ///// TODO: Auto login and put the logout button under privacy list view
 ///// TODO: Save floating button on task list
 ///// TODO: Try to achieve the hours worked by subtracting the time
-// TODO: Report no should have an id reflecting along with report no - store id on shared preferences
-// TODO: Storage issues with ios
+///// TODO: Report no should have an id reflecting along with report no - store id on shared preferences have employee id now
 ///// TODO: SQL Column to store the data is uploaded or not
-// TODO: SPM splash screen
 ///// TODO: Implement error on hours worked if its in negative or zero
-// TODO: SPM Logo
-// TODO: Sharepoint update method with rest api
-// TODO: Locking down of report once signed off
+///// TODO: Sharepoint update method with rest api
+///// TODO: Locking down of report once signed off and remove delete button // prevent user from deleting the report
+///// TODO: storage permission should popup
 ///// TODO: Database column to signify its been signed off and cant access it anymore, instead show pdf
 ///// TODO: Report list page needs to prevent from users to access the report if its signed off
+// TODO: Clean up sharepoint and azure app create new accounts
+// TODO: pdf creation with all the fields
+// TODO: figure out saving of pdf first before displaying it
+// TODO: SPM splash screen
+// TODO: Storage issues with ios
+// TODO: SPM Logo
+// TODO: Fix the bug on plant location
+// TODO: Fix bugs on getting user infos
+
 /*
 TODO: Step to post data to sharepoint list
   - Gather the list of rows where published report and task == 0

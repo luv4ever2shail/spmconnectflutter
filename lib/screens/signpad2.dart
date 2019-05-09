@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:intl/intl.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
@@ -71,7 +72,7 @@ class _Signpad2State extends State<Signpad2> {
       backgroundColor: Colors.grey,
       appBar: new AppBar(
           backgroundColor: barColor,
-          title: const Text('Customer Signature'),
+          title: Text('Signature'),
           actions: actions,
           bottom: new PreferredSize(
             child: new DrawBar(_controller),
@@ -95,7 +96,7 @@ class _Signpad2State extends State<Signpad2> {
           },
           child: Scaffold(
             appBar: new AppBar(
-              title: const Text('View your image'),
+              title: const Text('Signed'),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -135,9 +136,16 @@ class _Signpad2State extends State<Signpad2> {
 
   void _save() async {
     int result;
+    report.reportsigned = 1;
     if (report.id != null) {
-      report.reportsigned = 1;
+      // Case 1: Update operation
       result = await helper.updateReport(report);
+    } else {
+      // Case 2: Insert Operation
+      if (report.projectno.length > 0) {
+        report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+        result = await helper.inserReport(report);
+      }
     }
     if (result != 0) {
       print('Success signed');
