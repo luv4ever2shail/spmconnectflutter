@@ -17,6 +17,11 @@ class ReportDetail extends StatefulWidget {
 class _ReportDetail extends State<ReportDetail> {
   DatabaseHelper helper = DatabaseHelper();
 
+  String _placemark = '';
+  Geolocator _geolocator = Geolocator();
+  bool _validate = false;
+  _ReportDetail(this.report);
+
   Report report;
   Position _position;
   FocusNode customerFocusNode;
@@ -58,13 +63,9 @@ class _ReportDetail extends State<ReportDetail> {
 
     setState(() {
       _position = position;
+      _onLookupAddressPressed();
     });
-
-    _onLookupAddressPressed();
   }
-
-  String _placemark = '';
-  Geolocator _geolocator = Geolocator();
 
   Future<void> _onLookupAddressPressed() async {
     try {
@@ -94,6 +95,7 @@ class _ReportDetail extends State<ReportDetail> {
               pos.country;
         });
       }
+      setState(() {});
     } catch (e) {}
   }
 
@@ -116,8 +118,6 @@ class _ReportDetail extends State<ReportDetail> {
   TextEditingController authorizedbyController = TextEditingController();
   TextEditingController equipmentController = TextEditingController();
   TextEditingController technameController = TextEditingController();
-  bool _validate = false;
-  _ReportDetail(this.report);
 
   @override
   Widget build(BuildContext context) {
@@ -202,13 +202,16 @@ class _ReportDetail extends State<ReportDetail> {
                     textInputAction: TextInputAction.next,
                     onEditingComplete: () => FocusScope.of(context)
                         .requestFocus(contactnameFocusNode),
-                    // onChanged: (value) {
-                    //   updatePlantloc();
-                    // },
-                    onTap: () {
-                      _initPlatformState();
-                      planlocController.text = _placemark;
+                    onChanged: (value) {
                       updatePlantloc();
+                    },
+                    onTap: () {
+                      if (planlocController.text.length <= 0) {
+                        _initPlatformState();
+                        _onLookupAddressPressed();
+                        planlocController.text = _placemark;
+                        updatePlantloc();
+                      }
                     },
                     decoration: InputDecoration(
                         labelText: 'Plant Location',

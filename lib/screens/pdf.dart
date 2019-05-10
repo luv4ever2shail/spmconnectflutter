@@ -6,13 +6,14 @@ import 'package:pdf/widgets.dart' as Pdf;
 import 'package:printing/printing.dart';
 import 'package:spmconnectapp/models/report.dart';
 
-const directoryName = 'Pdfs';
+const directoryName = 'Connect_Pdfs';
 
 class MyPdf {
   final Report report;
+
   MyPdf(this.report);
 
-  Future<List<int>> buildPdf(PdfPageFormat format) async {
+  Future<void> buildPdf() async {
     final PdfDoc pdf = PdfDoc()
       ..addPage(Pdf.MultiPage(
           pageFormat: PdfPageFormat.letter
@@ -67,15 +68,18 @@ class MyPdf {
                       <String>['1999', 'PDF 1.3', 'Acrobat 4'],
                     ]),
               ]));
-    savepdf(pdf);
-    return pdf.save();
+    print('Started creating pdf');
+    await savepdf(pdf);
+    print('PDF Creation finished');
+    //pdf.save();
   }
 
-  Future savepdf(PdfDoc pdf) async {
+  Future<void> savepdf(PdfDoc pdf) async {
     Directory directory = await getExternalStorageDirectory();
     String path = directory.path;
-    print(path);
+    print('$path/$directoryName/${report.reportmapid}.pdf');
     await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/1001.pdf').writeAsBytesSync(pdf.save());    
+    File('$path/$directoryName/${report.reportmapid}.pdf')
+        .writeAsBytesSync(pdf.save());
   }
 }

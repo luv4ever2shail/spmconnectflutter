@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/home.dart';
+import 'package:spmconnectapp/screens/pdf_viewer.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
 import 'package:flushbar/flushbar.dart';
+
+const directoryName = 'Pdfs';
 
 class ReportList extends StatefulWidget {
   @override
@@ -21,7 +24,7 @@ class _ReportList extends State<ReportList> {
   List<Report> reportmapid;
   int count = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  String userId;
+  String empId;
 
   @override
   void initState() {
@@ -72,7 +75,8 @@ class _ReportList extends State<ReportList> {
               mapid = reportmapid[0].reportmapid + 1;
             }
             navigateToDetail(
-                Report('', '', '', '', '', '', '', '', mapid, 0, 0),
+                Report('$empId - ${mapid.toString()}', '', '', '', '', '', '',
+                    '', '', mapid, 0, 0),
                 'Add New Report');
           },
           tooltip: 'Create New Report',
@@ -96,11 +100,16 @@ class _ReportList extends State<ReportList> {
             child: ListTile(
               isThreeLine: true,
               leading: CircleAvatar(
-                child: Icon(Icons.receipt),
+                backgroundColor: this.reportlist[position].reportsigned == 0
+                    ? Colors.blue
+                    : Colors.green,
+                child: Icon(
+                  Icons.receipt,
+                  color: Colors.white,
+                ),
               ),
               title: Text(
-                'Report No - ' +
-                    this.reportlist[position].reportmapid.toString(),
+                'Report No - ' + this.reportlist[position].reportno,
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.5),
@@ -117,13 +126,23 @@ class _ReportList extends State<ReportList> {
                 style: titleStyle,
               ),
               trailing: GestureDetector(
-                child: Icon(
-                  Icons.delete,
-                  size: 40,
-                  color: Colors.grey,
-                ),
+                child: this.reportlist[position].reportsigned == 0
+                    ? Icon(
+                        Icons.delete,
+                        size: 40,
+                        color: Colors.grey,
+                      )
+                    : this.reportlist[position].reportpublished == 0
+                        ? SizedBox(
+                            width: 1,
+                            height: 1,
+                          )
+                        : Icon(
+                            Icons.check_circle,
+                            size: 40,
+                            color: Colors.green,
+                          ),
                 onTap: () {
-                  //_delete(context, reportlist[position]);
                   _neverSatisfied(
                     position,
                   );
@@ -169,6 +188,9 @@ class _ReportList extends State<ReportList> {
 
   void navigateToDetail(Report report, String title) async {
     if (report.reportsigned == 1) {
+      await Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return Pdfviewer(report.reportmapid.toString());
+      }));
     } else {
       bool result =
           await Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -232,7 +254,7 @@ class _ReportList extends State<ReportList> {
                 Flushbar(
                   title: "Report Deleted Successfully",
                   message: "All tasks associated with report got trashed.",
-                  duration: Duration(seconds: 3),
+                  duration: Duration(seconds: 2),
                   icon: Icon(
                     Icons.delete_forever,
                     size: 28.0,
@@ -252,7 +274,7 @@ class _ReportList extends State<ReportList> {
 
   getUserInfoSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('Id');
+    empId = prefs.getString('EmpId');
     setState(() {});
   }
 }

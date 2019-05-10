@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/signpad2.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:printing/printing.dart';
 import 'package:spmconnectapp/screens/pdf.dart';
 
 class ReportDetail4 extends StatefulWidget {
@@ -20,6 +20,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
   DatabaseHelper helper = DatabaseHelper();
 
   Report report;
+  PermissionStatus _permissionStatus = PermissionStatus.unknown;
 
   FocusNode custrepFocusNode;
   FocusNode custemailFocusNode;
@@ -31,6 +32,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode = FocusNode();
     custemailFocusNode = FocusNode();
     custcontactFocusNode = FocusNode();
+    requestPermission();
   }
 
   @override
@@ -39,7 +41,6 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode.dispose();
     custemailFocusNode.dispose();
     custcontactFocusNode.dispose();
-
     super.dispose();
   }
 
@@ -146,13 +147,19 @@ class _ReportDetail4 extends State<ReportDetail4> {
                 child: MaterialButton(
                   minWidth: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return Signpad2(report.reportmapid.toString(), report);
-                      }),
-                    );
+                  onPressed: () async {
+                    if (_permissionStatus.value == 2) {
+                      await myPdf.buildPdf();
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Signpad2(
+                              report.reportmapid.toString(), report);
+                        }),
+                      );
+                    } else {
+                      requestPermission();
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -176,26 +183,20 @@ class _ReportDetail4 extends State<ReportDetail4> {
                 ),
               ),
             ),
-            Center(
-              child: RaisedButton(
-                onPressed: () {
-                  Printing.layoutPdf(onLayout: myPdf.buildPdf);
-                },
-                elevation: 20.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  'Print Report',
-                  textScaleFactor: 1.5,
-                ),
-                color: Colors.amber,
-              ),
-            )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> requestPermission() async {
+    final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
+        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+    setState(() {
+      print(permissionRequestResult);
+      _permissionStatus = permissionRequestResult[PermissionGroup.storage];
+      print(_permissionStatus);
+    });
   }
 
 // Update the project no.

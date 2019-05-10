@@ -35,7 +35,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(appBarTitle + ' - ' + report.reportmapid.toString()),
+          title: Text(appBarTitle + ' - ' + report.reportno),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: movetolastscreen,

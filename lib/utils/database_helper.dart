@@ -14,6 +14,7 @@ class DatabaseHelper {
   String reportTable = 'servicerpt_tbl';
   String colId = 'id';
   String colProjectno = 'projectno';
+  String colReportno = 'reportno';
   String colCustomer = 'customer';
   String colPlantloc = 'plantloc';
   String colContactname = 'contactname';
@@ -83,7 +84,7 @@ class DatabaseHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, '
+        'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, $colReportno TEXT, '
         '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
         '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,'
         '$colreportpublished INTEGER,$colreportsigned INTEGER, $colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
@@ -254,9 +255,34 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getReportMapListUnpublished() async {
     Database db = await this.database;
     int published = 0;
-    //int signed = 1;
+    int signed = 1;
     var result = await db.rawQuery(
-        'SELECT * FROM $reportTable where $colreportpublished = $published  order by $colreportmapid ASC');
+        'SELECT * FROM $reportTable where $colreportpublished = $published AND $colreportsigned = $signed order by $colreportmapid ASC');
+    return result;
+  }
+
+// Getting all unpublished task
+
+  Future<List<Tasks>> getTaskListUnpublished() async {
+    var reportMapList =
+        await getTaskMapListUnpublished(); // Get 'Map List' from database
+    int count =
+        reportMapList.length; // Count the number of map entries in db table
+
+    List<Tasks> taskList = List<Tasks>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      taskList.add(Tasks.fromMapObject(reportMapList[i]));
+    }
+
+    return taskList;
+  }
+
+  Future<List<Map<String, dynamic>>> getTaskMapListUnpublished() async {
+    Database db = await this.database;
+    int published = 0;
+    var result = await db.rawQuery(
+        'SELECT * FROM $taskTable where $coltaskPublished = $published order by $coltaskId ASC');
     return result;
   }
 }

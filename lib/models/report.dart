@@ -1,5 +1,6 @@
 class Report {
   int _id;
+  String _reportno;
   String _projectno;
   String _customer;
   String _planloc;
@@ -18,6 +19,7 @@ class Report {
   int _signed;
 
   Report(
+      this._reportno,
       this._projectno,
       this._customer,
       this._planloc,
@@ -32,6 +34,7 @@ class Report {
 
   Report.withId(
       this._id,
+      this._reportno,
       this._projectno,
       this._customer,
       this._planloc,
@@ -58,6 +61,8 @@ class Report {
   int get reportsigned => _signed;
 
   String get projectno => _projectno;
+
+  String get reportno => _reportno;
 
   String get customer => _customer;
 
@@ -95,10 +100,12 @@ class Report {
     this._signed = newSigned;
   }
 
-  set projectno(String newTitle) {
-    if (newTitle.length <= 255) {
-      this._projectno = newTitle;
-    }
+  set projectno(String newProject) {
+    this._projectno = newProject;
+  }
+
+  set repotno(String newReport) {
+    this._reportno = newReport;
   }
 
   set customer(String newCustomer) {
@@ -156,6 +163,7 @@ class Report {
       map['id'] = _id;
     }
     map['projectno'] = _projectno;
+    map['reportno'] = _reportno;
     map['customer'] = _customer;
     map['plantloc'] = _planloc;
     map['contactname'] = _contactname;
@@ -179,6 +187,7 @@ class Report {
   Report.fromMapObject(Map<String, dynamic> map) {
     this._id = map['id'];
     this._projectno = map['projectno'];
+    this._reportno = map['reportno'];
     this._customer = map['customer'];
     this._planloc = map['plantloc'];
     this._contactname = map['contactname'];
