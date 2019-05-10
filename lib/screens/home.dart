@@ -49,17 +49,10 @@ class _MyhomeState extends State<Myhome> {
   var drawerIcons = [
     Icon(Icons.person),
     Icon(Icons.security),
-    Icon(Icons.lock),
     Icon(Icons.sync),
     Icon(Icons.exit_to_app)
   ];
-  var drawerText = [
-    "Profile",
-    "Privacy",
-    "Permissions",
-    "Sync Data",
-    "Log Out"
-  ];
+  var drawerText = ["Profile", "Privacy", "Sync Data", "Log Out"];
 
   final barColor = const Color(0xFF192A56);
   final bgColor = const Color(0xFFEAF0F1);
@@ -198,7 +191,6 @@ class _MyhomeState extends State<Myhome> {
                             builder: (context) => _userprofile(context));
                       } else if (drawerText[position] == 'Privacy') {
                         navigateToprivacy();
-                      } else if (drawerText[position] == 'Permissions') {
                       } else if (drawerText[position] == 'Sync Data') {
                         navigateToReportsUnpublished();
                       } else if (drawerText[position] == 'Log Out') {

@@ -10,9 +10,10 @@ const directoryName = 'Pdfs';
 
 class MyPdf {
   final Report report;
+
   MyPdf(this.report);
 
-  Future<List<int>> buildPdf(PdfPageFormat format) async {
+  Future<void> buildPdf() async {
     final PdfDoc pdf = PdfDoc()
       ..addPage(Pdf.MultiPage(
           pageFormat: PdfPageFormat.letter
@@ -70,14 +71,15 @@ class MyPdf {
     print('Started creating pdf');
     await savepdf(pdf);
     print('PDF Creation finished');
-    return pdf.save();
+    //pdf.save();
   }
 
   Future<void> savepdf(PdfDoc pdf) async {
     Directory directory = await getExternalStorageDirectory();
     String path = directory.path;
-    print(path);
+    print('$path/$directoryName/${report.reportmapid}.pdf');
     await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/1001.pdf').writeAsBytesSync(pdf.save());
+    File('$path/$directoryName/${report.reportmapid}.pdf')
+        .writeAsBytesSync(pdf.save());
   }
 }

@@ -71,13 +71,10 @@ class _Signpad2State extends State<Signpad2> {
     return new Scaffold(
       backgroundColor: Colors.grey,
       appBar: new AppBar(
-          backgroundColor: barColor,
-          title: Text('Signature'),
-          actions: actions,
-          bottom: new PreferredSize(
-            child: new DrawBar(_controller),
-            preferredSize: new Size(MediaQuery.of(context).size.width, 30.0),
-          )),
+        backgroundColor: barColor,
+        title: Text('Signature'),
+        actions: actions,
+      ),
       body: new Center(
           child: new AspectRatio(
               aspectRatio: 1.0, child: new Painter(_controller))),
@@ -107,7 +104,7 @@ class _Signpad2State extends State<Signpad2> {
             body: new Container(
                 alignment: Alignment.center,
                 child: new FutureBuilder<Uint8List>(
-                  future: picture.toPNG('1001'),
+                  future: picture.toPNG('${report.reportmapid}'),
                   builder: (BuildContext context,
                       AsyncSnapshot<Uint8List> snapshot) {
                     switch (snapshot.connectionState) {

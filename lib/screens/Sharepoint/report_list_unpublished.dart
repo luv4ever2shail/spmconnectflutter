@@ -39,6 +39,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   @override
   void initState() {
     super.initState();
+    _saving = true;
     getSharepointToken();
     getUserInfoSF();
   }
