@@ -141,12 +141,12 @@ class _MyhomeState extends State<Myhome> {
 
   Drawer _getMailAccountDrawerr() {
     Text email = new Text(
-      sfEmail == null ? '' : sfEmail,
+      _users == null ? sfEmail : _users.mail,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
     Text name = new Text(
-      sfName == null ? '' : sfName,
+      _users == null ? sfName : _users.displayName,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
@@ -225,6 +225,7 @@ class _MyhomeState extends State<Myhome> {
 
   void logout() async {
     try {
+      removeUserInfoFromSF();
       await oauth.logout();
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
         return MyLoginPage();
@@ -274,8 +275,8 @@ class _MyhomeState extends State<Myhome> {
       var data = json.decode(response.body);
       _users = Users.fromJson(data);
       setState(() {});
-      removeUserInfoFromSF();
-      storeUserInfoToSF();
+      await removeUserInfoFromSF();
+      await storeUserInfoToSF();
     } catch (e) {
       print(e);
     }

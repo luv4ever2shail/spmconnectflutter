@@ -7,6 +7,7 @@ import 'package:sharepoint_auth/model/config.dart';
 import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -20,10 +21,13 @@ class ReportListUnpublished extends StatefulWidget {
 class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Report> reportlist;
-  int count = 0;
+  List<Tasks> tasklist;
+  int reportcount = 0;
+  int taskcount = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   bool _saving = false;
-  int list = 0;
+  int listreportcount = 0;
+  int listtaskcount = 0;
   String empName;
 
   static final SharepointConfig _config = new SharepointConfig(
@@ -48,7 +52,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   Widget build(BuildContext context) {
     if (reportlist == null) {
       reportlist = List<Report>();
-      updateListView();
+      updateReportListView();
+      updateTaskListView();
     }
 
     return WillPopScope(
@@ -72,17 +77,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 size: 38,
               ),
               onPressed: () async {
-                if (count > 0) {
-                  print('sync tapped');
-                  setState(() {
-                    list = count;
-                    _saving = true;
-                  });
-                  for (final i in reportlist) {
-                    await postItemToSharepoint(
-                        i, accessToken, getReportToJSON(i), count);
-                  }
-                }
+                await synctasks();
               },
             )
           ],
@@ -99,11 +94,39 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     );
   }
 
+  Future<void> synctasks() async {
+    if (taskcount > 0) {
+      print('No of tasks found to be uploaded : $taskcount');
+      print('sync started for tasks');
+      setState(() {
+        listtaskcount = taskcount;
+        _saving = true;
+      });
+      for (final i in tasklist) {
+        await postTasksToSharepoint(
+            i, accessToken, getTaskToJSON(i), taskcount);
+      }
+    }
+    if (_saving) {
+      if (reportcount > 0) {
+        print('sync started for reports');
+        setState(() {
+          listreportcount = reportcount;
+          _saving = true;
+        });
+        for (final i in reportlist) {
+          await postReportsToSharepoint(
+              i, accessToken, getReportToJSON(i), reportcount);
+        }
+      }
+    }
+  }
+
   ListView getReportListView() {
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
 
     return ListView.builder(
-      itemCount: count,
+      itemCount: reportcount,
       itemBuilder: (BuildContext context, int position) {
         return Padding(
           padding: EdgeInsets.all(5.0),
@@ -146,7 +169,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   Future<Null> _handleRefresh() async {
     refreshKey.currentState?.show(atTop: false);
     await new Future.delayed(new Duration(seconds: 1));
-    updateListView();
+    updateReportListView();
     return null;
   }
 
@@ -155,21 +178,38 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     Navigator.pop(context, true);
   }
 
-  void updateListView() {
+  Future<void> updateReportListView() async {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
+    await dbFuture.then((database) {
       Future<List<Report>> reportListFuture =
           databaseHelper.getReportListUnpublished();
       reportListFuture.then((reportlist) {
         setState(() {
           this.reportlist = reportlist;
-          this.count = reportlist.length;
+          this.reportcount = reportlist.length;
         });
-        if (list <= count) {
+        if (listreportcount <= 0) {
           setState(() {
-            list = 0;
+            listreportcount = 0;
             _saving = false;
           });
+        }
+      });
+    });
+  }
+
+  Future<void> updateTaskListView() async {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    await dbFuture.then((database) {
+      Future<List<Tasks>> taskListFuture =
+          databaseHelper.getTaskListUnpublished();
+      taskListFuture.then((tasklist) {
+        setState(() {
+          this.tasklist = tasklist;
+          this.taskcount = tasklist.length;
+        });
+        if (listreportcount <= 0) {
+          print('finished syncing all tasks');
         }
       });
     });
@@ -186,6 +226,15 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     return reporttojson;
   }
 
+  String getTaskToJSON(Tasks task) {
+    String tasktojson =
+        ('{"__metadata": { "type": "SP.Data.ConnectTasksListItem" },"Title": "${task.reportid - task.id}","ReportId": "${task.reportid}","Taskid": "${task.id}",'
+            '"ItemNo": "${task.item}","Starttime": "${task.starttime}","Endtime": "${task.endtime}","Hours": "${task.hours}",'
+            '"WorkPerformed": "${task.workperformed}","Datecreated": "${task.date}","Uploadedby": "$empName"}');
+    //print(tasktojson);
+    return tasktojson;
+  }
+
   void getSharepointToken() async {
     await restapi.login();
     accessToken = await restapi.getAccessToken();
@@ -196,10 +245,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     await restapi.logout();
   }
 
-  Future<void> postItemToSharepoint(
+  Future<void> postReportsToSharepoint(
       Report report, String accesstoken, var _body, int count) async {
     try {
-      print('post started : list value $list');
+      print('post started : list value $listreportcount');
 
       http.Response response = await http.post(
           Uri.encodeFull(
@@ -226,6 +275,36 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
   }
 
+  Future<void> postTasksToSharepoint(
+      Tasks task, String accesstoken, var _body, int count) async {
+    try {
+      print('post started : list value $listtaskcount');
+
+      http.Response response = await http.post(
+          Uri.encodeFull(
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectTasks')/items"),
+          headers: {
+            "Authorization": "Bearer " + accesstoken,
+            "Content-Type": "application/json;odata=verbose",
+            "Accept": "application/json"
+          },
+          body: _body);
+
+      print(response.statusCode);
+      print('started');
+      if (response.statusCode == 201) {
+        await _saveTask(task);
+      } else {
+        setState(() {
+          _saving = false;
+        });
+      }
+      print('ended');
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> _saveReport(Report report) async {
     int result;
     if (report.id != null) {
@@ -233,12 +312,28 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       result = await databaseHelper.updateReport(report);
     }
     if (result != 0) {
-      list--;
-      print(list);
+      listreportcount--;
+      print(listreportcount);
       print('Success Saving');
-      updateListView();
+      updateReportListView();
     } else {
-      print('failure');
+      print('failure saving report');
+    }
+  }
+
+  Future<void> _saveTask(Tasks task) async {
+    int result;
+    if (task.id != null) {
+      task.published = 1;
+      result = await databaseHelper.updateTask(task);
+    }
+    if (result != 0) {
+      listtaskcount--;
+      print(listtaskcount);
+      print('Success Saving task');
+      updateTaskListView();
+    } else {
+      print('failure saving task');
     }
   }
 

@@ -47,18 +47,19 @@ class MyApp extends StatelessWidget {
 ///// TODO: storage permission should popup
 ///// TODO: Database column to signify its been signed off and cant access it anymore, instead show pdf
 ///// TODO: Report list page needs to prevent from users to access the report if its signed off
+///// TODO: Implement pdf viewer to view files from local source
+///// TODO: figure out saving of pdf first before displaying it
+///// TODO: Remove permission screen
+///// TODO: Implement uploading tasks
 // TODO: Clean up sharepoint and azure app create new accounts
 // TODO: pdf creation with all the fields
-///// TODO: figure out saving of pdf first before displaying it
 // TODO: SPM splash screen
 // TODO: Storage issues with ios
 // TODO: SPM Logo
-// TODO: Fix the bug on plant location
+///// TODO: Fix the bug on plant location
 // TODO: Fix bugs on getting user infos
-// TODO: Remove permission screen
-// TODO: Implement uploading tasks
 // TODO: Implement way to publish pdf and signatures
-// TODO: Implement pdf viewer to view files from local source
+// TODO: try to remove flush bar plugin and printing plugin to save pdf
 
 /*
 /TODO: Step to post data to sharepoint list.

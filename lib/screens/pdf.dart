@@ -6,7 +6,7 @@ import 'package:pdf/widgets.dart' as Pdf;
 import 'package:printing/printing.dart';
 import 'package:spmconnectapp/models/report.dart';
 
-const directoryName = 'Pdfs';
+const directoryName = 'Connect_Pdfs';
 
 class MyPdf {
   final Report report;

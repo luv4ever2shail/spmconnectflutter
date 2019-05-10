@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 
-const directoryName = 'Signature';
+const directoryName = 'Connect_Signatures';
 
 class Painter extends StatefulWidget {
   final PainterController painterController;
@@ -177,7 +177,6 @@ class PictureDetails {
         dateTime.microsecond.toString();
     return dateTimeString;
   }
-
 
   Future<Image> toImage() {
     return picture.toImage(width, height);

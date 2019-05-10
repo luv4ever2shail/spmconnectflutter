@@ -260,4 +260,29 @@ class DatabaseHelper {
         'SELECT * FROM $reportTable where $colreportpublished = $published AND $colreportsigned = $signed order by $colreportmapid ASC');
     return result;
   }
+
+// Getting all unpublished task
+
+  Future<List<Tasks>> getTaskListUnpublished() async {
+    var reportMapList =
+        await getTaskMapListUnpublished(); // Get 'Map List' from database
+    int count =
+        reportMapList.length; // Count the number of map entries in db table
+
+    List<Tasks> taskList = List<Tasks>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      taskList.add(Tasks.fromMapObject(reportMapList[i]));
+    }
+
+    return taskList;
+  }
+
+  Future<List<Map<String, dynamic>>> getTaskMapListUnpublished() async {
+    Database db = await this.database;
+    int published = 0;
+    var result = await db.rawQuery(
+        'SELECT * FROM $taskTable where $coltaskPublished = $published order by $coltaskId ASC');
+    return result;
+  }
 }

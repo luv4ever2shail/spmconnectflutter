@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
 import 'package:path_provider/path_provider.dart';
 
+const directoryName = 'Connect_Pdfs';
+
 class Pdfviewer extends StatefulWidget {
   final String reportno;
 
@@ -30,8 +32,8 @@ class _PdfviewerState extends State<Pdfviewer> {
     try {
       Directory directory = await getExternalStorageDirectory();
       String path = directory.path;
-      print("$path/Pdfs/$reportno.pdf");
-      File file = File("$path/Pdfs/$reportno.pdf");
+      print("$path/$directoryName/$reportno.pdf");
+      File file = File("$path/$directoryName/$reportno.pdf");
       document = await PDFDocument.fromFile(file);
       setState(() => _isLoading = false);
     } catch (e) {
