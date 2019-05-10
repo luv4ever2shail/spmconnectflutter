@@ -7,7 +7,6 @@ import 'package:spmconnectapp/screens/pdf_viewer.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
-import 'package:flushbar/flushbar.dart';
 
 const directoryName = 'Pdfs';
 
@@ -144,6 +143,7 @@ class _ReportList extends State<ReportList> {
                           ),
                 onTap: () {
                   _neverSatisfied(
+                    context,
                     position,
                   );
                 },
@@ -172,7 +172,7 @@ class _ReportList extends State<ReportList> {
     }));
   }
 
-  void _delete(BuildContext context, Report report) async {
+  Future<void> _delete(Report report) async {
     int result = await databaseHelper.deleteReport(report.id);
     if (result != 0) {
       debugPrint('deleted report');
@@ -225,7 +225,7 @@ class _ReportList extends State<ReportList> {
     });
   }
 
-  Future<void> _neverSatisfied(int position) async {
+  Future<void> _neverSatisfied(BuildContext contex, int position) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -249,21 +249,11 @@ class _ReportList extends State<ReportList> {
             FlatButton(
               child: Text('Discard'),
               onPressed: () {
-                _delete(context, reportlist[position]);
                 Navigator.of(context).pop();
-                Flushbar(
-                  title: "Report Deleted Successfully",
-                  message: "All tasks associated with report got trashed.",
-                  duration: Duration(seconds: 2),
-                  icon: Icon(
-                    Icons.delete_forever,
-                    size: 28.0,
-                    color: Colors.red,
-                  ),
-                  aroundPadding: EdgeInsets.all(8),
-                  borderRadius: 8,
-                  leftBarIndicatorColor: Colors.red,
-                ).show(context);
+                _delete(reportlist[position]);
+                Scaffold.of(contex).showSnackBar(SnackBar(
+                  content: Text("Report Deleted Successfully."),
+                ));
               },
             ),
           ],

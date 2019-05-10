@@ -95,6 +95,11 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
   Future<void> synctasks() async {
+    if (accessToken == null) {
+      _showAlertDialog('SPM Connect',
+          'Error occured while trying to sync data to cloud. Please check your network connections.');
+      return;
+    }
     if (taskcount > 0) {
       print('No of tasks found to be uploaded : $taskcount');
       print('sync started for tasks');
@@ -341,5 +346,13 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     empName = prefs.getString('Name');
     setState(() {});
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
   }
 }

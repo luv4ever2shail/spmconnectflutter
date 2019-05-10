@@ -173,7 +173,7 @@ class DatabaseHelper {
 
 //*! Task table commands
 
-  Future<int> inserTask(Tasks task) async {
+  Future<int> insertTask(Tasks task) async {
     Database db = await this.database;
     var result = await db.insert(taskTable, task.toMap());
     return result;

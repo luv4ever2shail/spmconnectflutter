@@ -1,4 +1,3 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:intl/intl.dart';
@@ -234,7 +233,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
         // Case 2: Insert Operation
         if (task.item.length > 0) {
           task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
-          result = await helper.inserTask(task);
+          result = await helper.insertTask(task);
         }
       }
 
@@ -258,21 +257,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
     //   content: Text(message),
     // );
     // showDialog(context: context, builder: (_) => alertDialog);
-
-    Flushbar(
-      title: title,
-      message: message,
-      animationDuration: Duration(seconds: 1),
-      duration: Duration(seconds: 2),
-      icon: Icon(
-        Icons.info_outline,
-        size: 35.0,
-        color: Colors.blue[300],
-      ),
-      aroundPadding: EdgeInsets.all(8),
-      borderRadius: 8,
-      leftBarIndicatorColor: Colors.blue[300],
-    ).show(context);
   }
 
 // Update the project no.

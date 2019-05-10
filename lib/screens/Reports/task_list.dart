@@ -86,7 +86,7 @@ class _TaskListState extends State<TaskList> {
             deleteItem(position);
             //To show a snackbar with the UNDO button
             Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Task deleted"),
+                content: Text("Task deleted ${tasklist[position].item}"),
                 action: SnackBarAction(
                     label: "UNDO",
                     onPressed: () {
@@ -100,12 +100,12 @@ class _TaskListState extends State<TaskList> {
   }
 
   void deleteItem(index) {
-    _delete(context, tasklist[index]);
+    _delete(tasklist[index]);
     updateListView();
   }
 
   void undoDeletion(item) async {
-    await databaseHelper.inserTask(item);
+    await databaseHelper.insertTask(item);
     updateListView();
   }
 
@@ -125,7 +125,7 @@ class _TaskListState extends State<TaskList> {
     Navigator.pop(context, true);
   }
 
-  void _delete(BuildContext context, Tasks task) async {
+  void _delete(Tasks task) async {
     await databaseHelper.deleteTask(task.id);
   }
 
