@@ -57,9 +57,9 @@ class MyApp extends StatelessWidget {
 // TODO: Storage issues with ios
 // TODO: SPM Logo
 ///// TODO: Fix the bug on plant location
-// TODO: Fix bugs on getting user infos
+///// TODO: Fix bugs on getting user infos
 // TODO: Implement way to publish pdf and signatures
-// TODO: try to remove flush bar plugin and printing plugin to save pdf
+///// TODO: try to remove flush bar plugin and printing plugin to save pdf
 
 /*
 /TODO: Step to post data to sharepoint list.
