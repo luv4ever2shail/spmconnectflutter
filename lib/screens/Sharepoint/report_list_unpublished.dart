@@ -77,6 +77,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 size: 38,
               ),
               onPressed: () async {
+                setState(() {
+                  _saving = true;
+                });
                 await synctasks();
               },
             )
@@ -98,32 +101,35 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     if (accessToken == null) {
       _showAlertDialog('SPM Connect',
           'Error occured while trying to sync data to cloud. Please check your network connections.');
+      setState(() {
+        _saving = false;
+      });
       return;
     }
-    if (taskcount > 0) {
-      print('No of tasks found to be uploaded : $taskcount');
-      print('sync started for tasks');
-      setState(() {
+    if (taskcount > 0 || reportcount > 0) {
+      if (taskcount > 0) {
+        print('No of tasks found to be uploaded : $taskcount');
+        print('sync started for tasks');
         listtaskcount = taskcount;
-        _saving = true;
-      });
-      for (final i in tasklist) {
-        await postTasksToSharepoint(
-            i, accessToken, getTaskToJSON(i), taskcount);
-      }
-    }
-    if (_saving) {
-      if (reportcount > 0) {
-        print('sync started for reports');
-        setState(() {
-          listreportcount = reportcount;
-          _saving = true;
-        });
-        for (final i in reportlist) {
-          await postReportsToSharepoint(
-              i, accessToken, getReportToJSON(i), reportcount);
+        for (final i in tasklist) {
+          await postTasksToSharepoint(
+              i, accessToken, getTaskToJSON(i), taskcount);
         }
       }
+      if (_saving) {
+        if (reportcount > 0) {
+          print('sync started for reports');
+          listreportcount = reportcount;
+          for (final i in reportlist) {
+            await postReportsToSharepoint(
+                i, accessToken, getReportToJSON(i), reportcount);
+          }
+        }
+      }
+    } else {
+      setState(() {
+        _saving = false;
+      });
     }
   }
 
