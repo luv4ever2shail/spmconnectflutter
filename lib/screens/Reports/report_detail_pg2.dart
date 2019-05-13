@@ -8,7 +8,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 class ReportDetail2 extends StatefulWidget {
   final String appBarTitle;
   final Tasks task;
-  final int reportid;
+  final String reportid;
 
   ReportDetail2(this.task, this.appBarTitle, this.reportid);
   @override
@@ -21,7 +21,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   DatabaseHelper helper = DatabaseHelper();
 
   String appBarTitle;
-  int reportid;
+  String reportid;
   Tasks task;
   DateTime _starttime;
   DateTime _endtime;
@@ -221,7 +221,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
     Navigator.pop(context, true);
   }
 
-  void _save(int reportid) async {
+  void _save(String reportid) async {
     if (!(_validate)) {
       movetolastscreen();
       task.reportid = reportid;

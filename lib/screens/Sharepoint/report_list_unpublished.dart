@@ -239,7 +239,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   String getTaskToJSON(Tasks task) {
     String tasktojson =
-        ('{"__metadata": { "type": "SP.Data.ConnectTasksListItem" },"Title": "${task.reportid - task.id}","ReportId": "${task.reportid}","Taskid": "${task.id}",'
+        ('{"__metadata": { "type": "SP.Data.ConnectTasksListItem" },"Title": "${task.reportid} - ${task.id}","ReportId": "${task.reportid}","Taskid": "${task.id}",'
             '"ItemNo": "${task.item}","Starttime": "${task.starttime}","Endtime": "${task.endtime}","Hours": "${task.hours}",'
             '"WorkPerformed": "${task.workperformed}","Datecreated": "${task.date}","Uploadedby": "$empName"}');
     //print(tasktojson);

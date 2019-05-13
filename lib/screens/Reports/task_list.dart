@@ -6,7 +6,7 @@ import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TaskList extends StatefulWidget {
-  final int reportid;
+  final String reportid;
 
   TaskList(this.reportid);
   @override
@@ -19,7 +19,7 @@ class _TaskListState extends State<TaskList> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Tasks> tasklist;
   int count = 0;
-  int reportid;
+  String reportid;
   _TaskListState(this.reportid);
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _TaskListState extends State<TaskList> {
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               debugPrint('FAB clicked');
-              navigateToDetail(Tasks(0, '', '', '', '', '', '', 0),
+              navigateToDetail(Tasks(reportid, '', '', '', '', '', '', 0),
                   'Add New Item', reportid);
             },
             icon: Icon(Icons.add),
@@ -129,7 +129,7 @@ class _TaskListState extends State<TaskList> {
     await databaseHelper.deleteTask(task.id);
   }
 
-  void navigateToDetail(Tasks task, String title, int reportid) async {
+  void navigateToDetail(Tasks task, String title, String reportid) async {
     bool result =
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportDetail2(task, title, reportid);

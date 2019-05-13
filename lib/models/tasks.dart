@@ -1,6 +1,6 @@
 class Tasks {
   int _id;
-  int _reportid;
+  String _reportid;
   int _published;
   String _item;
   String _starttime;
@@ -25,7 +25,7 @@ class Tasks {
 
   int get id => _id;
 
-  int get reportid => _reportid;
+  String get reportid => _reportid;
 
   int get published => _published;
 
@@ -41,7 +41,7 @@ class Tasks {
 
   String get date => _date;
 
-  set reportid(int newReportid) {
+  set reportid(String newReportid) {
     this._reportid = newReportid;
   }
 

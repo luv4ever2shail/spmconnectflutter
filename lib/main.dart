@@ -1,19 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spmconnectapp/screens/home.dart';
 import 'package:spmconnectapp/screens/login.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    autoLogIn();
+  }
+
+  void autoLogIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String userId = prefs.getString('Name');
+
+    if (userId != null) {
+      setState(() {
+        isLoggedIn = true;
+      });
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Service Reports',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyLoginPage(title: 'SPM Connect Login'),
-    );
+        title: 'Service Reports',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: isLoggedIn
+            ? Myhome(null)
+            : MyLoginPage(title: 'SPM Connect Login'));
   }
 }
 
@@ -51,14 +79,15 @@ class MyApp extends StatelessWidget {
 ///// TODO: figure out saving of pdf first before displaying it
 ///// TODO: Remove permission screen
 ///// TODO: Implement uploading tasks
+///// TODO: Auto login
 // TODO: Clean up sharepoint and azure app create new accounts
 // TODO: pdf creation with all the fields
 // TODO: SPM splash screen
 // TODO: Storage issues with ios
 // TODO: SPM Logo
+// TODO: Implement way to publish pdf and signatures
 ///// TODO: Fix the bug on plant location
 ///// TODO: Fix bugs on getting user infos
-// TODO: Implement way to publish pdf and signatures
 ///// TODO: try to remove flush bar plugin and printing plugin to save pdf
 
 /*
