@@ -207,9 +207,10 @@ class _ReportDetail2 extends State<ReportDetail2> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        tooltip: "Save Task Performed",
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.save),
+        label: Text('Save'),
+        tooltip: "Save task performed",
         onPressed: () {
           _save(reportid);
         },

@@ -44,7 +44,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   void initState() {
     super.initState();
     _saving = true;
-    getSharepointToken();
     getUserInfoSF();
   }
 
@@ -69,21 +68,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               movetolastscreen();
             },
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.sync,
-                color: Colors.white,
-                size: 38,
-              ),
-              onPressed: () async {
-                setState(() {
-                  _saving = true;
-                });
-                await synctasks();
-              },
-            )
-          ],
         ),
         body: ModalProgressHUD(
           inAsyncCall: _saving,
@@ -93,20 +77,36 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             child: getReportListView(),
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            setState(() {
+              _saving = true;
+            });
+            await synctasks();
+          },
+          tooltip: 'Sync reports to cloud',
+          icon: Icon(
+            Icons.sync,
+            color: Colors.white,
+          ),
+          label: Text('Sync Reports'),
+        ),
       ),
     );
   }
 
   Future<void> synctasks() async {
-    if (accessToken == null) {
-      _showAlertDialog('SPM Connect',
-          'Error occured while trying to sync data to cloud. Please check your network connections.');
-      setState(() {
-        _saving = false;
-      });
-      return;
-    }
     if (taskcount > 0 || reportcount > 0) {
+      await getSharepointToken();
+      if (accessToken == null) {
+        _showAlertDialog('SPM Connect',
+            'Error occured while trying to sync data to cloud. Please check your network connections.');
+        setState(() {
+          _saving = false;
+        });
+        return;
+      }
       if (taskcount > 0) {
         print('No of tasks found to be uploaded : $taskcount');
         print('sync started for tasks');
@@ -185,7 +185,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
   void movetolastscreen() {
-    removeSharepointToken();
+    //removeSharepointToken();
     Navigator.pop(context, true);
   }
 
@@ -246,7 +246,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     return tasktojson;
   }
 
-  void getSharepointToken() async {
+  Future<void> getSharepointToken() async {
     await restapi.login();
     accessToken = await restapi.getAccessToken();
     print('Access Token Sharepoint $accessToken');
