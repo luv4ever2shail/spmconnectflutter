@@ -82,10 +82,11 @@ class _MyAppState extends State<MyApp> {
 ///// TODO: Auto login
 // TODO: Clean up sharepoint and azure app create new accounts
 // TODO: pdf creation with all the fields
-// TODO: SPM splash screen
+///// TODO: SPM splash screen
 // TODO: Storage issues with ios
-// TODO: SPM Logo
-// TODO: Implement way to publish pdf and signatures
+///// TODO: SPM Logo
+///// TODO: Sync signature to sharepoint
+// TODO: Implement way to publish pdf
 ///// TODO: Fix the bug on plant location
 ///// TODO: Fix bugs on getting user infos
 ///// TODO: try to remove flush bar plugin and printing plugin to save pdf

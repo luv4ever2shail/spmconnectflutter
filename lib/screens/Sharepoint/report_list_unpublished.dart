@@ -108,7 +108,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       await getSharepointToken();
       if (accessToken == null) {
         _showAlertDialog('SPM Connect',
-            'Error occured while trying to sync data to cloud. Please check your network connections.');
+            'Unable to retrieve access token. Please check your network connections.');
         setState(() {
           _saving = false;
         });
@@ -291,8 +291,13 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             await postAttachment(resJson["Id"].toString(), accesstoken, file);
         if (result != 0) {
           await _saveReport(report);
+        } else {
+          _showAlertDialog('SPM Connect',
+              'Error occured while trying to sync signature png to cloud.');
         }
       } else {
+        _showAlertDialog('SPM Connect',
+            'Error occured while trying to sync Reports to cloud.');
         setState(() {
           _saving = false;
         });
@@ -323,6 +328,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       if (response.statusCode == 201) {
         await _saveTask(task);
       } else {
+        _showAlertDialog('SPM Connect',
+            'Error occured while trying to sync Tasks to cloud.');
         setState(() {
           _saving = false;
         });
@@ -345,6 +352,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print('Success Saving');
       updateReportListView();
     } else {
+      _showAlertDialog(
+          'SPM Connect', 'Error occured saving Report to database.');
       print('failure saving report');
     }
   }
@@ -361,6 +370,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print('Success Saving task');
       updateTaskListView();
     } else {
+      _showAlertDialog('SPM Connect', 'Error occured saving Task to database.');
       print('failure saving task');
     }
   }
@@ -375,6 +385,12 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     AlertDialog alertDialog = AlertDialog(
       title: Text(title),
       content: Text(message),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(''),
+          onPressed: () {},
+        )
+      ],
     );
     showDialog(context: context, builder: (_) => alertDialog);
   }
