@@ -417,17 +417,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future loadDocument() async {
     try {
-      if (Platform.isIOS) {
-        Directory directory = await getApplicationDocumentsDirectory();
-        String _path = directory.path;
-        print("$_path/$directoryName/");
-        path = "$_path/$directoryName/";
-      } else {
-        Directory directory = await getExternalStorageDirectory();
-        String _path = directory.path;
-        print("$_path/$directoryName/");
-        path = "$_path/$directoryName/";
-      }
+      Directory directory = await getApplicationDocumentsDirectory();
+      String _path = directory.path;
+      print("$_path/$directoryName/");
+      path = "$_path/$directoryName/";
     } catch (e) {
       print(e);
     }

@@ -57,15 +57,17 @@ class MyPdf {
                 Pdf.Paragraph(text: 'Contact Name :' + report.contactname),
                 Pdf.Paragraph(text: 'Authorized By :' + report.authorby),
                 Pdf.Paragraph(text: 'Equipment :' + report.equipment),
+                Pdf.Paragraph(
+                    text: 'Further Actions Req :' + report.furtheractions),
+                Pdf.Paragraph(text: 'Equipment :' + report.custcomments),
+                Pdf.Paragraph(text: 'Equipment :' + report.custrep),
+                Pdf.Paragraph(text: 'Equipment :' + report.custemail),
+                Pdf.Paragraph(text: 'Equipment :' + report.custcontact),
                 Pdf.Header(level: 2, text: 'Task Performed'),
                 Pdf.Table.fromTextArray(
                     context: context,
                     data: const <List<String>>[
                       <String>['Item', 'Hours', 'Task Performed'],
-                      <String>['1993', 'PDF 1.0', 'Acrobat 1'],
-                      <String>['1994', 'PDF 1.1', 'Acrobat 2'],
-                      <String>['1996', 'PDF 1.2', 'Acrobat 3'],
-                      <String>['1999', 'PDF 1.3', 'Acrobat 4'],
                     ]),
               ]));
     print('Started creating pdf');
@@ -75,20 +77,11 @@ class MyPdf {
   }
 
   Future<void> savepdf(PdfDoc pdf) async {
-    if (Platform.isIOS) {
-      Directory directory = await getApplicationDocumentsDirectory();
-      String path = directory.path;
-      print('$path/$directoryName/${report.reportmapid}.pdf');
-      await Directory('$path/$directoryName').create(recursive: true);
-      File('$path/$directoryName/${report.reportmapid}.pdf')
-          .writeAsBytesSync(pdf.save());
-    } else {
-      Directory directory = await getExternalStorageDirectory();
-      String path = directory.path;
-      print('$path/$directoryName/${report.reportmapid}.pdf');
-      await Directory('$path/$directoryName').create(recursive: true);
-      File('$path/$directoryName/${report.reportmapid}.pdf')
-          .writeAsBytesSync(pdf.save());
-    }
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path;
+    print('$path/$directoryName/${report.reportmapid}.pdf');
+    await Directory('$path/$directoryName').create(recursive: true);
+    File('$path/$directoryName/${report.reportmapid}.pdf')
+        .writeAsBytesSync(pdf.save());
   }
 }
