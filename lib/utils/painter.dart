@@ -187,15 +187,33 @@ class PictureDetails {
 
     var pngBytes = await image.toByteData(format: ImageByteFormat.png);
     // Use plugin [path_provider] to export image to storage
-    Directory directory = await getExternalStorageDirectory();
-    String path = directory.path;
-    print(path);
-    await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/$reportno.png')
-        .writeAsBytesSync(pngBytes.buffer.asInt8List());
-    return (await image.toByteData(format: ImageByteFormat.png))
-        .buffer
-        .asUint8List();
+
+    if (Platform.isIOS) {
+      Directory directory = await getApplicationDocumentsDirectory();
+      String path = directory.path;
+      print(path);
+      await Directory('$path/$directoryName').create(recursive: true);
+      print('Image signature path is : - $path/$directoryName/$reportno.png');
+      File('$path/$directoryName/$reportno.png')
+          .writeAsBytesSync(pngBytes.buffer.asInt8List());
+
+      return (await image.toByteData(format: ImageByteFormat.png))
+          .buffer
+          .asUint8List();
+    } else {
+      Directory directory = await getExternalStorageDirectory();
+      String path = directory.path;
+      print(path);
+      await Directory('$path/$directoryName').create(recursive: true);
+
+      print('Image signature path is : - $path/$directoryName/$reportno.png');
+      File('$path/$directoryName/$reportno.png')
+          .writeAsBytesSync(pngBytes.buffer.asInt8List());
+
+      return (await image.toByteData(format: ImageByteFormat.png))
+          .buffer
+          .asUint8List();
+    }
   }
 }
 

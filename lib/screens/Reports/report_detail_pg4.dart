@@ -151,7 +151,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                   padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                   onPressed: () async {
                     if (Platform.isIOS) {
-                      // await myPdf.buildPdf();
+                      await myPdf.buildPdf();
                       await Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {

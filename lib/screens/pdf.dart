@@ -75,11 +75,20 @@ class MyPdf {
   }
 
   Future<void> savepdf(PdfDoc pdf) async {
-    Directory directory = await getExternalStorageDirectory();
-    String path = directory.path;
-    print('$path/$directoryName/${report.reportmapid}.pdf');
-    await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/${report.reportmapid}.pdf')
-        .writeAsBytesSync(pdf.save());
+    if (Platform.isIOS) {
+      Directory directory = await getApplicationDocumentsDirectory();
+      String path = directory.path;
+      print('$path/$directoryName/${report.reportmapid}.pdf');
+      await Directory('$path/$directoryName').create(recursive: true);
+      File('$path/$directoryName/${report.reportmapid}.pdf')
+          .writeAsBytesSync(pdf.save());
+    } else {
+      Directory directory = await getExternalStorageDirectory();
+      String path = directory.path;
+      print('$path/$directoryName/${report.reportmapid}.pdf');
+      await Directory('$path/$directoryName').create(recursive: true);
+      File('$path/$directoryName/${report.reportmapid}.pdf')
+          .writeAsBytesSync(pdf.save());
+    }
   }
 }
