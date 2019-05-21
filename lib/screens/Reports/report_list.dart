@@ -74,8 +74,8 @@ class _ReportList extends State<ReportList> {
               mapid = reportmapid[0].reportmapid + 1;
             }
             navigateToDetail(
-                Report('$empId - ${mapid.toString()}', '', '', '', '', '', '',
-                    '', '', mapid, 0, 0),
+                Report('$empId${mapid.toString()}', '', '', '', '', '', '', '',
+                    '', mapid, 0, 0),
                 'Add New Report');
           },
           tooltip: 'Create New Report',

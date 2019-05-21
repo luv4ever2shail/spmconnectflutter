@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
 // TODO: Clean up sharepoint and azure app create new accounts
 // TODO: pdf creation with all the fields
 ///// TODO: SPM splash screen
-// TODO: Storage issues with ios
+///// TODO: Storage issues with ios
 ///// TODO: SPM Logo
 ///// TODO: Sync signature to sharepoint
 // TODO: Implement way to publish pdf

@@ -34,7 +34,9 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode = FocusNode();
     custemailFocusNode = FocusNode();
     custcontactFocusNode = FocusNode();
-    requestPermission();
+    if (Platform.isAndroid) {
+      requestPermission();
+    }
   }
 
   @override

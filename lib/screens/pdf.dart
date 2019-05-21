@@ -58,17 +58,12 @@ class MyPdf {
                 Pdf.Paragraph(text: 'Authorized By :' + report.authorby),
                 Pdf.Paragraph(text: 'Equipment :' + report.equipment),
                 Pdf.Paragraph(
-                    text: 'Further Actions Req :' + report.furtheractions),
-                Pdf.Paragraph(text: 'Equipment :' + report.custcomments),
-                Pdf.Paragraph(text: 'Equipment :' + report.custrep),
-                Pdf.Paragraph(text: 'Equipment :' + report.custemail),
-                Pdf.Paragraph(text: 'Equipment :' + report.custcontact),
-                Pdf.Header(level: 2, text: 'Task Performed'),
-                Pdf.Table.fromTextArray(
-                    context: context,
-                    data: const <List<String>>[
-                      <String>['Item', 'Hours', 'Task Performed'],
-                    ]),
+                    text: 'Cust. Comments :' + report.custcomments.trim()),
+                Pdf.Paragraph(
+                    text: 'Further Actions :' + report.furtheractions),
+                Pdf.Paragraph(text: 'Cust. Rep. :' + report.custrep),
+                Pdf.Paragraph(text: 'Email :' + report.custemail),
+                Pdf.Paragraph(text: 'Contact :' + report.custcontact),
               ]));
     print('Started creating pdf');
     await savepdf(pdf);

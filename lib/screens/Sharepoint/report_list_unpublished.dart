@@ -161,8 +161,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 ),
               ),
               title: Text(
-                'Report No - ' +
-                    this.reportlist[position].reportmapid.toString(),
+                'Report No - ' + this.reportlist[position].reportno,
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.5),
@@ -237,9 +236,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   String getReportToJSON(Report report) {
     String reporttojson =
         ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.reportno}","ReportMapId": "${report.reportmapid}","Report_Id": "${report.id}",'
-            '"ProjectNo": "${report.projectno}","Customer": "${report.customer}","PlantLoc": "${report.plantloc}","ContactName": "${report.contactname}",'
-            '"Authorizedby": "${report.authorby}","Equipment": "${report.equipment}","TechName": "${report.techname}","DateCreated": "${report.date}",'
-            '"FurtherActions": "${report.furtheractions}","CustComments": "${report.custcomments}","CustRep": "${report.custrep}","CustEmail": "${report.custemail}",'
+            '"ProjectNo": "${report.projectno}","Customer": "${report.customer.replaceAll('"', '\\"')}","PlantLoc": "${report.plantloc.replaceAll('"', '\\"')}","ContactName": "${report.contactname.replaceAll('"', '\\"')}",'
+            '"Authorizedby": "${report.authorby.replaceAll('"', '\\"')}","Equipment": "${report.equipment.replaceAll('"', '\\"')}","TechName": "${report.techname.replaceAll('"', '\\"')}","DateCreated": "${report.date}",'
+            '"FurtherActions": "${report.furtheractions.replaceAll('"', '\\"')}","CustComments": "${report.custcomments.replaceAll('"', '\\"')}","CustRep": "${report.custrep.replaceAll('"', '\\"')}","CustEmail": "${report.custemail.replaceAll('"', '\\"')}",'
             '"CustContact": "${report.custcontact}","Published": "${report.reportpublished}","Signed": "${report.reportsigned}","Uploadedby": "$empName"}');
     // print(reporttojson);
     return reporttojson;
@@ -248,8 +247,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   String getTaskToJSON(Tasks task) {
     String tasktojson =
         ('{"__metadata": { "type": "SP.Data.ConnectTasksListItem" },"Title": "${task.reportid} - ${task.id}","ReportId": "${task.reportid}","Taskid": "${task.id}",'
-            '"ItemNo": "${task.item}","Starttime": "${task.starttime}","Endtime": "${task.endtime}","Hours": "${task.hours}",'
-            '"WorkPerformed": "${task.workperformed}","Datecreated": "${task.date}","Uploadedby": "$empName"}');
+            '"ItemNo": "${task.item.replaceAll('"', '\\"')}","Starttime": "${task.starttime}","Endtime": "${task.endtime}","Hours": "${task.hours}",'
+            '"WorkPerformed": "${task.workperformed.replaceAll('"', '\\"')}","Datecreated": "${task.date}","Uploadedby": "$empName"}');
     //print(tasktojson);
     return tasktojson;
   }
