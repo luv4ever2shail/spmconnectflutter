@@ -4,6 +4,7 @@ import 'package:aad_oauth/aad_oauth.dart';
 import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/models/users.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
@@ -26,18 +27,18 @@ class _MyhomeState extends State<Myhome> {
   String accessToken;
   _MyhomeState(this.accessToken);
   Users _users;
-  Image image;
   String sfName;
   String sfEmail;
   String sfID;
   String sfPosition;
   String sfEmpid;
-
+  String sfprofilepic;
   @override
   void initState() {
     super.initState();
     if (accessToken != null) {
       getUserInfo(accessToken);
+      getUserPic(accessToken);
     }
     getUserInfoSF();
   }
@@ -157,16 +158,14 @@ class _MyhomeState extends State<Myhome> {
           decoration: BoxDecoration(color: barColor),
           accountName: name,
           accountEmail: email,
-          currentAccountPicture: image == null
+          currentAccountPicture: sfprofilepic == null
               ? Icon(
                   Icons.account_circle,
                   size: 60.0,
                   color: Colors.white,
                 )
-              : ImageIcon(
-                  AssetImage('assets/officelogo.png'),
-                  size: 35,
-                  color: Colors.deepOrange,
+              : ClipOval(
+                  child: Image.file(File('$sfprofilepic')),
                 ),
           onDetailsPressed: () => showDialog(
               context: context, builder: (context) => _userprofile(context)),
@@ -251,6 +250,7 @@ class _MyhomeState extends State<Myhome> {
     prefs.remove("Position");
     prefs.remove("Id");
     prefs.remove("EmpId");
+    prefs.remove('Profilepic');
   }
 
   getUserInfoSF() async {
@@ -260,6 +260,7 @@ class _MyhomeState extends State<Myhome> {
     sfPosition = prefs.getString('Position');
     sfID = prefs.getString('Id');
     sfEmpid = prefs.getString('EmpId');
+    sfprofilepic = prefs.getString('Profilepic');
     setState(() {});
   }
 
@@ -288,10 +289,20 @@ class _MyhomeState extends State<Myhome> {
         Uri.encodeFull("https://graph.microsoft.com/v1.0/me/photo/\$value"),
         headers: {
           "Authorization": "Bearer " + accesstoken,
-          "Content-Type": "image/jpg",
         },
       );
-      return response;
+      if (response.statusCode == 200) {
+        Directory directory = await getApplicationDocumentsDirectory();
+        String path = directory.path;
+        await Directory('$path/Picture').create(recursive: true);
+        File('$path/Picture/profile.jpg').writeAsBytesSync(response.bodyBytes);
+        var filePath = '$path/Picture/profile.jpg';
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('Profilepic', filePath);
+        setState(() {
+          sfprofilepic = filePath;
+        });
+      }
     } catch (e) {
       print(e);
     }
