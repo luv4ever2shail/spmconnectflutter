@@ -12,6 +12,7 @@ import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
 import 'package:spmconnectapp/screens/login.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spmconnectapp/utils/profiledialog.dart';
 
 class Myhome extends StatefulWidget {
   final String accessToken;
@@ -158,17 +159,18 @@ class _MyhomeState extends State<Myhome> {
           decoration: BoxDecoration(color: barColor),
           accountName: name,
           accountEmail: email,
-          currentAccountPicture: sfprofilepic == null
-              ? Icon(
-                  Icons.account_circle,
-                  size: 60.0,
-                  color: Colors.white,
-                )
-              : ClipOval(
-                  child: Image.file(File('$sfprofilepic')),
-                ),
-          onDetailsPressed: () => showDialog(
-              context: context, builder: (context) => _userprofile(context)),
+          currentAccountPicture: GestureDetector(
+            child: sfprofilepic == null
+                ? Icon(
+                    Icons.account_circle,
+                    size: 60.0,
+                    color: Colors.white,
+                  )
+                : ClipOval(
+                    child: Image.file(File('$sfprofilepic')),
+                  ),
+            onTap: () => showprofile(),
+          ),
         ),
         Expanded(
           flex: 2,
@@ -184,10 +186,7 @@ class _MyhomeState extends State<Myhome> {
                     this.setState(() {
                       Navigator.pop(context);
                       if (drawerText[position] == "Profile") {
-                        getUserInfoSF();
-                        showDialog(
-                            context: context,
-                            builder: (context) => _userprofile(context));
+                        showprofile();
                       } else if (drawerText[position] == 'Privacy') {
                         navigateToprivacy();
                       } else if (drawerText[position] == 'Sync Data') {
@@ -202,6 +201,21 @@ class _MyhomeState extends State<Myhome> {
         )
       ],
     ));
+  }
+
+  void showprofile() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialog(
+            name: sfName,
+            email: sfEmail,
+            jobtitle: sfPosition,
+            empid: sfEmpid,
+            id: sfID,
+            buttonText: "Okay",
+            profile: sfprofilepic,
+          ),
+    );
   }
 
   void navigateToReports() async {
@@ -306,55 +320,5 @@ class _MyhomeState extends State<Myhome> {
     } catch (e) {
       print(e);
     }
-  }
-
-  Widget _userprofile(BuildContext context) {
-    ThemeData localtheme = Theme.of(context);
-    return SimpleDialog(
-      contentPadding: EdgeInsets.zero,
-      elevation: 10.0,
-      title: Text('User Information'),
-      shape: BeveledRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              new Text(
-                _users == null ? sfName : _users.displayName,
-                style: localtheme.textTheme.headline,
-              ),
-              new Text(
-                _users == null ? sfEmail : 'Email : ${_users.mail}',
-                style: localtheme.textTheme.subhead
-                    .copyWith(fontStyle: FontStyle.italic),
-              ),
-              SizedBox(
-                height: 2.0,
-              ),
-              new Text(
-                _users == null
-                    ? 'Job Tile : $sfPosition'
-                    : 'Job Tile : ${_users.jobtitle}',
-                style: localtheme.textTheme.subhead
-                    .copyWith(fontStyle: FontStyle.italic),
-              ),
-              new Text(
-                _users == null ? 'Id : $sfID' : 'Id : ${_users.id}',
-                style: localtheme.textTheme.body2,
-              ),
-              new Text(
-                _users == null
-                    ? 'Emp Id : $sfEmpid'
-                    : 'Emp Id : ${_users.empid}',
-                style: localtheme.textTheme.body2,
-              )
-            ],
-          ),
-        )
-      ],
-    );
   }
 }
