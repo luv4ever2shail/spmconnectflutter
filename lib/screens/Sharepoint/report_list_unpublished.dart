@@ -104,7 +104,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
   Future<void> synctasks() async {
-    if (taskcount >= 0 || reportcount > 0) {
+    if (reportcount > 0) {
       await getSharepointToken();
       if (accessToken == null) {
         _showAlertDialog('SPM Connect',
