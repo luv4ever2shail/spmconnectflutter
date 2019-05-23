@@ -18,12 +18,10 @@ class _ReportDetail extends State<ReportDetail> {
   DatabaseHelper helper = DatabaseHelper();
 
   String _placemark = '';
-  Geolocator _geolocator = Geolocator();
   bool _validate = false;
   _ReportDetail(this.report);
 
   Report report;
-  Position _position;
   FocusNode customerFocusNode;
   FocusNode plantlocFocusNode;
   FocusNode contactnameFocusNode;
@@ -31,6 +29,8 @@ class _ReportDetail extends State<ReportDetail> {
   FocusNode technameFocusNode;
   FocusNode equipFocusNode;
 
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
   @override
   void initState() {
     super.initState();
@@ -40,42 +40,33 @@ class _ReportDetail extends State<ReportDetail> {
     authorbyFocusNode = FocusNode();
     technameFocusNode = FocusNode();
     equipFocusNode = FocusNode();
-
-    _initPlatformState();
-    _onLookupAddressPressed();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> _initPlatformState() async {
-    Position position;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      final Geolocator geolocator = Geolocator()
-        ..forceAndroidLocationManager = true;
-      position = await geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.bestForNavigation);
-    } on PlatformException {
-      position = null;
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _position = position;
+    _getLocation().then((position) {
+      userLocation = position;
       _onLookupAddressPressed();
     });
   }
 
+  Future<Position> _getLocation() async {
+    var currentLocation;
+    try {
+      currentLocation = await geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+    } catch (e) {
+      currentLocation = null;
+    }
+    return currentLocation;
+  }
+
   Future<void> _onLookupAddressPressed() async {
     try {
-      String cordinates =
-          _position.latitude.toString() + ',' + _position.longitude.toString();
+      String cordinates = userLocation.latitude.toString() +
+          ',' +
+          userLocation.longitude.toString();
       final List<String> coords = cordinates.split(',');
       final double latitude = double.parse(coords[0]);
       final double longitude = double.parse(coords[1]);
       final List<Placemark> placemarks =
-          await _geolocator.placemarkFromCoordinates(latitude, longitude);
+          await geolocator.placemarkFromCoordinates(latitude, longitude);
 
       if (placemarks != null && placemarks.isNotEmpty) {
         final Placemark pos = placemarks[0];
@@ -207,8 +198,10 @@ class _ReportDetail extends State<ReportDetail> {
                     },
                     onTap: () {
                       if (planlocController.text.length <= 0) {
-                        _initPlatformState();
-                        _onLookupAddressPressed();
+                        _getLocation().then((position) {
+                          userLocation = position;
+                          _onLookupAddressPressed();
+                        });
                         planlocController.text = _placemark;
                         updatePlantloc();
                       }
@@ -231,10 +224,10 @@ class _ReportDetail extends State<ReportDetail> {
                           return const Text(
                               'Allow access to the location services for this App using the device settings.');
                         }
-                        if (_position == null) {
+                        if (userLocation == null) {
                           return Text('');
                         }
-                        return Text(_position.toString());
+                        return Text(userLocation.toString());
                       }),
                   Text(_placemark),
                 ],

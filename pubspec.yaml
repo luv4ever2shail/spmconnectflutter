@@ -23,7 +23,6 @@ dependencies:
   path_provider: any
   intl: ^0.15.8
   flutter_markdown: ^0.2.0
-  flushbar: ^1.4.0
   datetime_picker_formfield: ^0.1.8  
   aad_oauth: ^0.1.7
   flutter_masked_text: ^0.8.0

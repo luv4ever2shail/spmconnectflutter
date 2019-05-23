@@ -89,7 +89,7 @@ class DatabaseHelper {
         '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,'
         '$colreportpublished INTEGER,$colreportsigned INTEGER, $colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
     await db.execute(
-        'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid INTEGER, '
+        'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid TEXT, '
         '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,$coltaskPublished INTEGER,'
         '$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT, $coltaskspare4 TEXT, $coltaskspare5 TEXT)');
   }
@@ -173,7 +173,7 @@ class DatabaseHelper {
 
 //*! Task table commands
 
-  Future<int> inserTask(Tasks task) async {
+  Future<int> insertTask(Tasks task) async {
     Database db = await this.database;
     var result = await db.insert(taskTable, task.toMap());
     return result;
@@ -211,7 +211,7 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<List<Tasks>> getTasksList(int reportid) async {
+  Future<List<Tasks>> getTasksList(String reportid) async {
     var taskMapList =
         await getTasksMapList(reportid); // Get 'Map List' from database
     int count =
@@ -226,11 +226,11 @@ class DatabaseHelper {
     return tasklist;
   }
 
-  Future<List<Map<String, dynamic>>> getTasksMapList(int reportid) async {
+  Future<List<Map<String, dynamic>>> getTasksMapList(String reportid) async {
     Database db = await this.database;
 
     var result = await db.rawQuery(
-        'SELECT * FROM $taskTable where $coltaskreportid = $reportid order by $coltaskId ASC');
+        'SELECT * FROM $taskTable where $coltaskreportid ="$reportid" order by $coltaskId ASC');
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }

@@ -30,11 +30,12 @@ class _PdfviewerState extends State<Pdfviewer> {
 
   loadDocument() async {
     try {
-      Directory directory = await getExternalStorageDirectory();
+      Directory directory = await getApplicationDocumentsDirectory();
       String path = directory.path;
       print("$path/$directoryName/$reportno.pdf");
       File file = File("$path/$directoryName/$reportno.pdf");
       document = await PDFDocument.fromFile(file);
+
       setState(() => _isLoading = false);
     } catch (e) {
       print(e);

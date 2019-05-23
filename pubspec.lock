@@ -71,13 +71,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.8"
-  flushbar:
-    dependency: "direct main"
-    description:
-      name: flushbar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -276,7 +269,11 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "3.1.0"
+=======
+    version: "3.0.2"
+>>>>>>> a65fae78168c3c334ab99e39357cf2764595a5a6
   petitparser:
     dependency: transitive
     description:

@@ -1,4 +1,3 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +8,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 class ReportDetail2 extends StatefulWidget {
   final String appBarTitle;
   final Tasks task;
-  final int reportid;
+  final String reportid;
 
   ReportDetail2(this.task, this.appBarTitle, this.reportid);
   @override
@@ -22,7 +21,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
   DatabaseHelper helper = DatabaseHelper();
 
   String appBarTitle;
-  int reportid;
+  String reportid;
   Tasks task;
   DateTime _starttime;
   DateTime _endtime;
@@ -81,7 +80,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            //_save(reportid);
             movetolastscreen();
           },
         ),
@@ -208,9 +206,10 @@ class _ReportDetail2 extends State<ReportDetail2> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        tooltip: "Save Task Performed",
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.save),
+        label: Text('Save'),
+        tooltip: "Save task performed",
         onPressed: () {
           _save(reportid);
         },
@@ -222,7 +221,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
     Navigator.pop(context, true);
   }
 
-  void _save(int reportid) async {
+  void _save(String reportid) async {
     if (!(_validate)) {
       movetolastscreen();
       task.reportid = reportid;
@@ -234,7 +233,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
         // Case 2: Insert Operation
         if (task.item.length > 0) {
           task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
-          result = await helper.inserTask(task);
+          result = await helper.insertTask(task);
         }
       }
 
@@ -258,21 +257,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
     //   content: Text(message),
     // );
     // showDialog(context: context, builder: (_) => alertDialog);
-
-    Flushbar(
-      title: title,
-      message: message,
-      animationDuration: Duration(seconds: 1),
-      duration: Duration(seconds: 2),
-      icon: Icon(
-        Icons.info_outline,
-        size: 35.0,
-        color: Colors.blue[300],
-      ),
-      aroundPadding: EdgeInsets.all(8),
-      borderRadius: 8,
-      leftBarIndicatorColor: Colors.blue[300],
-    ).show(context);
   }
 
 // Update the project no.
