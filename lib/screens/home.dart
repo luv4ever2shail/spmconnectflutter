@@ -316,6 +316,7 @@ class _MyhomeState extends State<Myhome> {
         setState(() {
           sfprofilepic = filePath;
         });
+        getUserInfoSF();
       }
     } catch (e) {
       print(e);

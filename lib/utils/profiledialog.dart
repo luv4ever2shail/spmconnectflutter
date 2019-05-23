@@ -56,7 +56,7 @@ class CustomDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min, // To make the card compact
             children: <Widget>[
               Text(
-                name,
+                name == null? 'Name Not Found' : name,
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w700,
@@ -64,7 +64,7 @@ class CustomDialog extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               Text(
-                email,
+                email == null? 'Email Not Found': email,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16.0,

@@ -304,7 +304,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.2"
+    version: "0.5.2+1"
   sharepoint_auth:
     dependency: "direct main"
     description:
