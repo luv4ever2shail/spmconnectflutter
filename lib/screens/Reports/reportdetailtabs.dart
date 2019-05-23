@@ -45,7 +45,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
           controller: controller,
           children: <Widget>[
             ReportDetail(report),
-            TaskList(report.reportmapid),
+            TaskList(report.reportno),
             ReportDetail3(report),
             ReportDetail4(report),
           ],

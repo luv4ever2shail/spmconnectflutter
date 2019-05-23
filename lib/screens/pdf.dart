@@ -57,16 +57,13 @@ class MyPdf {
                 Pdf.Paragraph(text: 'Contact Name :' + report.contactname),
                 Pdf.Paragraph(text: 'Authorized By :' + report.authorby),
                 Pdf.Paragraph(text: 'Equipment :' + report.equipment),
-                Pdf.Header(level: 2, text: 'Task Performed'),
-                Pdf.Table.fromTextArray(
-                    context: context,
-                    data: const <List<String>>[
-                      <String>['Item', 'Hours', 'Task Performed'],
-                      <String>['1993', 'PDF 1.0', 'Acrobat 1'],
-                      <String>['1994', 'PDF 1.1', 'Acrobat 2'],
-                      <String>['1996', 'PDF 1.2', 'Acrobat 3'],
-                      <String>['1999', 'PDF 1.3', 'Acrobat 4'],
-                    ]),
+                Pdf.Paragraph(
+                    text: 'Cust. Comments :' + report.custcomments.trim()),
+                Pdf.Paragraph(
+                    text: 'Further Actions :' + report.furtheractions),
+                Pdf.Paragraph(text: 'Cust. Rep. :' + report.custrep),
+                Pdf.Paragraph(text: 'Email :' + report.custemail),
+                Pdf.Paragraph(text: 'Contact :' + report.custcontact),
               ]));
     print('Started creating pdf');
     await savepdf(pdf);
@@ -75,7 +72,7 @@ class MyPdf {
   }
 
   Future<void> savepdf(PdfDoc pdf) async {
-    Directory directory = await getExternalStorageDirectory();
+    Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path;
     print('$path/$directoryName/${report.reportmapid}.pdf');
     await Directory('$path/$directoryName').create(recursive: true);

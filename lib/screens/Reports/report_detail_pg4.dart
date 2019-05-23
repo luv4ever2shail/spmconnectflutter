@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spmconnectapp/models/report.dart';
@@ -32,7 +34,9 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode = FocusNode();
     custemailFocusNode = FocusNode();
     custcontactFocusNode = FocusNode();
-    requestPermission();
+    if (Platform.isAndroid) {
+      requestPermission();
+    }
   }
 
   @override
@@ -148,7 +152,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                   minWidth: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                   onPressed: () async {
-                    if (_permissionStatus.value == 2) {
+                    if (Platform.isIOS) {
                       await myPdf.buildPdf();
                       await Navigator.push(
                         context,
@@ -158,7 +162,18 @@ class _ReportDetail4 extends State<ReportDetail4> {
                         }),
                       );
                     } else {
-                      requestPermission();
+                      if (_permissionStatus.value == 2) {
+                        await myPdf.buildPdf();
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return Signpad2(
+                                report.reportmapid.toString(), report);
+                          }),
+                        );
+                      } else {
+                        requestPermission();
+                      }
                     }
                   },
                   child: Row(

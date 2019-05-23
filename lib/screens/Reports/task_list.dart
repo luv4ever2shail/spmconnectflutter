@@ -6,7 +6,7 @@ import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TaskList extends StatefulWidget {
-  final int reportid;
+  final String reportid;
 
   TaskList(this.reportid);
   @override
@@ -19,7 +19,7 @@ class _TaskListState extends State<TaskList> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Tasks> tasklist;
   int count = 0;
-  int reportid;
+  String reportid;
   _TaskListState(this.reportid);
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _TaskListState extends State<TaskList> {
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               debugPrint('FAB clicked');
-              navigateToDetail(Tasks(0, '', '', '', '', '', '', 0),
+              navigateToDetail(Tasks(reportid, '', '', '', '', '', '', 0),
                   'Add New Item', reportid);
             },
             icon: Icon(Icons.add),
@@ -86,7 +86,7 @@ class _TaskListState extends State<TaskList> {
             deleteItem(position);
             //To show a snackbar with the UNDO button
             Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Task deleted"),
+                content: Text("Task deleted ${tasklist[position].item}"),
                 action: SnackBarAction(
                     label: "UNDO",
                     onPressed: () {
@@ -100,12 +100,12 @@ class _TaskListState extends State<TaskList> {
   }
 
   void deleteItem(index) {
-    _delete(context, tasklist[index]);
+    _delete(tasklist[index]);
     updateListView();
   }
 
   void undoDeletion(item) async {
-    await databaseHelper.inserTask(item);
+    await databaseHelper.insertTask(item);
     updateListView();
   }
 
@@ -125,11 +125,11 @@ class _TaskListState extends State<TaskList> {
     Navigator.pop(context, true);
   }
 
-  void _delete(BuildContext context, Tasks task) async {
+  void _delete(Tasks task) async {
     await databaseHelper.deleteTask(task.id);
   }
 
-  void navigateToDetail(Tasks task, String title, int reportid) async {
+  void navigateToDetail(Tasks task, String title, String reportid) async {
     bool result =
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportDetail2(task, title, reportid);
