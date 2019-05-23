@@ -195,7 +195,7 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<int> deleteAllTasks(int reportmapid) async {
+  Future<int> deleteAllTasks(String reportmapid) async {
     var db = await this.database;
     int result = await db.rawDelete(
         'DELETE FROM $taskTable WHERE $coltaskreportid = $reportmapid');

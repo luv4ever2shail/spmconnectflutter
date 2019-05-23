@@ -65,18 +65,23 @@ class _ReportList extends State<ReportList> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            debugPrint('FAB clicked');
-            getReportmapId();
-            int mapid = 0;
-            if (count == 0) {
-              mapid = 1001;
+            if (empId != null) {
+              debugPrint('FAB clicked');
+              getReportmapId();
+              int mapid = 0;
+              if (count == 0) {
+                mapid = 1001;
+              } else {
+                mapid = reportmapid[0].reportmapid + 1;
+              }
+              navigateToDetail(
+                  Report('$empId${mapid.toString()}', '', '', '', '', '', '',
+                      '', '', mapid, 0, 0),
+                  'Add New Report');
             } else {
-              mapid = reportmapid[0].reportmapid + 1;
+              _showAlertDialog('Employee Id not found',
+                  'Please contact the admin to have your employee id setup in order to create service reports.');
             }
-            navigateToDetail(
-                Report('$empId${mapid.toString()}', '', '', '', '', '', '', '',
-                    '', mapid, 0, 0),
-                'Add New Report');
           },
           tooltip: 'Create New Report',
           icon: Icon(Icons.add),
@@ -181,7 +186,7 @@ class _ReportList extends State<ReportList> {
       reportmapid.clear();
       getReportmapId();
     }
-    int result2 = await databaseHelper.deleteAllTasks(report.reportmapid);
+    int result2 = await databaseHelper.deleteAllTasks(report.reportno);
     if (result2 != 0) {
       debugPrint('deleted all tasks');
     }
@@ -267,5 +272,21 @@ class _ReportList extends State<ReportList> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getString('EmpId');
     setState(() {});
+  }
+
+  void _showAlertDialog(String title, String message) {
+    AlertDialog alertDialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Ok'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
+    showDialog(context: context, builder: (_) => alertDialog);
   }
 }

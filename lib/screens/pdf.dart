@@ -57,13 +57,6 @@ class MyPdf {
                 Pdf.Paragraph(text: 'Contact Name :' + report.contactname),
                 Pdf.Paragraph(text: 'Authorized By :' + report.authorby),
                 Pdf.Paragraph(text: 'Equipment :' + report.equipment),
-                Pdf.Paragraph(
-                    text: 'Cust. Comments :' + report.custcomments.trim()),
-                Pdf.Paragraph(
-                    text: 'Further Actions :' + report.furtheractions),
-                Pdf.Paragraph(text: 'Cust. Rep. :' + report.custrep),
-                Pdf.Paragraph(text: 'Email :' + report.custemail),
-                Pdf.Paragraph(text: 'Contact :' + report.custcontact),
               ]));
     print('Started creating pdf');
     await savepdf(pdf);
