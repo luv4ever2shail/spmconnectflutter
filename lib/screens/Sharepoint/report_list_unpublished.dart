@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +15,7 @@ import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 const directoryName = 'Connect_Signatures';
 
@@ -24,6 +27,9 @@ class ReportListUnpublished extends StatefulWidget {
 }
 
 class _ReportListUnpublishedState extends State<ReportListUnpublished> {
+  String _connectionStatus = 'Unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Report> reportlist;
   List<Tasks> tasklist;
@@ -50,8 +56,17 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   void initState() {
     super.initState();
     _saving = true;
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     loadDocument();
     getUserInfoSF();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -67,39 +82,48 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         movetolastscreen();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Upload Service Reports'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              movetolastscreen();
-            },
+          appBar: AppBar(
+            title: Text('Upload Service Reports'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                movetolastscreen();
+              },
+            ),
           ),
-        ),
-        body: ModalProgressHUD(
-          inAsyncCall: _saving,
-          child: RefreshIndicator(
-            key: refreshKey,
-            onRefresh: _handleRefresh,
-            child: getReportListView(),
+          body: ModalProgressHUD(
+            inAsyncCall: _saving,
+            child: RefreshIndicator(
+              key: refreshKey,
+              onRefresh: _handleRefresh,
+              child: _connectionStatus == 'ConnectivityResult.none'
+                  ? FlareActor(
+                      "assets/no_wifi.flr",
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
+                      animation: 'Untitled',
+                    )
+                  : getReportListView(),
+            ),
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            setState(() {
-              _saving = true;
-            });
-            await synctasks();
-          },
-          tooltip: 'Sync reports to cloud',
-          icon: Icon(
-            Icons.sync,
-            color: Colors.white,
-          ),
-          label: Text('Sync Reports'),
-        ),
-      ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: _connectionStatus != 'ConnectivityResult.none'
+              ? FloatingActionButton.extended(
+                  onPressed: () async {
+                    setState(() {
+                      _saving = true;
+                    });
+                    await synctasks();
+                  },
+                  tooltip: 'Sync reports to cloud',
+                  icon: Icon(
+                    Icons.sync,
+                    color: Colors.white,
+                  ),
+                  label: Text('Sync Reports'),
+                )
+              : Container()),
     );
   }
 
@@ -422,6 +446,68 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       path = "$_path/$directoryName/";
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return;
+    }
+
+    _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        String wifiName, wifiBSSID, wifiIP;
+
+        try {
+          wifiName = await _connectivity.getWifiName();
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiName = "Failed to get Wifi Name";
+        }
+
+        try {
+          wifiBSSID = await _connectivity.getWifiBSSID();
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiBSSID = "Failed to get Wifi BSSID";
+        }
+
+        try {
+          wifiIP = await _connectivity.getWifiIP();
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiIP = "Failed to get Wifi IP";
+        }
+
+        setState(() {
+          _connectionStatus = '$result\n'
+              'Wifi Name: $wifiName\n'
+              'Wifi BSSID: $wifiBSSID\n'
+              'Wifi IP: $wifiIP\n';
+        });
+        break;
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = 'Failed to get connectivity.');
+        break;
     }
   }
 }
