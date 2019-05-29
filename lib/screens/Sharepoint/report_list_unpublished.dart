@@ -123,7 +123,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                   ),
                   label: Text('Sync Reports'),
                 )
-              : Container()),
+              : Offstage()),
     );
   }
 
