@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/screens/Reports/report_preview.dart';
 import 'package:spmconnectapp/screens/home.dart';
-import 'package:spmconnectapp/screens/pdf_viewer.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
@@ -76,7 +76,7 @@ class _ReportList extends State<ReportList> {
               }
               navigateToDetail(
                   Report('$empId${mapid.toString()}', '', '', '', '', '', '',
-                      '', '', mapid, 0, 0),
+                      '', '', '', '', '', '', '', mapid, 0, 0),
                   'Add New Report');
             } else {
               _showAlertDialog('Employee Id not found',
@@ -195,7 +195,7 @@ class _ReportList extends State<ReportList> {
   void navigateToDetail(Report report, String title) async {
     if (report.reportsigned == 1) {
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return Pdfviewer(report.reportmapid.toString());
+        return ReportPreview(report);
       }));
     } else {
       bool result =

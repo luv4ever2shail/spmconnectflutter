@@ -51,91 +51,91 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   Widget _loginitemsWidget() {
     TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: <Color>[
-              const Color.fromRGBO(100, 145, 199, 0.6),
-              const Color.fromRGBO(61, 80, 180, 1),
-            ],
-            stops: [0.2, 1.9],
-            begin: const FractionalOffset(0.0, 0.0),
-            end: const FractionalOffset(0.0, 1.5),
-          ),
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: <Color>[
+            const Color.fromRGBO(100, 145, 200, 0.6),
+            const Color.fromRGBO(61, 80, 150, 1),
+          ],
+          stops: [0.2, 1.9],
+          begin: const FractionalOffset(0.0, 0.0),
+          end: const FractionalOffset(0.0, 1.5),
         ),
-        child: new Column(
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
-                    child: Text('Hello',
-                        style: TextStyle(
-                            fontSize: 80.0, fontWeight: FontWeight.bold)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
+                  child: Text('Hello',
+                      style: TextStyle(
+                          fontSize: 80.0, fontWeight: FontWeight.bold)),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text('There',
+                          style: TextStyle(
+                              fontSize: 80.0, fontWeight: FontWeight.bold)),
+                      Text('.',
+                          style: TextStyle(
+                              fontSize: 80.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[600])),
+                    ],
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 175.0, 0.0, 0.0),
-                    child: Row(
-                      children: <Widget>[
-                        Text('There',
-                            style: TextStyle(
-                                fontSize: 80.0, fontWeight: FontWeight.bold)),
-                        Text('.',
-                            style: TextStyle(
-                                fontSize: 80.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.orange[600])),
-                      ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.all(30.0),
+              child: Column(
+                children: <Widget>[
+                  Material(
+                    elevation: 5.0,
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: Colors.blue,
+                    child: MaterialButton(
+                      minWidth: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                      onPressed: () {
+                        _saving = true;
+                        login();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Center(
+                            child: ImageIcon(
+                              AssetImage('assets/officelogo.png'),
+                              size: 35,
+                              color: Colors.deepOrange,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text("Sign in with Office 365",
+                              textAlign: TextAlign.center,
+                              style: style.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
                   ),
                 ],
-              ),
-            ),
-            Container(
-                padding: EdgeInsets.only(top: 60.0, left: 30.0, right: 30.0),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 60.0),
-                    Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.blue,
-                      child: MaterialButton(
-                        minWidth: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: () {
-                          _saving = true;
-                          login();
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Center(
-                              child: ImageIcon(
-                                AssetImage('assets/officelogo.png'),
-                                size: 35,
-                                color: Colors.deepOrange,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text("Sign in with Office 365",
-                                textAlign: TextAlign.center,
-                                style: style.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
-          ],
-        ),
+              )),
+        ],
       ),
     );
   }

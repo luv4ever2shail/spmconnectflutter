@@ -55,7 +55,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                keyboardType: TextInputType.multiline,
+                keyboardType: TextInputType.text,
                 maxLines: 8,
                 textInputAction: TextInputAction.newline,
                 controller: furtheractionController,
@@ -78,7 +78,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
-                keyboardType: TextInputType.multiline,
+                keyboardType: TextInputType.text,
                 maxLines: 8,
                 controller: custcommentsController,
                 style: textStyle,

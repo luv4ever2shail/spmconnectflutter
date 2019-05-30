@@ -28,6 +28,11 @@ class Report {
       this._equipment,
       this._techname,
       this._date,
+      this._furtheractions,
+      this._custcomments,
+      this._custrep,
+      this._custemail,
+      this._custcontact,
       this._reportmapid,
       this._published,
       this._signed);

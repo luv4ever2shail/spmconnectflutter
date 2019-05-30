@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/signpad2.dart';
@@ -78,6 +79,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
               child: TextField(
                 controller: custrepController,
                 style: textStyle,
+                keyboardType: TextInputType.text,
                 focusNode: custrepFocusNode,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () =>
@@ -163,7 +165,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                       );
                     } else {
                       if (_permissionStatus.value == 2) {
-                        await myPdf.buildPdf();
+                       await myPdf.buildPdf();
                         await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
