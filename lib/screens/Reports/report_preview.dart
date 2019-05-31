@@ -293,7 +293,9 @@ class ReportPreviewState extends State<ReportPreview> {
       Directory directory = await getApplicationDocumentsDirectory();
       String _path = directory.path;
       print("$_path/$directoryName/");
-      path = "$_path/$directoryName/";
+      setState(() {
+        path = "$_path/$directoryName/";
+      });
     } catch (e) {
       print(e);
     }
