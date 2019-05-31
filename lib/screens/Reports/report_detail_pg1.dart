@@ -164,6 +164,7 @@ class _ReportDetail extends State<ReportDetail> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 controller: customerController,
+                keyboardType: TextInputType.text,
                 style: textStyle,
                 focusNode: customerFocusNode,
                 textInputAction: TextInputAction.next,
@@ -188,6 +189,7 @@ class _ReportDetail extends State<ReportDetail> {
                 children: <Widget>[
                   TextField(
                     controller: planlocController,
+                    keyboardType: TextInputType.text,
                     style: textStyle,
                     focusNode: plantlocFocusNode,
                     textInputAction: TextInputAction.next,
@@ -239,6 +241,7 @@ class _ReportDetail extends State<ReportDetail> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 controller: contactnameController,
+                keyboardType: TextInputType.text,
                 style: textStyle,
                 focusNode: contactnameFocusNode,
                 textInputAction: TextInputAction.next,
@@ -260,6 +263,7 @@ class _ReportDetail extends State<ReportDetail> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 controller: authorizedbyController,
+                keyboardType: TextInputType.text,
                 style: textStyle,
                 focusNode: authorbyFocusNode,
                 textInputAction: TextInputAction.next,
@@ -281,6 +285,7 @@ class _ReportDetail extends State<ReportDetail> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 controller: equipmentController,
+                keyboardType: TextInputType.text,
                 style: textStyle,
                 focusNode: equipFocusNode,
                 textInputAction: TextInputAction.next,
@@ -302,6 +307,7 @@ class _ReportDetail extends State<ReportDetail> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 controller: technameController,
+                keyboardType: TextInputType.text,
                 style: textStyle,
                 focusNode: technameFocusNode,
                 onChanged: (value) {

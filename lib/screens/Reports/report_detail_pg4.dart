@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/signpad2.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:spmconnectapp/screens/pdf.dart';
 
 class ReportDetail4 extends StatefulWidget {
   final Report report;
@@ -65,8 +65,6 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custemailController.text = report.custemail;
     custcontactController.text = report.custcontact;
 
-    MyPdf myPdf = new MyPdf(report);
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -78,6 +76,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
               child: TextField(
                 controller: custrepController,
                 style: textStyle,
+                keyboardType: TextInputType.text,
                 focusNode: custrepFocusNode,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () =>
@@ -153,7 +152,6 @@ class _ReportDetail4 extends State<ReportDetail4> {
                   padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                   onPressed: () async {
                     if (Platform.isIOS) {
-                      await myPdf.buildPdf();
                       await Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) {
@@ -163,7 +161,6 @@ class _ReportDetail4 extends State<ReportDetail4> {
                       );
                     } else {
                       if (_permissionStatus.value == 2) {
-                        await myPdf.buildPdf();
                         await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
