@@ -8,8 +8,6 @@ import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
 
-const directoryName = 'Pdfs';
-
 class ReportList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -157,6 +155,12 @@ class _ReportList extends State<ReportList> {
                 print(DateTime.now().millisecondsSinceEpoch ~/ 60000);
                 debugPrint("ListTile Tapped");
                 navigateToDetail(this.reportlist[position], 'Edit Report');
+              },
+              onLongPress: () async {
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                  return ReportPreview(this.reportlist[position]);
+                }));
               },
             ),
           ),

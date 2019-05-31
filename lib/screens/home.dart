@@ -94,11 +94,11 @@ class _MyhomeState extends State<Myhome> {
             : _getMailAccountDrawerr(),
         backgroundColor: bgColor,
         appBar: AppBar(
-          title: Center(
-              child: Text(
+          centerTitle: true,
+          title: Text(
             'SPM Connect',
             style: TextStyle(fontSize: 35.0, fontStyle: FontStyle.italic),
-          )),
+          ),
           backgroundColor: barColor,
         ),
         body: Padding(
@@ -129,7 +129,8 @@ class _MyhomeState extends State<Myhome> {
                         'Service Reports',
                         textScaleFactor: 2.0,
                       ),
-                      subtitle: Text(' - Access all you service reports.'),
+                      subtitle:
+                          Text('- Create/Access all you service reports.'),
                     ),
                   ),
                 ),

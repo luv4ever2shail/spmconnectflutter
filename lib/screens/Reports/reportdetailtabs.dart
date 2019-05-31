@@ -35,6 +35,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(appBarTitle + ' - ' + report.reportno),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),

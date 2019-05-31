@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:spmconnectapp/models/report.dart';
+
+const directoryName = 'Connect_Signatures';
 
 class ReportPreview extends StatefulWidget {
   final Report report;
@@ -12,6 +16,13 @@ class ReportPreview extends StatefulWidget {
 }
 
 class ReportPreviewState extends State<ReportPreview> {
+  @override
+  void initState() {
+    super.initState();
+    loadSignature();
+  }
+
+  String path = '';
   Report report;
   ReportPreviewState(this.report);
   @override
@@ -32,7 +43,12 @@ class ReportPreviewState extends State<ReportPreview> {
       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Divider(),
-        Center(child: Text('Report Information')),
+        Center(
+            child: Text(
+          'Report Information',
+          style: TextStyle(
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+        )),
         Container(
           child: Padding(
             padding: const EdgeInsets.all(14.0),
@@ -152,7 +168,12 @@ class ReportPreviewState extends State<ReportPreview> {
           ),
         ),
         Divider(),
-        Center(child: Text('Service Actions/Comments')),
+        Center(
+            child: Text(
+          'Service Actions/Comments',
+          style: TextStyle(
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+        )),
         Container(
           child: Padding(
             padding: const EdgeInsets.all(14.0),
@@ -163,7 +184,7 @@ class ReportPreviewState extends State<ReportPreview> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Center(child: new Text('Further Actions')),
+                      child: Text('Further Actions'),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -175,7 +196,7 @@ class ReportPreviewState extends State<ReportPreview> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Center(child: Text('Customer Comments')),
+                      child: Text('Customer Comments'),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -188,7 +209,12 @@ class ReportPreviewState extends State<ReportPreview> {
           ),
         ),
         Divider(),
-        Center(child: Text('Customer Representative')),
+        Center(
+            child: Text(
+          'Customer Information',
+          style: TextStyle(
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+        )),
         Container(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -235,7 +261,41 @@ class ReportPreviewState extends State<ReportPreview> {
             ),
           ),
         ),
+        Divider(),
+        Center(
+            child: Text(
+          'Customer Signature',
+          style: TextStyle(
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+        )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            elevation: 10,
+            child: Container(
+                height: 250,
+                padding: EdgeInsets.all(10),
+                child: FadeInImage(
+                  fit: BoxFit.contain,
+                  placeholder: AssetImage('assets/spm.png'),
+                  image: FileImage(
+                    File('$path${report.reportmapid.toString()}.png'),
+                  ),
+                )),
+          ),
+        ),
       ],
     );
+  }
+
+  Future loadSignature() async {
+    try {
+      Directory directory = await getApplicationDocumentsDirectory();
+      String _path = directory.path;
+      print("$_path/$directoryName/");
+      path = "$_path/$directoryName/";
+    } catch (e) {
+      print(e);
+    }
   }
 }
