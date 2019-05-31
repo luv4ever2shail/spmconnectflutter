@@ -276,7 +276,6 @@ class ReportPreviewState extends State<ReportPreview> {
                 height: 250,
                 padding: EdgeInsets.all(10),
                 child: FadeInImage(
-                  fit: BoxFit.contain,
                   placeholder: AssetImage('assets/spm.png'),
                   image: FileImage(
                     File('$path${report.reportmapid.toString()}.png'),
@@ -293,9 +292,8 @@ class ReportPreviewState extends State<ReportPreview> {
       Directory directory = await getApplicationDocumentsDirectory();
       String _path = directory.path;
       print("$_path/$directoryName/");
-      setState(() {
-        path = "$_path/$directoryName/";
-      });
+      path = "$_path/$directoryName/";
+      setState(() {});
     } catch (e) {
       print(e);
     }

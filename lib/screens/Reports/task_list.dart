@@ -38,7 +38,7 @@ class _TaskListState extends State<TaskList> {
             onPressed: () {
               debugPrint('FAB clicked');
               navigateToDetail(Tasks(reportid, '', '', '', '', '', '', 0),
-                  'Add New Item', reportid);
+                  'Add New Task', reportid);
             },
             icon: Icon(Icons.add),
             label: Text('Add a new task')),
@@ -74,7 +74,7 @@ class _TaskListState extends State<TaskList> {
                 onTap: () {
                   debugPrint("ListTile Tapped");
                   navigateToDetail(
-                      this.tasklist[position], 'Edit Item', reportid);
+                      this.tasklist[position], 'Edit Task', reportid);
                 },
               ),
             ),
