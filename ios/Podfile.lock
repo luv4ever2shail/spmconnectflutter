@@ -1,4 +1,9 @@
 PODS:
+  - BSGridCollectionViewLayout (1.2.3)
+  - BSImagePicker (2.10.0):
+    - BSGridCollectionViewLayout (= 1.2.3)
+    - BSImageView (= 1.0.3)
+  - BSImageView (1.0.3)
   - connectivity (0.0.1):
     - Flutter
     - Reachability
@@ -13,6 +18,9 @@ PODS:
   - geolocator (3.0.1):
     - Flutter
   - google_api_availability (2.0.1):
+    - Flutter
+  - multi_image_picker (4.3.3):
+    - BSImagePicker (~> 2.10.0)
     - Flutter
   - path_provider (0.0.1):
     - Flutter
@@ -32,6 +40,7 @@ DEPENDENCIES:
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_api_availability (from `.symlinks/plugins/google_api_availability/ios`)
+  - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -39,6 +48,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - BSGridCollectionViewLayout
+    - BSImagePicker
+    - BSImageView
     - FMDB
     - Reachability
 
@@ -55,6 +67,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geolocator/ios"
   google_api_availability:
     :path: ".symlinks/plugins/google_api_availability/ios"
+  multi_image_picker:
+    :path: ".symlinks/plugins/multi_image_picker/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -65,6 +79,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  BSGridCollectionViewLayout: 568273e113fbc815f868f1898ef0465aee68f955
+  BSImagePicker: fa0c15b6740e8aa7a7b7f0fe38a71ad4cfa0ec4a
+  BSImageView: a149459433a2687157d034c78e059d30ac7f2544
   connectivity: c72716e202a1225ec4810740d5cb56b8ae3bf4cc
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   flutter_secure_storage: 0c5779648ff644110e507909b77a57e620cbbf8b
@@ -72,12 +89,13 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geolocator: 0b6c573899b9cf2ef523d98b5e300f2b8ebc9c1d
   google_api_availability: 163b30f802e6148c67f092aa4501c90ddd8eec8d
+  multi_image_picker: 793deb4260503e6602d746cb919d370dafb74792
   path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
   permission_handler: fa6b0d784b1a43cb96b468a5b8365cb130b1956a
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
   sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
 
-PODFILE CHECKSUM: 162ee9a312518223a77a71fde74fd3b75b9d1e76
+PODFILE CHECKSUM: 8a5a49612b3b3cc72e94c8ef81b00ea1fdbb30b2
 
 COCOAPODS: 1.6.1

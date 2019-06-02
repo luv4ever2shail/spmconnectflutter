@@ -12,6 +12,7 @@ import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
 import 'package:spmconnectapp/screens/login.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spmconnectapp/utils/image_picker.dart';
 import 'package:spmconnectapp/utils/profiledialog.dart';
 
 class Myhome extends StatefulWidget {
@@ -222,6 +223,12 @@ class _MyhomeState extends State<Myhome> {
   void navigateToReports() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportList();
+    }));
+  }
+
+  void navigateToImagePicker() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ImagePicker();
     }));
   }
 
