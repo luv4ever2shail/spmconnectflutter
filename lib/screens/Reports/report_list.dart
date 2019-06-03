@@ -194,6 +194,10 @@ class _ReportList extends State<ReportList> {
     if (result2 != 0) {
       debugPrint('deleted all tasks');
     }
+    int result3 = await databaseHelper.deleteAllImages(report.reportno);
+    if (result3 != 0) {
+      debugPrint('deleted all image references');
+    }
   }
 
   void navigateToDetail(Report report, String title) async {
