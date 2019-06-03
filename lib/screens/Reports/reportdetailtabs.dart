@@ -54,7 +54,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
           ],
           onPageChanged: (int index) {
             if (report.projectno.length == 0 && index == 1) {
-              _showAlertDialog('Project No', 'Cant be Empty');
+              _showAlertDialog('Error!', 'Project number cannot be empty.');
               controller.jumpToPage(0);
             } else {
               if (index == 1)
@@ -148,7 +148,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
       // _showAlertDialog('SPM Connect', 'Report Saved Successfully');
     } else {
       // Failure
-      _showAlertDialog('SPM Connect', 'Problem Saving Note');
+      _showAlertDialog('SPM Connect', 'Problem Saving Report');
     }
   }
 
@@ -156,6 +156,14 @@ class _ReportDetTabState extends State<ReportDetTab> {
     AlertDialog alertDialog = AlertDialog(
       title: Text(title),
       content: Text(message),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Ok'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
     );
     showDialog(context: context, builder: (_) => alertDialog);
   }
