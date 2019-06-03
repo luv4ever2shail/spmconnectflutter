@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharepoint_auth/model/config.dart';
 import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/models/images.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
@@ -33,12 +35,15 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Report> reportlist;
   List<Tasks> tasklist;
+  List<Images> imagelist;
   int reportcount = 0;
   int taskcount = 0;
+  int imagecount = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   bool _saving = false;
   int listreportcount = 0;
   int listtaskcount = 0;
+  int listimagecount = 0;
   String path = '';
   String empName;
 
@@ -73,6 +78,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   Widget build(BuildContext context) {
     if (reportlist == null) {
       reportlist = List<Report>();
+      tasklist = List<Tasks>();
+      imagelist = List<Images>();
       updateReportListView();
       updateTaskListView();
     }
@@ -153,6 +160,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           print('sync started for reports');
           listreportcount = reportcount;
           for (final i in reportlist) {
+            listimagecount = 0;
+            imagelist.clear();
+            await updateImagesListView(i.reportno);
             await postReportsToSharepoint(
                 i, accessToken, getReportToJSON(i), reportcount);
           }
@@ -257,6 +267,20 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     });
   }
 
+  Future<void> updateImagesListView(String reportid) async {
+    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    await dbFuture.then((database) {
+      Future<List<Images>> taskListFuture =
+          databaseHelper.getImageListUnpublished(reportid);
+      taskListFuture.then((tasklist) {
+        setState(() {
+          this.imagelist = tasklist;
+          this.imagecount = tasklist.length;
+        });
+      });
+    });
+  }
+
   String getReportToJSON(Report report) {
     String reporttojson =
         ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.reportno}","ReportMapId": "${report.reportmapid}","Report_Id": "${report.id}",'
@@ -306,18 +330,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print('started');
       Map<String, dynamic> resJson = json.decode(response.body);
       print('Token Type : ' + resJson["Id"].toString());
+
       if (response.statusCode == 201) {
-        print(path);
-        File file = File('$path${report.reportmapid.toString()}.png');
-        print(file);
-        int result =
-            await postAttachment(resJson["Id"].toString(), accesstoken, file);
-        if (result != 0) {
-          await _saveReport(report);
-        } else {
-          _showAlertDialog('SPM Connect',
-              'Error occured while trying to sync signature png to cloud.');
-        }
+        await postSignatureToSharepoint(resJson, report, accesstoken);
+        await postAttachmentsToSharepoint(resJson, report, accesstoken);
       } else {
         _showAlertDialog('SPM Connect',
             'Error occured while trying to sync Reports to cloud.');
@@ -325,10 +341,87 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           _saving = false;
         });
       }
+
       print('ended');
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<void> postSignatureToSharepoint(
+      Map<String, dynamic> resJson, Report report, String accesstoken) async {
+    print(path);
+    File file = File('$path${report.reportmapid.toString()}.png');
+    print(file);
+    int result =
+        await postAttachment(resJson["Id"].toString(), accesstoken, file);
+    if (result != 0) {
+      await _saveReport(report);
+    } else {
+      _showAlertDialog('SPM Connect',
+          'Error occured while trying to sync signature png to cloud.');
+    }
+  }
+
+  Future<int> postAttachment(String id, String accesstoken, File file) async {
+    try {
+      String fileName = file.path.split("/").last;
+      print(fileName);
+      http.Response response = await http.post(
+          Uri.encodeFull(
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/items($id)/AttachmentFiles/ add(FileName='$fileName')"),
+          headers: {
+            "Authorization": "Bearer " + accesstoken,
+            "Accept": "application/json"
+          },
+          body: file.readAsBytesSync());
+      print(response.statusCode);
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+    }
+    return 0;
+  }
+
+  Future<void> postAttachmentsToSharepoint(
+      Map<String, dynamic> resJson, Report report, String accesstoken) async {
+    if (imagecount > 0) {
+      print('sync started for images report ${report.reportno}');
+      listimagecount = imagecount;
+      for (final i in imagelist) {
+        Asset resultList;
+        resultList = Asset(i.identifier, i.name, i.width, i.height);
+        ByteData byteData = await resultList.requestOriginal();
+        List<int> imageData = byteData.buffer.asUint8List();
+        int result = await postImages(
+            resJson["Id"].toString(), accesstoken, i.name, imageData);
+        if (result != 0) {
+          await _saveImage(i, report.reportno);
+        } else {
+          _showAlertDialog('SPM Connect',
+              'Error occured while trying to sync attachments to cloud.');
+        }
+      }
+    }
+  }
+
+  Future<int> postImages(
+      String id, String accesstoken, String file, List<int> imageData) async {
+    try {
+      http.Response response = await http.post(
+          Uri.encodeFull(
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/items($id)/AttachmentFiles/ add(FileName='$file')"),
+          headers: {
+            "Authorization": "Bearer " + accesstoken,
+            "Accept": "application/json"
+          },
+          body: imageData);
+      print(response.statusCode);
+      return response.statusCode;
+    } catch (e) {
+      print(e);
+    }
+    return 0;
   }
 
   Future<void> postTasksToSharepoint(
@@ -373,11 +466,29 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       listreportcount--;
       print(listreportcount);
       print('Success Saving');
-      updateReportListView();
+      await updateReportListView();
     } else {
       _showAlertDialog(
-          'SPM Connect', 'Error occured saving Report to database.');
+          'SPM Connect', 'Error occured while saving Report to database.');
       print('failure saving report');
+    }
+  }
+
+  Future<void> _saveImage(Images image, String reportno) async {
+    int result;
+    if (image.reportid != null) {
+      image.published = 1;
+      result = await databaseHelper.updateImage(image);
+    }
+    if (result != 0) {
+      listimagecount--;
+      print(listimagecount);
+      print('Success Saving image');
+      await updateImagesListView(reportno);
+    } else {
+      _showAlertDialog(
+          'SPM Connect', 'Error occured while saving attachments to database.');
+      print('failure saving images');
     }
   }
 
@@ -391,9 +502,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       listtaskcount--;
       print(listtaskcount);
       print('Success Saving task');
-      updateTaskListView();
+      await updateTaskListView();
     } else {
-      _showAlertDialog('SPM Connect', 'Error occured saving Task to database.');
+      _showAlertDialog(
+          'SPM Connect', 'Error occured while saving Task to database.');
       print('failure saving task');
     }
   }
@@ -410,32 +522,14 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       content: Text(message),
       actions: <Widget>[
         FlatButton(
-          child: Text(''),
-          onPressed: () {},
+          child: Text('Ok'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         )
       ],
     );
     showDialog(context: context, builder: (_) => alertDialog);
-  }
-
-  Future<int> postAttachment(String id, String accesstoken, File file) async {
-    try {
-      String fileName = file.path.split("/").last;
-      print(fileName);
-      http.Response response = await http.post(
-          Uri.encodeFull(
-              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/items($id)/AttachmentFiles/ add(FileName='$fileName')"),
-          headers: {
-            "Authorization": "Bearer " + accesstoken,
-            "Accept": "application/json"
-          },
-          body: file.readAsBytesSync());
-      print(response.statusCode);
-      return response.statusCode;
-    } catch (e) {
-      print(e);
-    }
-    return 0;
   }
 
   Future loadDocument() async {

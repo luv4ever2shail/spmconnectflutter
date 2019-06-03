@@ -61,6 +61,7 @@ class DatabaseHelper {
   String colimageName = 'name';
   String colimageWidth = 'width';
   String colimageHeight = 'height';
+  String colimagePublished = 'imagepublished';
   String colimagespare1 = 'spare1';
   String colimagespare2 = 'spare2';
   String colimagespare3 = 'spare3';
@@ -106,7 +107,7 @@ class DatabaseHelper {
         '$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT, $coltaskspare4 TEXT, $coltaskspare5 TEXT)');
     await db.execute(
         'CREATE TABLE $imageTable($colimageReportid TEXT , $colimageIdentifier TEXT, '
-        '$colimageName TEXT, $colimageWidth INTEGER, $colimageHeight INTEGER,$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT)');
+        '$colimageName TEXT, $colimageWidth INTEGER, $colimageHeight INTEGER,$colimagePublished INTEGER,$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
@@ -300,6 +301,31 @@ class DatabaseHelper {
     return result;
   }
 
+// Getting all unpublished Images
+  Future<List<Images>> getImageListUnpublished(String reportid) async {
+    var reportMapList = await getImageMapListUnpublished(
+        reportid); // Get 'Map List' from database
+    int count =
+        reportMapList.length; // Count the number of map entries in db table
+
+    List<Images> taskList = List<Images>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      taskList.add(Images.fromMapObject(reportMapList[i]));
+    }
+
+    return taskList;
+  }
+
+  Future<List<Map<String, dynamic>>> getImageMapListUnpublished(
+      String reportid) async {
+    Database db = await this.database;
+    int published = 0;
+    var result = await db.rawQuery(
+        'SELECT * FROM $imageTable where $colimagePublished = $published AND $colimageReportid = $reportid');
+    return result;
+  }
+
 //*! Image table commands
 
   Future<int> insertImage(Images image) async {
@@ -311,7 +337,7 @@ class DatabaseHelper {
   // Update Operation: Update a Note object and save it to database
   Future<int> updateImage(Images image) async {
     var db = await this.database;
-    var result = await db.update(taskTable, image.toMap(),
+    var result = await db.update(imageTable, image.toMap(),
         where: '$colimageReportid = ?', whereArgs: [image.reportid]);
     return result;
   }

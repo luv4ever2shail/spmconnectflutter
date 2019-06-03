@@ -132,6 +132,7 @@ class _ImagePickerState extends State<ImagePicker> {
           children: <Widget>[
             count > 0
                 ? FloatingActionButton(
+                    heroTag: 'bttn1',
                     child: Icon(
                       Icons.delete_outline,
                       color: Colors.white,
@@ -146,6 +147,7 @@ class _ImagePickerState extends State<ImagePicker> {
               height: 5.0,
             ),
             FloatingActionButton(
+              heroTag: 'bttn2',
               child: Icon(
                 Icons.attach_file,
                 color: Colors.white,
@@ -178,7 +180,7 @@ class _ImagePickerState extends State<ImagePicker> {
 
   void _save(String identifier, String name, int width, int height) async {
     int result = 0;
-    Images _image = Images(identifier, name, width, height, reportid);
+    Images _image = Images(identifier, name, width, height, reportid, 0);
 
     result = await databaseHelper.insertImage(_image);
 

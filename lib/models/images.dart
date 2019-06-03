@@ -4,19 +4,26 @@ class Images {
   int _width;
   int _height;
   String _reportid;
+  int _published;
 
-  Images(
-      this._identifier, this._name, this._height, this._width, this._reportid);
+  Images(this._identifier, this._name, this._height, this._width,
+      this._reportid, this._published);
 
   int get width => _width;
 
   int get height => _height;
+
+  int get published => _published;
 
   String get identifier => _identifier;
 
   String get name => _name;
 
   String get reportid => _reportid;
+
+  set published(int newPublishid) {
+    this._published = newPublishid;
+  }
 
   set identifier(String newIdentifier) {
     this._identifier = newIdentifier;
@@ -46,6 +53,7 @@ class Images {
     map['name'] = _name;
     map['width'] = _width;
     map['height'] = _height;
+    map['imagepublished'] = _published;
     return map;
   }
 
@@ -56,5 +64,6 @@ class Images {
     this._name = map['name'];
     this._width = map['width'];
     this._height = map['height'];
+    this._published = map['imagepublished'];
   }
 }
