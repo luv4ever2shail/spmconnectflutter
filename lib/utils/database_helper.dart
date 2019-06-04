@@ -278,9 +278,9 @@ class DatabaseHelper {
 
 // Getting all unpublished task
 
-  Future<List<Tasks>> getTaskListUnpublished() async {
-    var reportMapList =
-        await getTaskMapListUnpublished(); // Get 'Map List' from database
+  Future<List<Tasks>> getTaskListUnpublished(String reportid) async {
+    var reportMapList = await getTaskMapListUnpublished(
+        reportid); // Get 'Map List' from database
     int count =
         reportMapList.length; // Count the number of map entries in db table
 
@@ -293,11 +293,12 @@ class DatabaseHelper {
     return taskList;
   }
 
-  Future<List<Map<String, dynamic>>> getTaskMapListUnpublished() async {
+  Future<List<Map<String, dynamic>>> getTaskMapListUnpublished(
+      String reportid) async {
     Database db = await this.database;
     int published = 0;
     var result = await db.rawQuery(
-        'SELECT * FROM $taskTable where $coltaskPublished = $published order by $coltaskId ASC');
+        'SELECT * FROM $taskTable where $coltaskPublished = $published AND $coltaskreportid = $reportid order by $coltaskId ASC');
     return result;
   }
 

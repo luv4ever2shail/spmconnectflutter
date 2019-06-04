@@ -273,14 +273,17 @@ class ReportPreviewState extends State<ReportPreview> {
           child: Card(
             elevation: 10,
             child: Container(
-                height: 250,
-                padding: EdgeInsets.all(10),
-                child: FadeInImage(
-                  placeholder: AssetImage('assets/spm.png'),
-                  image: FileImage(
-                    File('$path${report.reportmapid.toString()}.png'),
-                  ),
-                )),
+              height: 250,
+              padding: EdgeInsets.all(10),
+              child: path.length > 0
+                  ? FadeInImage(
+                      placeholder: AssetImage('assets/spm.png'),
+                      image: FileImage(
+                        File('$path${report.reportmapid.toString()}.png'),
+                      ),
+                    )
+                  : CircularProgressIndicator(),
+            ),
           ),
         ),
       ],

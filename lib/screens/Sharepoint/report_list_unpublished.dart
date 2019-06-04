@@ -81,7 +81,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       tasklist = List<Tasks>();
       imagelist = List<Images>();
       updateReportListView();
-      updateTaskListView();
     }
 
     return WillPopScope(
@@ -146,29 +145,47 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         return;
       }
 
-      if (taskcount > 0) {
-        print('No of tasks found to be uploaded : $taskcount');
-        print('sync started for tasks');
-        listtaskcount = taskcount;
-        for (final i in tasklist) {
-          await postTasksToSharepoint(
-              i, accessToken, getTaskToJSON(i), taskcount);
-        }
-      }
       if (_saving) {
         if (reportcount > 0) {
           print('No of reports found to be uploaded : $reportcount');
-          print('sync started for reports');
           listreportcount = reportcount;
+
           for (final i in reportlist) {
+            listtaskcount = 0;
+            tasklist.clear();
+            await updateTaskListView(i.reportno);
+
+            print(
+                'No of task found in report ${i.reportno} to be uploaded is $taskcount');
+
+            if (taskcount > 0) {
+              listtaskcount = taskcount;
+              for (final i in tasklist) {
+                print(
+                    'Uploading task ${tasklist.indexOf(i)} for report ${i.reportid}');
+                await postTasksToSharepoint(
+                    i, accessToken, getTaskToJSON(i), taskcount);
+              }
+            }
+
             listimagecount = 0;
             imagelist.clear();
             await updateImagesListView(i.reportno);
+            print(
+                'No of images found in report ${i.reportno} to be uploaded is $imagecount');
+
             await postReportsToSharepoint(
                 i, accessToken, getReportToJSON(i), reportcount);
           }
         }
       }
+      reportlist.clear();
+      reportcount = 0;
+      tasklist.clear();
+      taskcount = 0;
+      imagelist.clear();
+      imagecount = 0;
+      await updateReportListView();
     } else {
       setState(() {
         _saving = false;
@@ -234,10 +251,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 // Retrieving list of all three modules : Report Task Images
   Future<void> updateReportListView() async {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    await dbFuture.then((database) {
+    await dbFuture.then((database) async {
       Future<List<Report>> reportListFuture =
           databaseHelper.getReportListUnpublished();
-      reportListFuture.then((reportlist) {
+      await reportListFuture.then((reportlist) {
         setState(() {
           this.reportlist = reportlist;
           this.reportcount = reportlist.length;
@@ -252,17 +269,17 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     });
   }
 
-  Future<void> updateTaskListView() async {
+  Future<void> updateTaskListView(String reportid) async {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    await dbFuture.then((database) {
+    await dbFuture.then((database) async {
       Future<List<Tasks>> taskListFuture =
-          databaseHelper.getTaskListUnpublished();
-      taskListFuture.then((tasklist) {
+          databaseHelper.getTaskListUnpublished(reportid);
+      await taskListFuture.then((tasklist) {
         setState(() {
           this.tasklist = tasklist;
           this.taskcount = tasklist.length;
         });
-        if (listreportcount <= 0) {
+        if (listtaskcount <= 0) {
           print('finished syncing all tasks');
         }
       });
@@ -271,14 +288,17 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future<void> updateImagesListView(String reportid) async {
     final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    await dbFuture.then((database) {
+    await dbFuture.then((database) async {
       Future<List<Images>> taskListFuture =
           databaseHelper.getImageListUnpublished(reportid);
-      taskListFuture.then((tasklist) {
+      await taskListFuture.then((tasklist) {
         setState(() {
           this.imagelist = tasklist;
           this.imagecount = tasklist.length;
         });
+        if (listimagecount <= 0) {
+          print('finished syncing all images');
+        }
       });
     });
   }
@@ -317,7 +337,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   Future<void> postReportsToSharepoint(
       Report report, String accesstoken, var _body, int count) async {
     try {
-      print('post started : list value $listreportcount');
+      print('Uploading report no ${report.reportno} to sharepoint');
 
       http.Response response = await http.post(
           Uri.encodeFull(
@@ -329,8 +349,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           },
           body: _body);
 
-      print(response.statusCode);
-      print('started');
+      print('Report no ${report.reportno} is uploaded ${response.statusCode}');
       Map<String, dynamic> resJson = json.decode(response.body);
       print('Token Type : ' + resJson["Id"].toString());
 
@@ -358,7 +377,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   Future<void> postTasksToSharepoint(
       Tasks task, String accesstoken, var _body, int count) async {
     try {
-      print('post started : list value $listtaskcount');
+       print('Uploading task no ${task.reportid} to sharepoint');
+
 
       http.Response response = await http.post(
           Uri.encodeFull(
@@ -370,8 +390,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           },
           body: _body);
 
-      print(response.statusCode);
-      print('started');
+      //print(response.statusCode);
+      //print('started');
       if (response.statusCode == 201) {
         await _saveTask(task);
       } else {
@@ -397,7 +417,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     int result =
         await postAttachment(resJson["Id"].toString(), accesstoken, file);
     if (result != 0) {
-      await _saveReport(report);
     } else {
       _showAlertDialog('SPM Connect',
           'Error occured while trying to sync signature png to cloud.');
@@ -417,7 +436,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             "Accept": "application/json"
           },
           body: file.readAsBytesSync());
-      print(response.statusCode);
+      //print(response.statusCode);
       result = response.statusCode;
     } catch (e) {
       print(e);
@@ -443,12 +462,15 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             resJson["Id"].toString(), accesstoken, i.name, imageData);
         if (result != 0) {
           print('saving image');
-          await _saveImage(i, report.reportno);
+          await _saveImage(i);
         } else {
           _showAlertDialog('SPM Connect',
               'Error occured while trying to sync attachments to cloud.');
         }
       }
+      print(
+          'Completed uploading images for ${report.reportno}. Saving report.');
+      await _saveReport(report);
     }
   }
 
@@ -464,7 +486,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             "Accept": "application/json"
           },
           body: imageData);
-      print(response.statusCode);
+      //print(response.statusCode);
       result = response.statusCode;
     } catch (e) {
       print(e);
@@ -484,7 +506,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       listreportcount--;
       print('Report count is : $listreportcount');
       print('Success Saving Report');
-      await updateReportListView();
     } else {
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving Report to database.');
@@ -492,7 +513,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
   }
 
-  Future<void> _saveImage(Images image, String reportno) async {
+  Future<void> _saveImage(Images image) async {
     int result;
     if (image.reportid != null) {
       image.published = 1;
@@ -502,7 +523,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       listimagecount--;
       print('list image count is : $listimagecount');
       print('Success Saving image');
-      await updateImagesListView(reportno);
     } else {
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving attachments to database.');
@@ -520,7 +540,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       listtaskcount--;
       print('Task to upload count is : $listtaskcount');
       print('Success Saving task');
-      await updateTaskListView();
     } else {
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving Task to database.');
