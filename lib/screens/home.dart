@@ -170,7 +170,10 @@ class _MyhomeState extends State<Myhome> {
                 : ClipOval(
                     child: Image.file(File('$sfprofilepic')),
                   ),
-            onTap: () => showprofile(),
+            onTap: () {
+              Navigator.of(context).pop();
+              showprofile();
+            },
           ),
         ),
         Expanded(
@@ -317,7 +320,7 @@ class _MyhomeState extends State<Myhome> {
         setState(() {
           sfprofilepic = filePath;
         });
-        getUserInfoSF();
+        await getUserInfoSF();
       }
     } catch (e) {
       print(e);

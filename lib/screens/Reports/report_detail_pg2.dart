@@ -102,7 +102,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                   updateItem();
                 },
                 decoration: InputDecoration(
-                    labelText: 'Item No.',
+                    labelText: 'ID',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),

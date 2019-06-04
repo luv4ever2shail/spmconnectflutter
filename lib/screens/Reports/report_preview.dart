@@ -273,15 +273,17 @@ class ReportPreviewState extends State<ReportPreview> {
           child: Card(
             elevation: 10,
             child: Container(
-                height: 250,
-                padding: EdgeInsets.all(10),
-                child: FadeInImage(
-                  fit: BoxFit.contain,
-                  placeholder: AssetImage('assets/spm.png'),
-                  image: FileImage(
-                    File('$path${report.reportmapid.toString()}.png'),
-                  ),
-                )),
+              height: 250,
+              padding: EdgeInsets.all(10),
+              child: path.length > 0
+                  ? FadeInImage(
+                      placeholder: AssetImage('assets/spm.png'),
+                      image: FileImage(
+                        File('$path${report.reportmapid.toString()}.png'),
+                      ),
+                    )
+                  : CircularProgressIndicator(),
+            ),
           ),
         ),
       ],
@@ -294,6 +296,7 @@ class ReportPreviewState extends State<ReportPreview> {
       String _path = directory.path;
       print("$_path/$directoryName/");
       path = "$_path/$directoryName/";
+      setState(() {});
     } catch (e) {
       print(e);
     }

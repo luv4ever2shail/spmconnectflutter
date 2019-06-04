@@ -1,4 +1,5 @@
 import 'package:path/path.dart';
+import 'package:spmconnectapp/models/images.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
@@ -53,6 +54,18 @@ class DatabaseHelper {
   String coltaskspare4 = 'taskspare4';
   String coltaskspare5 = 'taskspare5';
 
+  // ** Table column names for tasks
+  String imageTable = 'image_tbl';
+  String colimageReportid = 'reportid';
+  String colimageIdentifier = 'identifier';
+  String colimageName = 'name';
+  String colimageWidth = 'width';
+  String colimageHeight = 'height';
+  String colimagePublished = 'imagepublished';
+  String colimagespare1 = 'spare1';
+  String colimagespare2 = 'spare2';
+  String colimagespare3 = 'spare3';
+
   DatabaseHelper._createInstance();
 
   factory DatabaseHelper() {
@@ -92,6 +105,9 @@ class DatabaseHelper {
         'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid TEXT, '
         '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,$coltaskPublished INTEGER,'
         '$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT, $coltaskspare4 TEXT, $coltaskspare5 TEXT)');
+    await db.execute(
+        'CREATE TABLE $imageTable($colimageReportid TEXT , $colimageIdentifier TEXT, '
+        '$colimageName TEXT, $colimageWidth INTEGER, $colimageHeight INTEGER,$colimagePublished INTEGER,$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
@@ -248,7 +264,6 @@ class DatabaseHelper {
     for (int i = 0; i < count; i++) {
       reportList.add(Report.fromMapObject(reportMapList[i]));
     }
-
     return reportList;
   }
 
@@ -263,9 +278,9 @@ class DatabaseHelper {
 
 // Getting all unpublished task
 
-  Future<List<Tasks>> getTaskListUnpublished() async {
-    var reportMapList =
-        await getTaskMapListUnpublished(); // Get 'Map List' from database
+  Future<List<Tasks>> getTaskListUnpublished(String reportid) async {
+    var reportMapList = await getTaskMapListUnpublished(
+        reportid); // Get 'Map List' from database
     int count =
         reportMapList.length; // Count the number of map entries in db table
 
@@ -278,11 +293,101 @@ class DatabaseHelper {
     return taskList;
   }
 
-  Future<List<Map<String, dynamic>>> getTaskMapListUnpublished() async {
+  Future<List<Map<String, dynamic>>> getTaskMapListUnpublished(
+      String reportid) async {
     Database db = await this.database;
     int published = 0;
     var result = await db.rawQuery(
-        'SELECT * FROM $taskTable where $coltaskPublished = $published order by $coltaskId ASC');
+        'SELECT * FROM $taskTable where $coltaskPublished = $published AND $coltaskreportid = $reportid order by $coltaskId ASC');
+    return result;
+  }
+
+// Getting all unpublished Images
+  Future<List<Images>> getImageListUnpublished(String reportid) async {
+    var reportMapList = await getImageMapListUnpublished(
+        reportid); // Get 'Map List' from database
+    int count =
+        reportMapList.length; // Count the number of map entries in db table
+
+    List<Images> taskList = List<Images>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      taskList.add(Images.fromMapObject(reportMapList[i]));
+    }
+
+    return taskList;
+  }
+
+  Future<List<Map<String, dynamic>>> getImageMapListUnpublished(
+      String reportid) async {
+    Database db = await this.database;
+    int published = 0;
+    var result = await db.rawQuery(
+        'SELECT * FROM $imageTable where $colimagePublished = $published AND $colimageReportid = $reportid');
+    return result;
+  }
+
+//*! Image table commands
+
+  Future<int> insertImage(Images image) async {
+    Database db = await this.database;
+    var result = await db.insert(imageTable, image.toMap());
+    return result;
+  }
+
+  // Update Operation: Update a Note object and save it to database
+  Future<int> updateImage(Images image) async {
+    var db = await this.database;
+    var result = await db.update(imageTable, image.toMap(),
+        where: '$colimageReportid = ?', whereArgs: [image.reportid]);
+    return result;
+  }
+
+  // Delete Operation: Delete a Note object from database
+  Future<int> deleteImages(String id) async {
+    var db = await this.database;
+    int result = await db
+        .rawDelete('DELETE FROM $imageTable WHERE $colimageReportid = $id');
+    return result;
+  }
+
+  Future<int> deleteAllImages(String reportmapid) async {
+    var db = await this.database;
+    int result = await db.rawDelete(
+        'DELETE FROM $imageTable WHERE $colimageReportid = $reportmapid');
+    return result;
+  }
+
+  // Get number of Note objects in database
+  Future<int> getCountImages() async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> x =
+        await db.rawQuery('SELECT COUNT (*) from $imageTable');
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+
+  Future<List<Images>> getImageList(String reportid) async {
+    var taskMapList =
+        await getImagesMapList(reportid); // Get 'Map List' from database
+    int count =
+        taskMapList.length; // Count the number of map entries in db table
+
+    List<Images> tasklist = List<Images>();
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      tasklist.add(Images.fromMapObject(taskMapList[i]));
+    }
+
+    return tasklist;
+  }
+
+  Future<List<Map<String, dynamic>>> getImagesMapList(String reportid) async {
+    Database db = await this.database;
+
+    var result = await db.rawQuery(
+        'SELECT * FROM $imageTable where $colimageReportid =$reportid');
+    //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }
 }

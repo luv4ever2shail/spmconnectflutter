@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/screens/Reports/image_picker.dart';
 import 'package:spmconnectapp/screens/Reports/report_detail_pg1.dart';
 import 'package:spmconnectapp/screens/Reports/task_list.dart';
 import 'package:spmconnectapp/screens/Reports/report_detail_pg3.dart';
@@ -48,19 +49,22 @@ class _ReportDetTabState extends State<ReportDetTab> {
             ReportDetail(report),
             TaskList(report.reportno),
             ReportDetail3(report),
+            ImagePicker(report.reportno),
             ReportDetail4(report),
           ],
           onPageChanged: (int index) {
             if (report.projectno.length == 0 && index == 1) {
-              _showAlertDialog('Project No', 'Cant be Empty');
+              _showAlertDialog('Error!', 'Project number cannot be empty.');
               controller.jumpToPage(0);
             } else {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';
               else if (index == 0)
                 this.appBarTitle = 'Edit Report';
-              else if (index == 3)
+              else if (index == 4)
                 this.appBarTitle = 'Customer Info';
+              else if (index == 3)
+                this.appBarTitle = 'Attach Pictures';
               else
                 this.appBarTitle = 'Report Comments';
               setState(() {
@@ -74,13 +78,17 @@ class _ReportDetTabState extends State<ReportDetTab> {
           currentIndex: _selectedTab,
           onTap: (int index) {
             if (report.projectno.length == 0 &&
-                (index == 1 || index == 2 || index == 3)) {
+                (index == 1 || index == 2 || index == 3 || index == 4)) {
               _showAlertDialog('Project No', 'Cant be Empty');
             } else {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';
               else if (index == 0)
                 this.appBarTitle = 'Edit Report';
+              else if (index == 3)
+                this.appBarTitle = 'Attach Images';
+              else if (index == 4)
+                this.appBarTitle = 'Customer';
               else
                 this.appBarTitle = 'Comments';
               setState(() {
@@ -101,6 +109,10 @@ class _ReportDetTabState extends State<ReportDetTab> {
             BottomNavigationBarItem(
               icon: Icon(Icons.comment),
               title: Text('Comments'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera),
+              title: Text('Pictures'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.people),
@@ -136,7 +148,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
       // _showAlertDialog('SPM Connect', 'Report Saved Successfully');
     } else {
       // Failure
-      _showAlertDialog('SPM Connect', 'Problem Saving Note');
+      _showAlertDialog('SPM Connect', 'Problem Saving Report');
     }
   }
 
@@ -144,6 +156,14 @@ class _ReportDetTabState extends State<ReportDetTab> {
     AlertDialog alertDialog = AlertDialog(
       title: Text(title),
       content: Text(message),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Ok'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        )
+      ],
     );
     showDialog(context: context, builder: (_) => alertDialog);
   }
