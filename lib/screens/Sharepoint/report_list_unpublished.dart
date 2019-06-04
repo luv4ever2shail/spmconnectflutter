@@ -109,26 +109,36 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                       fit: BoxFit.contain,
                       animation: 'Untitled',
                     )
-                  : getReportListView(),
+                  : reportcount > 0
+                      ? getReportListView()
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                                'All Reports are synced to sharepoint. No Reports found to be synced to sharepoint.'),
+                          ),
+                        ),
             ),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: _connectionStatus != 'ConnectivityResult.none'
-              ? FloatingActionButton.extended(
-                  onPressed: () async {
-                    setState(() {
-                      _saving = true;
-                    });
-                    await synctasks();
-                  },
-                  tooltip: 'Sync reports to cloud',
-                  icon: Icon(
-                    Icons.sync,
-                    color: Colors.white,
-                  ),
-                  label: Text('Sync Reports'),
-                )
+              ? reportcount > 0
+                  ? FloatingActionButton.extended(
+                      onPressed: () async {
+                        setState(() {
+                          _saving = true;
+                        });
+                        await synctasks();
+                      },
+                      tooltip: 'Sync reports to cloud',
+                      icon: Icon(
+                        Icons.sync,
+                        color: Colors.white,
+                      ),
+                      label: Text('Sync Reports'),
+                    )
+                  : Offstage()
               : Offstage()),
     );
   }
@@ -162,7 +172,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               listtaskcount = taskcount;
               for (final i in tasklist) {
                 print(
-                    'Uploading task ${tasklist.indexOf(i)} for report ${i.reportid}');
+                    'Uploading task ${tasklist.indexOf(i) + 1} for report ${i.reportid}');
                 await postTasksToSharepoint(
                     i, accessToken, getTaskToJSON(i), taskcount);
               }
@@ -377,8 +387,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   Future<void> postTasksToSharepoint(
       Tasks task, String accesstoken, var _body, int count) async {
     try {
-       print('Uploading task no ${task.reportid} to sharepoint');
-
+      print('Uploading task no ${task.reportid} - ${task.id} to sharepoint');
 
       http.Response response = await http.post(
           Uri.encodeFull(
@@ -390,8 +399,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           },
           body: _body);
 
-      //print(response.statusCode);
-      //print('started');
+      print('Task Uploaded with status code : ${response.statusCode}');
       if (response.statusCode == 201) {
         await _saveTask(task);
       } else {
@@ -413,7 +421,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       Map<String, dynamic> resJson, Report report, String accesstoken) async {
     print(path);
     File file = File('$path${report.reportmapid.toString()}.png');
-    print(file);
+    print('Signature File Name : $file');
     int result =
         await postAttachment(resJson["Id"].toString(), accesstoken, file);
     if (result != 0) {
@@ -427,7 +435,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     int result = 0;
     try {
       String fileName = file.path.split("/").last;
-      print(fileName);
+      print('Signature file name to be uploaded is : $fileName');
       http.Response response = await http.post(
           Uri.encodeFull(
               "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/items($id)/AttachmentFiles/ add(FileName='$fileName')"),
@@ -436,7 +444,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             "Accept": "application/json"
           },
           body: file.readAsBytesSync());
-      //print(response.statusCode);
+      print('Signature uploaded with status code : ${response.statusCode}');
       result = response.statusCode;
     } catch (e) {
       print(e);
@@ -453,7 +461,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       listimagecount = imagecount;
       print('No of images found for ${report.reportno} - is $imagecount');
       for (final i in imagelist) {
-        print('uploading image count ${imagelist.indexOf(i)}');
+        print('uploading image count ${imagelist.indexOf(i) + 1}');
         Asset resultList;
         resultList = Asset(i.identifier, i.name, i.width, i.height);
         ByteData byteData = await resultList.requestOriginal();
@@ -504,8 +512,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
     if (result != 0) {
       listreportcount--;
-      print('Report count is : $listreportcount');
-      print('Success Saving Report');
+      print('Success Saving Report to database');
+      print('Report to be uploaded count is : $listreportcount');
     } else {
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving Report to database.');
@@ -521,8 +529,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
     if (result != 0) {
       listimagecount--;
-      print('list image count is : $listimagecount');
-      print('Success Saving image');
+      print('Success Saving image to database');
+      print('list image count to be uploaded is : $listimagecount');
     } else {
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving attachments to database.');
@@ -538,8 +546,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
     if (result != 0) {
       listtaskcount--;
+      print('Success Saving task to database');
       print('Task to upload count is : $listtaskcount');
-      print('Success Saving task');
     } else {
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving Task to database.');
@@ -574,8 +582,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     try {
       Directory directory = await getApplicationDocumentsDirectory();
       String _path = directory.path;
-      print("$_path/$directoryName/");
       path = "$_path/$directoryName/";
+      print("Signature path retrieved $_path");
     } catch (e) {
       print(e);
     }
