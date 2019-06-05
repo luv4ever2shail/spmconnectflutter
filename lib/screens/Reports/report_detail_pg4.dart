@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -112,6 +111,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                 decoration: InputDecoration(
                     labelText: 'Customer Email',
                     labelStyle: textStyle,
+                    hintText: 'abc@abc.com',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),
@@ -134,6 +134,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                 decoration: InputDecoration(
                     labelText: 'Customer Contact',
                     labelStyle: textStyle,
+                    hintText: '###-###-####',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
               ),

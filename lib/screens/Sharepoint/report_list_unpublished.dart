@@ -16,10 +16,12 @@ import 'package:spmconnectapp/models/images.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
+import 'package:spmconnectapp/utils/progress_dialog.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
 const directoryName = 'Connect_Signatures';
+ProgressDialog pr;
 
 class ReportListUnpublished extends StatefulWidget {
   @override
@@ -46,7 +48,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   int listimagecount = 0;
   String path = '';
   String empName;
-
+  var percentage = 0.0;
   static final SharepointConfig _config = new SharepointConfig(
       Apikeys.sharepointClientId,
       Apikeys.sharepointClientSecret,
@@ -84,16 +86,22 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
 
     return WillPopScope(
-      onWillPop: () {
-        movetolastscreen();
+      onWillPop: () async {
+        if (!_saving) {
+          movetolastscreen();
+        }
+        return false;
       },
       child: Scaffold(
           appBar: AppBar(
             title: Text('Upload Service Reports'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                movetolastscreen();
+              onPressed: () async {
+                if (!_saving) {
+                  movetolastscreen();
+                }
+                return false;
               },
             ),
           ),
@@ -145,6 +153,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future<void> synctasks() async {
     if (reportcount > 0) {
+      pr = new ProgressDialog(context, ProgressDialogType.Download);
+      pr.setMessage('Access Token...');
+      pr.show();
+
       await getSharepointToken();
       if (accessToken == null) {
         _showAlertDialog('SPM Connect',
@@ -154,13 +166,32 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         });
         return;
       }
+      percentage += 10.0;
+      pr.update(
+          progress: percentage.roundToDouble(), message: 'Access Token...');
 
       if (_saving) {
         if (reportcount > 0) {
           print('No of reports found to be uploaded : $reportcount');
           listreportcount = reportcount;
 
+          pr.update(
+              progress: percentage.roundToDouble(),
+              message: 'Uploading Report..');
+          await Future.delayed(Duration(seconds: 1));
+
+          pr.update(
+              progress: percentage.roundToDouble(),
+              message: 'Report Count $reportcount');
+          await Future.delayed(Duration(seconds: 1));
+
           for (final i in reportlist) {
+            percentage += 10.0 / reportcount;
+            pr.update(
+                progress: percentage.roundToDouble(),
+                message: 'Report ${i.reportno}');
+            await Future.delayed(Duration(seconds: 2));
+
             listtaskcount = 0;
             tasklist.clear();
             await updateTaskListView(i.reportno);
@@ -168,18 +199,34 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             print(
                 'No of task found in report ${i.reportno} to be uploaded is $taskcount');
 
+            pr.update(
+                progress: percentage.roundToDouble(),
+                message: 'Task Count $taskcount');
+            await Future.delayed(Duration(seconds: 1));
+
+            var taskpercent = 0.0;
+            taskpercent = 25 / reportcount;
             if (taskcount > 0) {
               listtaskcount = taskcount;
               for (final i in tasklist) {
                 print(
                     'Uploading task ${tasklist.indexOf(i) + 1} for report ${i.reportid}');
+                percentage += taskpercent / taskcount;
+                pr.update(
+                    progress: percentage.roundToDouble(),
+                    message: 'Task No. ${tasklist.indexOf(i) + 1}');
                 await postTasksToSharepoint(
                     i, accessToken, getTaskToJSON(i), taskcount);
               }
             }
 
+            pr.update(
+                progress: percentage.roundToDouble(),
+                message: 'Tasks Uploaded');
+
             listimagecount = 0;
             imagelist.clear();
+
             await updateImagesListView(i.reportno);
             print(
                 'No of images found in report ${i.reportno} to be uploaded is $imagecount');
@@ -196,6 +243,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       imagelist.clear();
       imagecount = 0;
       await updateReportListView();
+      print('No reports found to be uploaded : $reportcount');
+      percentage = 0.0;
+      pr.update(progress: percentage.roundToDouble(), message: '');
+      pr.hide();
     } else {
       setState(() {
         _saving = false;
@@ -364,6 +415,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print('Token Type : ' + resJson["Id"].toString());
 
       if (response.statusCode == 201) {
+        percentage += 20.0 / reportcount;
+        pr.update(
+            progress: percentage.roundToDouble(), message: 'Report Uploaded');
+
         print('Posting Signature to Sharepoint');
         await postSignatureToSharepoint(resJson, report, accesstoken);
         print('Posting Images to Sharepoint');
@@ -425,6 +480,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     int result =
         await postAttachment(resJson["Id"].toString(), accesstoken, file);
     if (result != 0) {
+      percentage += 10.0 / reportcount;
+      pr.update(
+          progress: percentage.roundToDouble(), message: 'Signature Uploaded');
     } else {
       _showAlertDialog('SPM Connect',
           'Error occured while trying to sync signature png to cloud.');
@@ -456,12 +514,25 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future<void> postAttachmentsToSharepoint(
       Map<String, dynamic> resJson, Report report, String accesstoken) async {
+    pr.update(
+        progress: percentage.roundToDouble(),
+        message: 'Attachments $imagecount');
+    await Future.delayed(Duration(seconds: 2));
+    var percent = 0.0;
+    percent = 25.0 / reportcount;
     if (imagecount > 0) {
       print('sync started for images report ${report.reportno}');
       listimagecount = imagecount;
+
       print('No of images found for ${report.reportno} - is $imagecount');
       for (final i in imagelist) {
         print('uploading image count ${imagelist.indexOf(i) + 1}');
+
+        percentage += percent / imagecount;
+        pr.update(
+            progress: percentage.roundToDouble(),
+            message: 'Attch. No. ${imagelist.indexOf(i) + 1}');
+
         Asset resultList;
         resultList = Asset(i.identifier, i.name, i.width, i.height);
         ByteData byteData = await resultList.requestOriginal();
@@ -474,10 +545,17 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         } else {
           _showAlertDialog('SPM Connect',
               'Error occured while trying to sync attachments to cloud.');
+          return;
         }
       }
       print(
           'Completed uploading images for ${report.reportno}. Saving report.');
+
+      await _saveReport(report);
+      pr.update(progress: percentage.roundToDouble(), message: 'Completed');
+    } else {
+      print(
+          'No attachments found to be uploaded for ${report.reportno}. Saving report.');
       await _saveReport(report);
     }
   }

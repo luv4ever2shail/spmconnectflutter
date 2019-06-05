@@ -152,7 +152,6 @@ class _ReportList extends State<ReportList> {
                 },
               ),
               onTap: () {
-                print(DateTime.now().millisecondsSinceEpoch ~/ 60000);
                 debugPrint("ListTile Tapped");
                 navigateToDetail(this.reportlist[position], 'Edit Report');
               },

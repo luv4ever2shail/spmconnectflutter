@@ -76,6 +76,26 @@ class _TaskListState extends State<TaskList> {
                   navigateToDetail(
                       this.tasklist[position], 'Edit Task', reportid);
                 },
+                trailing: IconButton(
+                  onPressed: () {
+                    var item = tasklist.elementAt(position);
+                    print('object');
+                    deleteItem(position);
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        content:
+                            Text("Task deleted ${tasklist[position].item}"),
+                        action: SnackBarAction(
+                            label: "UNDO",
+                            onPressed: () {
+                              undoDeletion(item);
+                            })));
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    size: 40,
+                  ),
+                  color: Colors.red,
+                ),
               ),
             ),
           ),

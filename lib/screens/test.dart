@@ -1,61 +1,61 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:geolocator/geolocator.dart';
 
-class CurrentLocationWidget extends StatefulWidget {
-  @override
-  _LocationState createState() => _LocationState();
-}
+// class CurrentLocationWidget extends StatefulWidget {
+//   @override
+//   _LocationState createState() => _LocationState();
+// }
 
-class _LocationState extends State<CurrentLocationWidget> {
-  Position _position;
+// class _LocationState extends State<CurrentLocationWidget> {
+//   Position _position;
 
-  @override
-  void initState() {
-    super.initState();
-    _initPlatformState();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _initPlatformState();
+//   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> _initPlatformState() async {
-    Position position;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      final Geolocator geolocator = Geolocator()
-        ..forceAndroidLocationManager = true;
-      position = await geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.bestForNavigation);
-    } on PlatformException {
-      position = null;
-    }
-    if (!mounted) {
-      return;
-    }
+//   // Platform messages are asynchronous, so we initialize in an async method.
+//   Future<void> _initPlatformState() async {
+//     Position position;
+//     // Platform messages may fail, so we use a try/catch PlatformException.
+//     try {
+//       final Geolocator geolocator = Geolocator()
+//         ..forceAndroidLocationManager = true;
+//       position = await geolocator.getCurrentPosition(
+//           desiredAccuracy: LocationAccuracy.bestForNavigation);
+//     } on PlatformException {
+//       position = null;
+//     }
+//     if (!mounted) {
+//       return;
+//     }
 
-    setState(() {
-      _position = position;
-    });
-  }
+//     setState(() {
+//       _position = position;
+//     });
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<GeolocationStatus>(
-          future: Geolocator().checkGeolocationPermissionStatus(),
-          builder: (BuildContext context,
-              AsyncSnapshot<GeolocationStatus> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.data == GeolocationStatus.denied) {
-              return const Text(
-                  'Allow access to the location services for this App using the device settings.');
-            }
-            return Text(_position.toString());
-          }),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: FutureBuilder<GeolocationStatus>(
+//           future: Geolocator().checkGeolocationPermissionStatus(),
+//           builder: (BuildContext context,
+//               AsyncSnapshot<GeolocationStatus> snapshot) {
+//             if (!snapshot.hasData) {
+//               return const Center(child: CircularProgressIndicator());
+//             }
+//             if (snapshot.data == GeolocationStatus.denied) {
+//               return const Text(
+//                   'Allow access to the location services for this App using the device settings.');
+//             }
+//             return Text(_position.toString());
+//           }),
+//     );
+//   }
+// }
 
 // import 'package:flutter/material.dart';
 

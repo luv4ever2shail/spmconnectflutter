@@ -120,6 +120,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                       format: formats[InputType.time],
                       decoration: InputDecoration(
                         labelText: 'Start Time',
+                        hintText: 'HH:MM',
                         icon: Icon(Icons.date_range),
                       ),
                       onChanged: (value) {
@@ -141,6 +142,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                       format: formats[InputType.time],
                       decoration: InputDecoration(
                         labelText: 'End Time',
+                        hintText: 'HH:MM',
                         icon: Icon(Icons.date_range),
                       ),
                       onChanged: (dt) {
