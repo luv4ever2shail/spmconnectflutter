@@ -220,8 +220,8 @@ class _ColorPickerButtonState extends State<ColorPickerButton> {
           contentPadding: const EdgeInsets.all(0.0),
           content: SingleChildScrollView(
             child: ColorPicker(
-              pickerColor,
-              (Color c) => pickerColor = c,
+              pickerColor: pickerColor,
+              onColorChanged: (Color c) => pickerColor = c,
               colorPickerWidth: 1000.0,
               pickerAreaHeightPercent: 0.8,
               enableAlpha: true,
