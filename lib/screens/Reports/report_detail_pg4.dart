@@ -181,6 +181,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
                         child: Icon(
                           Icons.assignment_turned_in,
                           size: 40,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(

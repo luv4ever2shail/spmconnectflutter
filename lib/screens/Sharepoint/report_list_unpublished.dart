@@ -275,7 +275,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               leading: CircleAvatar(
                 backgroundColor: Colors.green,
                 child: Icon(
-                  Icons.receipt,
+                  Icons.sync,
                   color: Colors.white,
                 ),
               ),

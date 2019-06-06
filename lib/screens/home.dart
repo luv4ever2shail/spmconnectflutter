@@ -250,7 +250,7 @@ class _MyhomeState extends State<Myhome> {
     } catch (e) {}
   }
 
-  storeUserInfoToSF() async {
+  Future storeUserInfoToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('Name', _users.displayName);
     prefs.setString('Email', _users.mail);
@@ -260,9 +260,8 @@ class _MyhomeState extends State<Myhome> {
     setState(() {});
   }
 
-  removeUserInfoFromSF() async {
+  Future removeUserInfoFromSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
     prefs.remove("Name");
     prefs.remove("Email");
     prefs.remove("Position");
@@ -271,7 +270,7 @@ class _MyhomeState extends State<Myhome> {
     prefs.remove('Profilepic');
   }
 
-  getUserInfoSF() async {
+  Future getUserInfoSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     sfName = prefs.getString('Name');
     sfEmail = prefs.getString('Email');
@@ -293,7 +292,6 @@ class _MyhomeState extends State<Myhome> {
       );
       var data = json.decode(response.body);
       _users = Users.fromJson(data);
-      setState(() {});
       await removeUserInfoFromSF();
       await storeUserInfoToSF();
     } catch (e) {
