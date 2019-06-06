@@ -81,14 +81,18 @@ class _TaskListState extends State<TaskList> {
                     var item = tasklist.elementAt(position);
                     print('object');
                     deleteItem(position);
-                    Scaffold.of(context).showSnackBar(SnackBar(
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
                         content:
                             Text("Task deleted ${tasklist[position].item}"),
                         action: SnackBarAction(
-                            label: "UNDO",
-                            onPressed: () {
-                              undoDeletion(item);
-                            })));
+                          label: "UNDO",
+                          onPressed: () {
+                            undoDeletion(item);
+                          },
+                        ),
+                      ),
+                    );
                   },
                   icon: Icon(
                     Icons.delete,

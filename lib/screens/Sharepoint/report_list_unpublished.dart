@@ -62,7 +62,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   @override
   void initState() {
     super.initState();
-    _saving = true;
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -236,22 +235,29 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           }
         }
       }
-      reportlist.clear();
-      reportcount = 0;
-      tasklist.clear();
-      taskcount = 0;
-      imagelist.clear();
-      imagecount = 0;
-      await updateReportListView();
-      print('No reports found to be uploaded : $reportcount');
-      percentage = 0.0;
-      pr.update(progress: percentage.roundToDouble(), message: '');
-      pr.hide();
+      await closeUpload();
     } else {
       setState(() {
         _saving = false;
       });
     }
+  }
+
+  Future<void> closeUpload() async {
+    reportlist.clear();
+    reportcount = 0;
+    tasklist.clear();
+    taskcount = 0;
+    imagelist.clear();
+    imagecount = 0;
+    await updateReportListView();
+    print('No reports found to be uploaded : $reportcount');
+    percentage = 0.0;
+    pr.update(progress: percentage.roundToDouble(), message: '');
+    pr.hide();
+    setState(() {
+      _saving = false;
+    });
   }
 
   ListView getReportListView() {
@@ -321,10 +327,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           this.reportcount = reportlist.length;
         });
         if (listreportcount <= 0) {
-          setState(() {
-            listreportcount = 0;
-            _saving = false;
-          });
+          listreportcount = 0;
         }
       });
     });
@@ -426,9 +429,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       } else {
         _showAlertDialog('SPM Connect',
             'Error occured while trying to sync Reports to cloud.');
-        setState(() {
-          _saving = false;
-        });
+        await closeUpload();
+        return;
       }
 
       print('ended');
@@ -460,9 +462,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       } else {
         _showAlertDialog('SPM Connect',
             'Error occured while trying to sync Tasks to cloud.');
-        setState(() {
-          _saving = false;
-        });
+        await closeUpload();
+        return;
       }
       print('ended');
     } catch (e) {
@@ -483,6 +484,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       percentage += 10.0 / reportcount;
       pr.update(
           progress: percentage.roundToDouble(), message: 'Signature Uploaded');
+      await Future.delayed(Duration(seconds: 2));
     } else {
       _showAlertDialog('SPM Connect',
           'Error occured while trying to sync signature png to cloud.');
@@ -545,7 +547,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         } else {
           _showAlertDialog('SPM Connect',
               'Error occured while trying to sync attachments to cloud.');
-          return;
+          await closeUpload();
         }
       }
       print(
@@ -553,10 +555,13 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
       await _saveReport(report);
       pr.update(progress: percentage.roundToDouble(), message: 'Completed');
+      await Future.delayed(Duration(seconds: 2));
     } else {
       print(
           'No attachments found to be uploaded for ${report.reportno}. Saving report.');
       await _saveReport(report);
+      pr.update(progress: percentage.roundToDouble(), message: 'Completed');
+      await Future.delayed(Duration(seconds: 2));
     }
   }
 
