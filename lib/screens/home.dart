@@ -144,12 +144,16 @@ class _MyhomeState extends State<Myhome> {
 
   Drawer _getMailAccountDrawerr() {
     Text email = new Text(
-      _users == null ? sfEmail : _users.mail,
+      _users == null
+          ? sfEmail == null ? 'Email Not Found' : sfEmail
+          : _users.mail == null ? 'Email Not Found' : _users.mail,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
     Text name = new Text(
-      _users == null ? sfName : _users.displayName,
+      _users == null
+          ? sfName == null ? 'Name Not Found' : sfName
+          : _users.displayName == null ? 'Name Not Found' : _users.displayName,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
