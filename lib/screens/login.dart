@@ -140,11 +140,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
     );
   }
 
-  void showError(dynamic ex) {
-    //showMessage(ex.toString(), false);
-    //showMessage('Login Interrupted by the user.', false);
-  }
-
   void showMessage(String text, bool login) {
     var alert = new AlertDialog(
         content: new Text(text),
@@ -187,7 +182,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       setState(() {
         _saving = false;
       });
-      showError(e);
+      print(e);
     }
   }
 
@@ -204,7 +199,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       });
       //showMessage("Logged out", false);
     } catch (e) {
-      showError(e);
+      print(e);
     }
   }
 
