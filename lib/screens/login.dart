@@ -6,6 +6,8 @@ import 'package:spmconnectapp/screens/home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:async';
 
+import 'package:spmconnectapp/utils/top_bar.dart';
+
 class MyLoginPage extends StatefulWidget {
   MyLoginPage({Key key, this.title}) : super(key: key);
   final String title;
@@ -65,18 +67,20 @@ class _MyLoginPageState extends State<MyLoginPage> {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          TopBar(),
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
                   child: Text('Hello',
                       style: TextStyle(
-                          fontSize: 80.0, fontWeight: FontWeight.bold)),
+                          fontSize: 80.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54)),
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
@@ -84,7 +88,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     children: <Widget>[
                       Text('There',
                           style: TextStyle(
-                              fontSize: 80.0, fontWeight: FontWeight.bold)),
+                              fontSize: 80.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54)),
                       Text('.',
                           style: TextStyle(
                               fontSize: 80.0,
@@ -97,16 +103,17 @@ class _MyLoginPageState extends State<MyLoginPage> {
             ),
           ),
           Container(
-              padding: EdgeInsets.all(30.0),
+              padding: EdgeInsets.fromLTRB(0, 30.0, 0, 0),
+              width: 300.0,
               child: Column(
                 children: <Widget>[
                   Material(
                     elevation: 5.0,
-                    borderRadius: BorderRadius.circular(30.0),
-                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Color(0xFF192A85),
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                      padding: EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
                       onPressed: () {
                         _saving = true;
                         login();

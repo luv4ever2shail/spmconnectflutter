@@ -108,7 +108,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       imagelist = List<Images>();
       getReportList();
     }
-
+    if (_connectionStatus == 'ConnectivityResult.none' && _saving == true) {
+      closeprudate();
+    }
     return WillPopScope(
       onWillPop: () async {
         if (!_saving) {
@@ -529,6 +531,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     imagelist.clear();
     imagecount = 0;
     await getReportList();
+    await closeprudate();
+  }
+
+  Future<void> closeprudate() async {
     percentage = 0.0;
     pr.update(progress: percentage.roundToDouble(), message: '');
     pr.hide();
@@ -536,6 +542,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       _saving = false;
     });
   }
+
+// Logs
 
   Future<void> prepareLogFile() async {
     final logdir = await _localPath + "/FLogs";
@@ -571,13 +579,14 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           },
           body: _body);
 
-      print('Log item is created ${response.statusCode}');
-
       Map<String, dynamic> resJson = json.decode(response.body);
-      print('Token Type : ' + resJson["Id"].toString());
 
       if (response.statusCode == 201) {
+        print('Log item is created ${response.statusCode}');
+        print('Token id : ' + resJson["Id"].toString());
         await postLogToSharepoint(resJson, accesstoken, file);
+      } else {
+        return;
       }
     } catch (e) {
       print(e);
@@ -612,7 +621,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           },
           body: file.readAsBytesSync());
       print('log file uploaded with status code : ${response.statusCode}');
-
       result = 1;
     } catch (e) {
       print(e);
@@ -1214,7 +1222,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         break;
       case ConnectivityResult.mobile:
       case ConnectivityResult.none:
-        setState(() => _connectionStatus = result.toString());
+        setState(() {
+          _connectionStatus = result.toString();
+        });
         break;
       default:
         setState(() => _connectionStatus = 'Failed to get connectivity.');
