@@ -37,7 +37,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     // adjust window size for browser login
     var screenSize = MediaQuery.of(context).size;
     var rectSize =
-        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+        Rect.fromLTWH(0.0, 50.0, screenSize.width, screenSize.height - 25);
     oauth.setWebViewScreenSize(rectSize);
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -177,6 +177,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
           });
         });
       }
+
       //showMessage('Logged in successfully', true);
     } catch (e) {
       setState(() {

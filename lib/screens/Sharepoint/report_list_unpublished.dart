@@ -313,7 +313,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   String getLogToJSON() {
     String reporttojson =
-        ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "$empName","Uploadedby": "$empName"}');
+        ('{"__metadata": { "type": "SP.Data.LogsListItem" },"Title": "$empName"}');
     return reporttojson;
   }
 
@@ -563,7 +563,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
       http.Response response = await http.post(
           Uri.encodeFull(
-              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('TestList')/items"),
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('Logs')/items"),
           headers: {
             "Authorization": "Bearer " + accesstoken,
             "Content-Type": "application/json;odata=verbose",
@@ -578,11 +578,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
       if (response.statusCode == 201) {
         await postLogToSharepoint(resJson, accesstoken, file);
-      } else {
-        _showAlertDialog('SPM Connect',
-            'Error occured while trying to sync Reports to cloud.');
       }
-      print('ended');
     } catch (e) {
       print(e);
     }
@@ -609,7 +605,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print(fileName);
       http.Response response = await http.post(
           Uri.encodeFull(
-              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('TestList')/items($id)/AttachmentFiles/ add(FileName='$fileName')"),
+              "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('Logs')/items($id)/AttachmentFiles/add(FileName='$fileName')"),
           headers: {
             "Authorization": "Bearer " + accesstoken,
             "Accept": "application/json"
@@ -1149,31 +1145,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
 // Get Log File
-
-  Future<File> get _logFile async {
-    
-    final logdir = await _localPath + "/FLogs";
-
-    //creating directory
-    Directory(logdir).create()
-        // The created directory is returned as a Future.
-        .then((Directory directory) {
-      print(directory.path);
-    });
-
-    //opening file
-    var file = File("$logdir/flog.txt");
-    var isExist = await file.exists();
-
-    //check to see if file exist
-    if (isExist) {
-      print('File exists------------------>_getLocalFile()');
-    } else {
-      print('file does not exist---------->_getLocalFile()');
-    }
-
-    return file;
-  }
 
   Future<String> get _localPath async {
     var directory;
