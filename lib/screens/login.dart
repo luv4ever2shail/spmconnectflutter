@@ -1,7 +1,7 @@
-import 'package:aad_oauth/aad_oauth.dart';
-import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/aad_auth/aad_oauth.dart';
+import 'package:spmconnectapp/aad_auth/model/config.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:async';
