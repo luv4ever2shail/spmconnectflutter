@@ -48,9 +48,9 @@ class _Signpad2State extends State<Signpad2> {
           icon: new Icon(Icons.content_copy),
           tooltip: 'Customer Signature',
           onPressed: () => setState(() {
-                _finished = false;
-                _controller = _newController();
-              }),
+            _finished = false;
+            _controller = _newController();
+          }),
         ),
       ];
     } else {
@@ -209,8 +209,8 @@ class DrawBar extends StatelessWidget {
               child: new Slider(
             value: _controller.thickness,
             onChanged: (double value) => setState(() {
-                  _controller.thickness = value;
-                }),
+              _controller.thickness = value;
+            }),
             min: 1.0,
             max: 20.0,
             activeColor: Colors.white,

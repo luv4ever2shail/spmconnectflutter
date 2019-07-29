@@ -37,7 +37,7 @@ class _TaskListState extends State<TaskList> {
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               debugPrint('FAB clicked');
-              navigateToDetail(Tasks(reportid, '', '', '', '', '', '', 0),
+              navigateToDetail(Tasks(reportid, '', null, null, '', '', '', 0),
                   'Add New Task', reportid);
             },
             icon: Icon(Icons.add),
@@ -98,7 +98,7 @@ class _TaskListState extends State<TaskList> {
                     Icons.delete,
                     size: 40,
                   ),
-                  color: Colors.red,
+                  color: Colors.grey,
                 ),
               ),
             ),
