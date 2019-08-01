@@ -135,7 +135,7 @@ By phone number: 5197370320
 By mail: 5445 Outer Drive, Windsor, OIN N9A 6J3, Canada
 
 **Contact Developer**
-Developed by : Shail Patel
-If you have any questions or suggestions about my application, do not hesitate to contact me at shail@spm-automation.com
+Developed by : **Shail Patel**
+If you have any questions or suggestions about my application, do not hesitate to contact me at **shail@spm-automation.com**
 """;
 }

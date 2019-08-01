@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:aad_oauth/aad_oauth.dart';
-import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/aad_auth/aad_oauth.dart';
+import 'package:spmconnectapp/aad_auth/model/config.dart';
 import 'package:spmconnectapp/models/users.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
@@ -54,7 +54,7 @@ class _MyhomeState extends State<Myhome> {
     Icon(Icons.sync),
     Icon(Icons.exit_to_app)
   ];
-  var drawerText = ["Profile", "Privacy", "Sync Data", "Log Out"];
+  var drawerText = ["Profile", "Privacy", "Sync Reports", "Log Out"];
 
   final barColor = const Color(0xFF192A56);
   final bgColor = const Color(0xFFEAF0F1);
@@ -144,12 +144,16 @@ class _MyhomeState extends State<Myhome> {
 
   Drawer _getMailAccountDrawerr() {
     Text email = new Text(
-      _users == null ? sfEmail : _users.mail,
+      _users == null
+          ? sfEmail == null ? 'Email Not Found' : sfEmail
+          : _users.mail == null ? 'Email Not Found' : _users.mail,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
     Text name = new Text(
-      _users == null ? sfName : _users.displayName,
+      _users == null
+          ? sfName == null ? 'Name Not Found' : sfName
+          : _users.displayName == null ? 'Name Not Found' : _users.displayName,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
@@ -193,7 +197,7 @@ class _MyhomeState extends State<Myhome> {
                         showprofile();
                       } else if (drawerText[position] == 'Privacy') {
                         navigateToprivacy();
-                      } else if (drawerText[position] == 'Sync Data') {
+                      } else if (drawerText[position] == 'Sync Reports') {
                         navigateToReportsUnpublished();
                       } else if (drawerText[position] == 'Log Out') {
                         logout();
@@ -250,7 +254,7 @@ class _MyhomeState extends State<Myhome> {
     } catch (e) {}
   }
 
-  storeUserInfoToSF() async {
+  Future storeUserInfoToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('Name', _users.displayName);
     prefs.setString('Email', _users.mail);
@@ -260,9 +264,8 @@ class _MyhomeState extends State<Myhome> {
     setState(() {});
   }
 
-  removeUserInfoFromSF() async {
+  Future removeUserInfoFromSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Remove String
     prefs.remove("Name");
     prefs.remove("Email");
     prefs.remove("Position");
@@ -271,7 +274,7 @@ class _MyhomeState extends State<Myhome> {
     prefs.remove('Profilepic');
   }
 
-  getUserInfoSF() async {
+  Future getUserInfoSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     sfName = prefs.getString('Name');
     sfEmail = prefs.getString('Email');
@@ -293,7 +296,6 @@ class _MyhomeState extends State<Myhome> {
       );
       var data = json.decode(response.body);
       _users = Users.fromJson(data);
-      setState(() {});
       await removeUserInfoFromSF();
       await storeUserInfoToSF();
     } catch (e) {

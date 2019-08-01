@@ -26,14 +26,12 @@ class _ReportDetail2 extends State<ReportDetail2> {
   DateTime _starttime;
   DateTime _endtime;
 
-  FocusNode timeFocusNode;
   FocusNode wrkperfrmFocusNode;
   FocusNode hoursFocusNode;
 
   @override
   void initState() {
     super.initState();
-    timeFocusNode = FocusNode();
     wrkperfrmFocusNode = FocusNode();
     hoursFocusNode = FocusNode();
   }
@@ -41,7 +39,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
   @override
   void dispose() {
     // Clean up the focus node when the Form is disposed
-    timeFocusNode.dispose();
     wrkperfrmFocusNode.dispose();
     hoursFocusNode.dispose();
     super.dispose();
@@ -57,11 +54,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   _ReportDetail2(this.task, this.appBarTitle, this.reportid);
 
-  final formats = {
-    InputType.both: DateFormat("EEEE, MMMM d, yyyy 'at' h:mma"),
-    InputType.date: DateFormat('yyyy-MM-dd'),
-    InputType.time: DateFormat("HH:mm"),
-  };
+  final format = DateFormat("HH:mm");
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +88,6 @@ class _ReportDetail2 extends State<ReportDetail2> {
                 textInputAction: TextInputAction.next,
                 controller: itemController,
                 style: textStyle,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(timeFocusNode),
                 onChanged: (value) {
                   debugPrint('Something changed in Item Text Field');
                   updateItem();
@@ -113,13 +104,21 @@ class _ReportDetail2 extends State<ReportDetail2> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: DateTimePickerFormField(
-                      inputType: InputType.time,
+                    child: DateTimeField(
+                      readOnly: true,
                       controller: starttimeController,
-                      editable: false,
-                      format: formats[InputType.time],
+                      onShowPicker: (context, currentValue) async {
+                        final time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.fromDateTime(
+                              currentValue ?? DateTime.now()),
+                        );
+                        return DateTimeField.convert(time);
+                      },
+                      format: format,
                       decoration: InputDecoration(
                         labelText: 'Start Time',
+                        hintText: 'HH:MM',
                         icon: Icon(Icons.date_range),
                       ),
                       onChanged: (value) {
@@ -134,13 +133,21 @@ class _ReportDetail2 extends State<ReportDetail2> {
                     width: 5.0,
                   ),
                   Expanded(
-                    child: DateTimePickerFormField(
+                    child: DateTimeField(
                       controller: endtimeController,
-                      inputType: InputType.time,
-                      editable: false,
-                      format: formats[InputType.time],
+                      format: format,
+                      readOnly: true,
+                      onShowPicker: (context, currentValue) async {
+                        final time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.fromDateTime(
+                              currentValue ?? DateTime.now()),
+                        );
+                        return DateTimeField.convert(time);
+                      },
                       decoration: InputDecoration(
                         labelText: 'End Time',
+                        hintText: 'HH:MM',
                         icon: Icon(Icons.date_range),
                       ),
                       onChanged: (dt) {

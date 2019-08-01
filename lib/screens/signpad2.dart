@@ -48,9 +48,9 @@ class _Signpad2State extends State<Signpad2> {
           icon: new Icon(Icons.content_copy),
           tooltip: 'Customer Signature',
           onPressed: () => setState(() {
-                _finished = false;
-                _controller = _newController();
-              }),
+            _finished = false;
+            _controller = _newController();
+          }),
         ),
       ];
     } else {
@@ -64,8 +64,7 @@ class _Signpad2State extends State<Signpad2> {
             tooltip: 'Clear',
             onPressed: _controller.clear),
         new IconButton(
-            icon: new Icon(Icons.check),
-            onPressed: () => _show(_controller.finish(), context)),
+            icon: new Icon(Icons.check), onPressed: () => _neverSatisfied()),
       ];
     }
     return new Scaffold(
@@ -131,6 +130,41 @@ class _Signpad2State extends State<Signpad2> {
     }));
   }
 
+  Future<void> _neverSatisfied() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submit report?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Are you sure want to sign and submit this report? Once "Confirmed", report will not be available for edit or delete to the user.')
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _show(_controller.finish(), context);
+              },
+            ),
+            FlatButton(
+              child: Text('Discard'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _save() async {
     int result;
     report.reportsigned = 1;
@@ -175,8 +209,8 @@ class DrawBar extends StatelessWidget {
               child: new Slider(
             value: _controller.thickness,
             onChanged: (double value) => setState(() {
-                  _controller.thickness = value;
-                }),
+              _controller.thickness = value;
+            }),
             min: 1.0,
             max: 20.0,
             activeColor: Colors.white,

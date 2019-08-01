@@ -79,7 +79,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
           onTap: (int index) {
             if (report.projectno.length == 0 &&
                 (index == 1 || index == 2 || index == 3 || index == 4)) {
-              _showAlertDialog('Project No', 'Cant be Empty');
+              _showAlertDialog('Error!', 'Project number cannot be empty.');
             } else {
               if (index == 1)
                 this.appBarTitle = 'Edit Tasks';

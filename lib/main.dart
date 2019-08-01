@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:spmconnectapp/screens/login.dart';
+import 'package:spmconnectapp/themes/colors.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,9 +36,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Service Reports',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: appTheme,
         debugShowCheckedModeBanner: false,
         home: isLoggedIn
             ? Myhome(null)

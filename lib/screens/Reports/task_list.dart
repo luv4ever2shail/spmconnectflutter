@@ -37,7 +37,7 @@ class _TaskListState extends State<TaskList> {
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               debugPrint('FAB clicked');
-              navigateToDetail(Tasks(reportid, '', '', '', '', '', '', 0),
+              navigateToDetail(Tasks(reportid, '', null, null, '', '', '', 0),
                   'Add New Task', reportid);
             },
             icon: Icon(Icons.add),
@@ -76,6 +76,30 @@ class _TaskListState extends State<TaskList> {
                   navigateToDetail(
                       this.tasklist[position], 'Edit Task', reportid);
                 },
+                trailing: IconButton(
+                  onPressed: () {
+                    var item = tasklist.elementAt(position);
+                    print('object');
+                    deleteItem(position);
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text("Task deleted ${tasklist[position].item}"),
+                        action: SnackBarAction(
+                          label: "UNDO",
+                          onPressed: () {
+                            undoDeletion(item);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    size: 40,
+                  ),
+                  color: Colors.grey,
+                ),
               ),
             ),
           ),

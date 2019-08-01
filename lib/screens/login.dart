@@ -1,10 +1,12 @@
-import 'package:aad_oauth/aad_oauth.dart';
-import 'package:aad_oauth/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/aad_auth/aad_oauth.dart';
+import 'package:spmconnectapp/aad_auth/model/config.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:async';
+
+import 'package:spmconnectapp/utils/top_bar.dart';
 
 class MyLoginPage extends StatefulWidget {
   MyLoginPage({Key key, this.title}) : super(key: key);
@@ -37,7 +39,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     // adjust window size for browser login
     var screenSize = MediaQuery.of(context).size;
     var rectSize =
-        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+        Rect.fromLTWH(0.0, 50.0, screenSize.width, screenSize.height - 25);
     oauth.setWebViewScreenSize(rectSize);
     return new Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -65,18 +67,20 @@ class _MyLoginPageState extends State<MyLoginPage> {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          TopBar(),
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0),
                   child: Text('Hello',
                       style: TextStyle(
-                          fontSize: 80.0, fontWeight: FontWeight.bold)),
+                          fontSize: 80.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54)),
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 0.0),
@@ -84,7 +88,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     children: <Widget>[
                       Text('There',
                           style: TextStyle(
-                              fontSize: 80.0, fontWeight: FontWeight.bold)),
+                              fontSize: 80.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54)),
                       Text('.',
                           style: TextStyle(
                               fontSize: 80.0,
@@ -97,16 +103,17 @@ class _MyLoginPageState extends State<MyLoginPage> {
             ),
           ),
           Container(
-              padding: EdgeInsets.all(30.0),
+              padding: EdgeInsets.fromLTRB(0, 30.0, 0, 0),
+              width: 300.0,
               child: Column(
                 children: <Widget>[
                   Material(
                     elevation: 5.0,
-                    borderRadius: BorderRadius.circular(30.0),
-                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Color(0xFF192A85),
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                      padding: EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
                       onPressed: () {
                         _saving = true;
                         login();
@@ -138,11 +145,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
         ],
       ),
     );
-  }
-
-  void showError(dynamic ex) {
-    //showMessage(ex.toString(), false);
-    //showMessage('Login Interrupted by the user.', false);
   }
 
   void showMessage(String text, bool login) {
@@ -182,12 +184,13 @@ class _MyLoginPageState extends State<MyLoginPage> {
           });
         });
       }
+
       //showMessage('Logged in successfully', true);
     } catch (e) {
       setState(() {
         _saving = false;
       });
-      showError(e);
+      print(e);
     }
   }
 
@@ -204,7 +207,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
       });
       //showMessage("Logged out", false);
     } catch (e) {
-      showError(e);
+      print(e);
     }
   }
 
