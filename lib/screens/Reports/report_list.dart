@@ -22,7 +22,7 @@ class _ReportList extends State<ReportList> {
   int count = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   String empId;
-
+  String sfEmail;
   @override
   void initState() {
     super.initState();
@@ -128,7 +128,8 @@ class _ReportList extends State<ReportList> {
                 style: titleStyle,
               ),
               trailing: GestureDetector(
-                child: this.reportlist[position].reportsigned == 0
+                child: this.reportlist[position].reportsigned == 0 ||
+                        sfEmail == 'shail@spm-automation.com'
                     ? Icon(
                         Icons.delete,
                         size: 40,
@@ -200,7 +201,7 @@ class _ReportList extends State<ReportList> {
   }
 
   void navigateToDetail(Report report, String title) async {
-    if (report.reportsigned == 1) {
+    if (report.reportsigned == 1 && sfEmail != 'shail@spm-automation.com') {
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
         return ReportPreview(report);
       }));
@@ -278,6 +279,7 @@ class _ReportList extends State<ReportList> {
   getUserInfoSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getString('EmpId');
+    sfEmail = prefs.getString('Email');
     setState(() {});
   }
 
