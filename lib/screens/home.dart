@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
@@ -11,7 +12,6 @@ import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
 import 'package:spmconnectapp/screens/login.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/utils/profiledialog.dart';
 
 class Myhome extends StatefulWidget {
@@ -26,22 +26,17 @@ class Myhome extends StatefulWidget {
 
 class _MyhomeState extends State<Myhome> {
   String accessToken;
+  Box _box;
   _MyhomeState(this.accessToken);
   Users _users;
-  String sfName;
-  String sfEmail;
-  String sfID;
-  String sfPosition;
-  String sfEmpid;
-  String sfprofilepic;
   @override
   void initState() {
+    _box = Hive.box('myBox');
     super.initState();
     if (accessToken != null) {
       getUserInfo(accessToken);
       getUserPic(accessToken);
     }
-    getUserInfoSF();
   }
 
   static final Config config = new Config(Apikeys.tenantid, Apikeys.clientid,
@@ -63,19 +58,19 @@ class _MyhomeState extends State<Myhome> {
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Do you want to exit an App'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () => exit(0),
-                    child: new Text('Yes'),
-                  ),
-                ],
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
               ),
+              new FlatButton(
+                onPressed: () => exit(0),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
         ) ??
         false;
   }
@@ -85,13 +80,8 @@ class _MyhomeState extends State<Myhome> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        drawer: _users == null
-            ? sfEmail == null && sfName == null
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : _getMailAccountDrawerr()
-            : _getMailAccountDrawerr(),
+        drawer:
+            _box.get('Name') != null ? _getMailAccountDrawerr() : Container(),
         backgroundColor: bgColor,
         appBar: AppBar(
           centerTitle: true,
@@ -144,16 +134,11 @@ class _MyhomeState extends State<Myhome> {
 
   Drawer _getMailAccountDrawerr() {
     Text email = new Text(
-      _users == null
-          ? sfEmail == null ? 'Email Not Found' : sfEmail
-          : _users.mail == null ? 'Email Not Found' : _users.mail,
+      _box.get('Email'),
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
-
     Text name = new Text(
-      _users == null
-          ? sfName == null ? 'Name Not Found' : sfName
-          : _users.displayName == null ? 'Name Not Found' : _users.displayName,
+      _box.get('Name'),
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15.0),
     );
 
@@ -165,14 +150,14 @@ class _MyhomeState extends State<Myhome> {
           accountName: name,
           accountEmail: email,
           currentAccountPicture: GestureDetector(
-            child: sfprofilepic == null
+            child: _box.get('Profilepic') == null
                 ? Icon(
                     Icons.account_circle,
                     size: 60.0,
                     color: Colors.white,
                   )
                 : ClipOval(
-                    child: Image.file(File('$sfprofilepic')),
+                    child: Image.file(File('${_box.get('Profilepic')}')),
                   ),
             onTap: () {
               Navigator.of(context).pop();
@@ -190,19 +175,17 @@ class _MyhomeState extends State<Myhome> {
                   leading: drawerIcons[position],
                   title: Text(drawerText[position],
                       style: TextStyle(fontSize: 15.0)),
-                  onTap: () {
-                    this.setState(() {
-                      Navigator.pop(context);
-                      if (drawerText[position] == "Profile") {
-                        showprofile();
-                      } else if (drawerText[position] == 'Privacy') {
-                        navigateToprivacy();
-                      } else if (drawerText[position] == 'Sync Reports') {
-                        navigateToReportsUnpublished();
-                      } else if (drawerText[position] == 'Log Out') {
-                        logout();
-                      }
-                    });
+                  onTap: () async {
+                    Navigator.pop(context);
+                    if (drawerText[position] == "Profile") {
+                      showprofile();
+                    } else if (drawerText[position] == 'Privacy') {
+                      navigateToprivacy();
+                    } else if (drawerText[position] == 'Sync Reports') {
+                      navigateToReportsUnpublished();
+                    } else if (drawerText[position] == 'Log Out') {
+                      await signout(context);
+                    }
                   },
                 );
               }),
@@ -215,14 +198,14 @@ class _MyhomeState extends State<Myhome> {
     showDialog(
       context: context,
       builder: (BuildContext context) => CustomDialog(
-            name: sfName,
-            email: sfEmail,
-            jobtitle: sfPosition,
-            empid: sfEmpid,
-            id: sfID,
-            buttonText: "Okay",
-            profile: sfprofilepic,
-          ),
+        name: _box.get('Name'),
+        email: _box.get('Email'),
+        jobtitle: _box.get('Position'),
+        empid: _box.get('EmpId'),
+        id: _box.get('Id'),
+        buttonText: "Okay",
+        profile: _box.get('Profilepic'),
+      ),
     );
   }
 
@@ -244,45 +227,93 @@ class _MyhomeState extends State<Myhome> {
     }));
   }
 
-  void logout() async {
-    try {
-      removeUserInfoFromSF();
+  Future<void> signout(BuildContext _context) async {
+    bool result = await showAlertDialog(
+        _context, 'Logout', 'Do you really wanna logout?');
+    print(result);
+    if (result) {
+      await removeUserInfoFromSF();
       await oauth.logout();
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
         return MyLoginPage();
       }));
-    } catch (e) {}
+    }
+  }
+
+  Future<bool> showAlertDialog(
+    BuildContext context,
+    String title,
+    String message,
+  ) async {
+    bool result = false;
+    await showDialog(
+      context: context,
+      builder: (BuildContext br) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text(
+            title,
+            style: TextStyle(
+                color: Theme.of(context).textTheme.title.color, fontSize: 25),
+          ),
+          content: Text(
+            message,
+            style: new TextStyle(
+                fontSize: 15,
+                fontFamily: 'Nunito',
+                color: Theme.of(context).textTheme.title.color),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'No',
+                style: new TextStyle(
+                    fontSize: 15,
+                    fontFamily: 'Nunito',
+                    color: Theme.of(context).textTheme.title.color),
+              ),
+              onPressed: () {
+                result = false;
+                Navigator.pop(br);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Yes',
+                style: new TextStyle(
+                    fontSize: 15,
+                    fontFamily: 'Nunito',
+                    color: Theme.of(context).textTheme.title.color),
+              ),
+              onPressed: () {
+                result = true;
+                Navigator.pop(br);
+              },
+            )
+          ],
+        );
+      },
+    );
+    return result;
   }
 
   Future storeUserInfoToSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('Name', _users.displayName);
-    prefs.setString('Email', _users.mail);
-    prefs.setString('Position', _users.jobtitle);
-    prefs.setString('Id', _users.id);
-    prefs.setString('EmpId', _users.empid);
+    _box.put('Name', _users.displayName);
+    _box.put('Email', _users.mail);
+    _box.put('Position', _users.jobtitle);
+    _box.put('Id', _users.id);
+    _box.put('EmpId', _users.empid);
     setState(() {});
   }
 
   Future removeUserInfoFromSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("Name");
-    prefs.remove("Email");
-    prefs.remove("Position");
-    prefs.remove("Id");
-    prefs.remove("EmpId");
-    prefs.remove('Profilepic');
-  }
-
-  Future getUserInfoSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    sfName = prefs.getString('Name');
-    sfEmail = prefs.getString('Email');
-    sfPosition = prefs.getString('Position');
-    sfID = prefs.getString('Id');
-    sfEmpid = prefs.getString('EmpId');
-    sfprofilepic = prefs.getString('Profilepic');
-    setState(() {});
+    _box.delete("Name");
+    _box.delete("Email");
+    _box.delete("Position");
+    _box.delete("Id");
+    _box.delete("EmpId");
+    _box.delete('Profilepic');
   }
 
   Future getUserInfo(String accesstoken) async {
@@ -317,12 +348,8 @@ class _MyhomeState extends State<Myhome> {
         await Directory('$path/Picture').create(recursive: true);
         File('$path/Picture/profile.jpg').writeAsBytesSync(response.bodyBytes);
         var filePath = '$path/Picture/profile.jpg';
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('Profilepic', filePath);
-        setState(() {
-          sfprofilepic = filePath;
-        });
-        await getUserInfoSF();
+        _box.put('Profilepic', filePath);
+        setState(() {});
       }
     } catch (e) {
       print(e);

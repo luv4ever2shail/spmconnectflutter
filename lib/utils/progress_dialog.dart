@@ -59,16 +59,13 @@ class ProgressDialog {
         barrierDismissible: false,
         builder: (BuildContext context) {
           _context = context;
-          return WillPopScope(
-            onWillPop: () {},
-            child: Dialog(
-                insetAnimationCurve: Curves.easeInOut,
-                insetAnimationDuration: Duration(milliseconds: 100),
-                elevation: 10.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                child: _dialog),
-          );
+          return Dialog(
+              insetAnimationCurve: Curves.easeInOut,
+              insetAnimationDuration: Duration(milliseconds: 100),
+              elevation: 10.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              child: _dialog);
         },
       );
     }

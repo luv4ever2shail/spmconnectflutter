@@ -64,12 +64,12 @@ class _ImagePickerState extends State<ImagePicker> {
     }
   }
 
-  Future<void> deleteAssets() async {
-    await MultiImagePicker.deleteImages(assets: images);
-    setState(() {
-      images = List<Asset>();
-    });
-  }
+  // Future<void> deleteAssets() async {
+  //   await MultiImagePicker.deleteImages(assets: images);
+  //   setState(() {
+  //     images = List<Asset>();
+  //   });
+  // }
 
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();

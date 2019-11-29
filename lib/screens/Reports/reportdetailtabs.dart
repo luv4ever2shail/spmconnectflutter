@@ -30,96 +30,91 @@ class _ReportDetTabState extends State<ReportDetTab> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        movetolastscreen();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(appBarTitle + ' - ' + report.reportno),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: movetolastscreen,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(appBarTitle + ' - ' + report.reportno),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: movetolastscreen,
+        ),
+      ),
+      body: PageView(
+        controller: controller,
+        children: <Widget>[
+          ReportDetail(report),
+          TaskList(report.reportno),
+          ReportDetail3(report),
+          ImagePicker(report.reportno),
+          ReportDetail4(report),
+        ],
+        onPageChanged: (int index) {
+          if (report.projectno.length == 0 && index == 1) {
+            _showAlertDialog('Error!', 'Project number cannot be empty.');
+            controller.jumpToPage(0);
+          } else {
+            if (index == 1)
+              this.appBarTitle = 'Edit Tasks';
+            else if (index == 0)
+              this.appBarTitle = 'Edit Report';
+            else if (index == 4)
+              this.appBarTitle = 'Customer Info';
+            else if (index == 3)
+              this.appBarTitle = 'Attach Pictures';
+            else
+              this.appBarTitle = 'Report Comments';
+            setState(() {
+              _selectedTab = index;
+            });
+          }
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedTab,
+        onTap: (int index) {
+          if (report.projectno.length == 0 &&
+              (index == 1 || index == 2 || index == 3 || index == 4)) {
+            _showAlertDialog('Error!', 'Project number cannot be empty.');
+          } else {
+            if (index == 1)
+              this.appBarTitle = 'Edit Tasks';
+            else if (index == 0)
+              this.appBarTitle = 'Edit Report';
+            else if (index == 3)
+              this.appBarTitle = 'Attach Images';
+            else if (index == 4)
+              this.appBarTitle = 'Customer';
+            else
+              this.appBarTitle = 'Comments';
+            setState(() {
+              _selectedTab = index;
+              controller.jumpToPage(index);
+            });
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            title: Text('Details'),
           ),
-        ),
-        body: PageView(
-          controller: controller,
-          children: <Widget>[
-            ReportDetail(report),
-            TaskList(report.reportno),
-            ReportDetail3(report),
-            ImagePicker(report.reportno),
-            ReportDetail4(report),
-          ],
-          onPageChanged: (int index) {
-            if (report.projectno.length == 0 && index == 1) {
-              _showAlertDialog('Error!', 'Project number cannot be empty.');
-              controller.jumpToPage(0);
-            } else {
-              if (index == 1)
-                this.appBarTitle = 'Edit Tasks';
-              else if (index == 0)
-                this.appBarTitle = 'Edit Report';
-              else if (index == 4)
-                this.appBarTitle = 'Customer Info';
-              else if (index == 3)
-                this.appBarTitle = 'Attach Pictures';
-              else
-                this.appBarTitle = 'Report Comments';
-              setState(() {
-                _selectedTab = index;
-              });
-            }
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedTab,
-          onTap: (int index) {
-            if (report.projectno.length == 0 &&
-                (index == 1 || index == 2 || index == 3 || index == 4)) {
-              _showAlertDialog('Error!', 'Project number cannot be empty.');
-            } else {
-              if (index == 1)
-                this.appBarTitle = 'Edit Tasks';
-              else if (index == 0)
-                this.appBarTitle = 'Edit Report';
-              else if (index == 3)
-                this.appBarTitle = 'Attach Images';
-              else if (index == 4)
-                this.appBarTitle = 'Customer';
-              else
-                this.appBarTitle = 'Comments';
-              setState(() {
-                _selectedTab = index;
-                controller.jumpToPage(index);
-              });
-            }
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.info),
-              title: Text('Details'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.track_changes),
-              title: Text('Tasks'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.comment),
-              title: Text('Comments'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.camera),
-              title: Text('Pictures'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              title: Text('Customer'),
-            ),
-          ],
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.track_changes),
+            title: Text('Tasks'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.comment),
+            title: Text('Comments'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            title: Text('Pictures'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            title: Text('Customer'),
+          ),
+        ],
       ),
     );
   }

@@ -27,22 +27,17 @@ class _TaskListState extends State<TaskList> {
       tasklist = List<Tasks>();
       updateListView();
     }
-    return WillPopScope(
-      onWillPop: () {
-        movetolastscreen();
-      },
-      child: Scaffold(
-        body: Scrollbar(child: getReportListView()),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              debugPrint('FAB clicked');
-              navigateToDetail(Tasks(reportid, '', null, null, '', '', '', 0),
-                  'Add New Task', reportid);
-            },
-            icon: Icon(Icons.add),
-            label: Text('Add a new task')),
-      ),
+    return Scaffold(
+      body: Scrollbar(child: getReportListView()),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            debugPrint('FAB clicked');
+            navigateToDetail(Tasks(reportid, '', null, null, '', '', '', 0),
+                'Add New Task', reportid);
+          },
+          icon: Icon(Icons.add),
+          label: Text('Add a new task')),
     );
   }
 

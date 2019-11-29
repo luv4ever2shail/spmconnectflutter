@@ -41,50 +41,45 @@ class _ReportList extends State<ReportList> {
       getReportmapId();
     }
 
-    return WillPopScope(
-      onWillPop: () {
-        movetolastscreen();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('SPM Connect Service Reports'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              movetolastscreen();
-            },
-          ),
-        ),
-        body: RefreshIndicator(
-          key: refreshKey,
-          onRefresh: _handleRefresh,
-          child: getReportListView(),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('SPM Connect Service Reports'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            if (empId != null) {
-              debugPrint('FAB clicked');
-              getReportmapId();
-              int mapid = 0;
-              if (count == 0) {
-                mapid = 1001;
-              } else {
-                mapid = reportmapid[0].reportmapid + 1;
-              }
-              navigateToDetail(
-                  Report('$empId${mapid.toString()}', '', '', '', '', '', '',
-                      '', '', '', '', '', '', '', mapid, 0, 0),
-                  'Add New Report');
-            } else {
-              _showAlertDialog('Employee Id not found',
-                  'Please contact the admin to have your employee id setup in order to create service reports.');
-            }
+            movetolastscreen();
           },
-          tooltip: 'Create New Report',
-          icon: Icon(Icons.add),
-          label: Text('Create New Report'),
         ),
+      ),
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: _handleRefresh,
+        child: getReportListView(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (empId != null) {
+            debugPrint('FAB clicked');
+            getReportmapId();
+            int mapid = 0;
+            if (count == 0) {
+              mapid = 1001;
+            } else {
+              mapid = reportmapid[0].reportmapid + 1;
+            }
+            navigateToDetail(
+                Report('$empId${mapid.toString()}', '', '', '', '', '', '', '',
+                    '', '', '', '', '', '', mapid, 0, 0),
+                'Add New Report');
+          } else {
+            _showAlertDialog('Employee Id not found',
+                'Please contact the admin to have your employee id setup in order to create service reports.');
+          }
+        },
+        tooltip: 'Create New Report',
+        icon: Icon(Icons.add),
+        label: Text('Create New Report'),
       ),
     );
   }

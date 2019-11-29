@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharepoint_auth/model/config.dart';
 import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
@@ -111,75 +111,67 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     if (_connectionStatus == 'ConnectivityResult.none' && _saving == true) {
       closeprudate();
     }
-    return WillPopScope(
-      onWillPop: () async {
-        if (!_saving) {
-          movetolastscreen();
-        }
-        return false;
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text('Upload Service Reports'),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () async {
-                if (!_saving) {
-                  movetolastscreen();
-                }
-                return false;
-              },
-            ),
-          ),
-          body: ModalProgressHUD(
-            inAsyncCall: _saving,
-            child: RefreshIndicator(
-              key: refreshKey,
-              onRefresh: _handleRefresh,
-              child: _connectionStatus == 'ConnectivityResult.none'
-                  ? FlareActor(
-                      "assets/no_wifi.flr",
-                      alignment: Alignment.center,
-                      fit: BoxFit.contain,
-                      animation: 'Untitled',
-                    )
-                  : reportcount > 0
-                      ? getReportListView()
-                      : Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                                'All Reports are synced to sharepoint. No Reports found to be synced to sharepoint.'),
-                          ),
-                        ),
-            ),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: _connectionStatus != 'ConnectivityResult.none'
-              ? reportcount > 0
-                  ? FloatingActionButton.extended(
-                      onPressed: () async {
-                        FLog.logThis(
-                          className: "Sharepoint",
-                          methodName: "Sync Button",
-                          text: "Sync button pressed",
-                          type: LogLevel.INFO,
-                        );
-                        setState(() {
-                          _saving = true;
-                        });
-                        await syncAll();
-                      },
-                      tooltip: 'Sync reports to cloud',
-                      icon: Icon(
-                        Icons.sync,
-                        color: Colors.white,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Upload Service Reports'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () async {
+            if (!_saving) {
+              movetolastscreen();
+            }
+            return false;
+          },
+        ),
+      ),
+      body: ModalProgressHUD(
+        inAsyncCall: _saving,
+        child: RefreshIndicator(
+          key: refreshKey,
+          onRefresh: _handleRefresh,
+          child: _connectionStatus == 'ConnectivityResult.none'
+              ? FlareActor(
+                  "assets/no_wifi.flr",
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain,
+                  animation: 'Untitled',
+                )
+              : reportcount > 0
+                  ? getReportListView()
+                  : Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                            'All Reports are synced to sharepoint. No Reports found to be synced to sharepoint.'),
                       ),
-                      label: Text('Sync Reports'),
-                    )
-                  : Offstage()
-              : Offstage()),
+                    ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _connectionStatus != 'ConnectivityResult.none'
+          ? reportcount > 0
+              ? FloatingActionButton.extended(
+                  onPressed: () async {
+                    FLog.logThis(
+                      className: "Sharepoint",
+                      methodName: "Sync Button",
+                      text: "Sync button pressed",
+                      type: LogLevel.INFO,
+                    );
+                    setState(() {
+                      _saving = true;
+                    });
+                    await syncAll();
+                  },
+                  tooltip: 'Sync reports to cloud',
+                  icon: Icon(
+                    Icons.sync,
+                    color: Colors.white,
+                  ),
+                  label: Text('Sync Reports'),
+                )
+              : Offstage()
+          : Offstage(),
     );
   }
 
@@ -921,7 +913,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
         Asset resultList;
         resultList = Asset(i.identifier, i.name, i.width, i.height);
-        ByteData byteData = await resultList.requestOriginal();
+        ByteData byteData = await resultList.getByteData(quality: 100);
         List<int> imageData = byteData.buffer.asUint8List();
         int result = await postImageSharepoint(
             resJson["Id"].toString(), accesstoken, i.name, imageData);
@@ -1116,8 +1108,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 //Getting User Info
   getUserInfoSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    empName = prefs.getString('Name');
+    Box _box = Hive.box('myBox');
+    empName = _box.get('Name');
     setState(() {});
   }
 

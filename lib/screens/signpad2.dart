@@ -86,47 +86,43 @@ class _Signpad2State extends State<Signpad2> {
     });
     Navigator.of(context)
         .push(new MaterialPageRoute(builder: (BuildContext context) {
-      return WillPopScope(
-          onWillPop: () {
-            _save();
-          },
-          child: Scaffold(
-            appBar: new AppBar(
-              title: const Text('Signed'),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  _save();
-                },
-              ),
-            ),
-            body: new Container(
-                alignment: Alignment.center,
-                child: new FutureBuilder<Uint8List>(
-                  future: picture.toPNG('${report.reportmapid}'),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<Uint8List> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.done:
-                        if (snapshot.hasError) {
-                          return new Text('Error: ${snapshot.error}');
-                        } else {
-                          return Image.memory(snapshot.data);
-                        }
-                        break;
-                      default:
-                        return new Container(
-                            child: new FractionallySizedBox(
-                          widthFactor: 0.1,
-                          child: new AspectRatio(
-                              aspectRatio: 1.0,
-                              child: new CircularProgressIndicator()),
-                          alignment: Alignment.center,
-                        ));
+      return Scaffold(
+        appBar: new AppBar(
+          title: const Text('Signed'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              _save();
+            },
+          ),
+        ),
+        body: new Container(
+            alignment: Alignment.center,
+            child: new FutureBuilder<Uint8List>(
+              future: picture.toPNG('${report.reportmapid}'),
+              builder:
+                  (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+                      return new Text('Error: ${snapshot.error}');
+                    } else {
+                      return Image.memory(snapshot.data);
                     }
-                  },
-                )),
-          ));
+                    break;
+                  default:
+                    return new Container(
+                        child: new FractionallySizedBox(
+                      widthFactor: 0.1,
+                      child: new AspectRatio(
+                          aspectRatio: 1.0,
+                          child: new CircularProgressIndicator()),
+                      alignment: Alignment.center,
+                    ));
+                }
+              },
+            )),
+      );
     }));
   }
 

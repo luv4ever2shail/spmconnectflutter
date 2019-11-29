@@ -22,23 +22,25 @@ dependencies:
   sqflite: any
   path_provider: any
   intl: ^0.15.8
-  flutter_markdown: ^0.2.0
+  flutter_markdown: any
   flutter_masked_text: ^0.8.0
   http: ^0.12.0+2
   modal_progress_hud: ^0.1.3
   sharepoint_auth: ^0.1.0
   geolocator: ^3.0.1
   flutter_colorpicker: any
-  permission_handler: ^3.0.0
+  permission_handler: ^3.0.1
   connectivity: ^0.4.3+6
   flare_flutter: 
-  multi_image_picker: ^4.3.6
-  f_logs: ^1.2.0
+  multi_image_picker: ^4.5.9
+  f_logs: ^1.2.1
   flutter_webview_plugin: ^0.3.5
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  datetime_picker_formfield: ^0.4.0
+  datetime_picker_formfield: ^0.4.3
+  hive: ^1.1.1
+  hive_flutter: ^0.2.1
 
 dev_dependencies:
   flutter_test:
