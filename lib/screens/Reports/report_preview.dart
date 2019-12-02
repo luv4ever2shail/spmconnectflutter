@@ -28,11 +28,12 @@ class ReportPreviewState extends State<ReportPreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-        middle: Text(
+      appBar: AppBar(
+        title: Text(
           'Report Details',
           style: TextStyle(fontSize: 19.0),
         ),
+        centerTitle: true,
       ),
       body: body(),
     );

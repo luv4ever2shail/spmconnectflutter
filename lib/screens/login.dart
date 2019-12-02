@@ -114,9 +114,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
                       padding: EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
-                      onPressed: () {
+                      onPressed: () async {
                         _saving = true;
-                        login();
+                        await login();
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +167,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
-  void login() async {
+  Future<void> login() async {
     try {
       setState(() {
         _saving = true;
@@ -194,7 +194,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     }
   }
 
-  void logout() async {
+  Future<void> logout() async {
     try {
       setState(() {
         _saving = true;

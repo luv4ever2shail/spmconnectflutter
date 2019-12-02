@@ -12,6 +12,7 @@ import 'package:spmconnectapp/screens/Reports/report_list.dart';
 import 'package:spmconnectapp/screens/Sharepoint/report_list_unpublished.dart';
 import 'package:spmconnectapp/screens/login.dart';
 import 'package:spmconnectapp/screens/privacy_policy.dart';
+import 'package:spmconnectapp/themes/colors.dart';
 import 'package:spmconnectapp/utils/profiledialog.dart';
 
 class Myhome extends StatefulWidget {
@@ -50,9 +51,6 @@ class _MyhomeState extends State<Myhome> {
     Icon(Icons.exit_to_app)
   ];
   var drawerText = ["Profile", "Privacy", "Sync Reports", "Log Out"];
-
-  final barColor = const Color(0xFF192A56);
-  final bgColor = const Color(0xFFEAF0F1);
 
   Future<bool> _onWillPop() {
     return showDialog(
@@ -254,24 +252,19 @@ class _MyhomeState extends State<Myhome> {
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: Text(
             title,
-            style: TextStyle(
-                color: Theme.of(context).textTheme.title.color, fontSize: 25),
+            style: TextStyle(color: barColor, fontSize: 25),
           ),
           content: Text(
             message,
             style: new TextStyle(
-                fontSize: 15,
-                fontFamily: 'Nunito',
-                color: Theme.of(context).textTheme.title.color),
+                fontSize: 15, fontFamily: 'Nunito', color: barColor),
           ),
           actions: <Widget>[
             FlatButton(
               child: Text(
                 'No',
                 style: new TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Nunito',
-                    color: Theme.of(context).textTheme.title.color),
+                    fontSize: 15, fontFamily: 'Nunito', color: barColor),
               ),
               onPressed: () {
                 result = false;
@@ -282,9 +275,7 @@ class _MyhomeState extends State<Myhome> {
               child: Text(
                 'Yes',
                 style: new TextStyle(
-                    fontSize: 15,
-                    fontFamily: 'Nunito',
-                    color: Theme.of(context).textTheme.title.color),
+                    fontSize: 15, fontFamily: 'Nunito', color: barColor),
               ),
               onPressed: () {
                 result = true;
