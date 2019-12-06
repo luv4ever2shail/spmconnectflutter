@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/Reports/report_preview.dart';
@@ -20,11 +21,13 @@ class _ReportList extends State<ReportList> {
   List<Report> reportlist;
   List<Report> reportmapid;
   int count = 0;
+  Box _box;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   String empId;
   String sfEmail;
   @override
   void initState() {
+    _box = Hive.box('myBox');
     super.initState();
     getUserInfoSF();
   }
@@ -272,10 +275,9 @@ class _ReportList extends State<ReportList> {
   }
 
   getUserInfoSF() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    empId = prefs.getString('EmpId');
-    sfEmail = prefs.getString('Email');
-    setState(() {});
+    setState(() {
+      empId = _box.get('EmpId');
+    });
   }
 
   void _showAlertDialog(String title, String message) {

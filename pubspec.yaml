@@ -62,6 +62,7 @@ flutter:
     - assets/spm.png
     - assets/no_wifi.flr
     - assets/double_ring_loading_io.gif
+    - assets/customers.json
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:spmconnectapp/models/customers.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/utils/autocomplete_textfield.dart';
 import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,11 +19,11 @@ class ReportDetail extends StatefulWidget {
 
 class _ReportDetail extends State<ReportDetail> {
   DatabaseHelper helper = DatabaseHelper();
-
+  String selectedState;
   String _placemark = '';
   bool _validate = false;
   _ReportDetail(this.report);
-
+  List<Customer> customerList;
   Report report;
   FocusNode customerFocusNode;
   FocusNode plantlocFocusNode;
@@ -28,6 +31,7 @@ class _ReportDetail extends State<ReportDetail> {
   FocusNode authorbyFocusNode;
   FocusNode technameFocusNode;
   FocusNode equipFocusNode;
+  Customer selectedPerson;
 
   Geolocator geolocator = Geolocator();
   Position userLocation;
@@ -40,10 +44,20 @@ class _ReportDetail extends State<ReportDetail> {
     authorbyFocusNode = FocusNode();
     technameFocusNode = FocusNode();
     equipFocusNode = FocusNode();
+
     _getLocation().then((position) {
       userLocation = position;
       _onLookupAddressPressed();
     });
+    getStatesList();
+  }
+
+  void getStatesList() async {
+    customerList = CustomersList().getCustomerListFromJson(json.decode(
+        await DefaultAssetBundle.of(context)
+            .loadString("assets/customers.json")));
+
+    setState(() {});
   }
 
   Future<Position> _getLocation() async {
@@ -160,25 +174,64 @@ class _ReportDetail extends State<ReportDetail> {
             ),
 
             // Second Element - Customer Name
+            // Padding(
+            //   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            //   child: TextField(
+            //     controller: customerController,
+            //     keyboardType: TextInputType.text,
+            //     style: textStyle,
+            //     focusNode: customerFocusNode,
+            //     textInputAction: TextInputAction.next,
+            //     onEditingComplete: () =>
+            //         FocusScope.of(context).requestFocus(plantlocFocusNode),
+            //     onChanged: (value) {
+            //       debugPrint('Something changed in Customer Text Field');
+            //       updateCustomername();
+            //     },
+            //     decoration: InputDecoration(
+            //         labelText: 'Customer',
+            //         labelStyle: textStyle,
+            //         border: OutlineInputBorder(
+            //             borderRadius: BorderRadius.circular(5.0))),
+            //   ),
+            // ),
             Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                controller: customerController,
-                keyboardType: TextInputType.text,
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+              child: SimpleAutocompleteFormField<Customer>(
+                maxSuggestions: 20,
                 style: textStyle,
+                controller: customerController,
                 focusNode: customerFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(plantlocFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Customer Text Field');
-                  updateCustomername();
-                },
                 decoration: InputDecoration(
                     labelText: 'Customer',
                     labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+                    border: OutlineInputBorder()),
+                suggestionsHeight: 80.0,
+                itemBuilder: (context, person) => Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(person.name,
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ]),
+                ),
+                onSearch: (search) async => customerList
+                    .where((person) => person.name
+                        .toLowerCase()
+                        .contains(search.toLowerCase()))
+                    .toList(),
+                itemFromString: (string) => customerList.singleWhere(
+                    (person) =>
+                        person.name.toLowerCase() == string.toLowerCase(),
+                    orElse: () => null),
+                onChanged: (value) {
+                  updateCustomername();
+                  setState(() => selectedPerson = value);
+                },
+                onSaved: (value) => setState(() => selectedPerson = value),
+                validator: (person) =>
+                    person == null ? 'Invalid person.' : null,
               ),
             ),
 
@@ -360,4 +413,11 @@ class _ReportDetail extends State<ReportDetail> {
   void updateTechname() {
     report.techname = technameController.text;
   }
+}
+
+class Customer {
+  Customer(this.name);
+  final String name;
+  @override
+  String toString() => name;
 }
