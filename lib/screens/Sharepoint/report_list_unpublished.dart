@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
@@ -10,15 +9,19 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:sharepoint_auth/model/config.dart';
 import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/Resource/connectivity.dart';
+import 'package:spmconnectapp/Resource/database_helper.dart';
+import 'package:spmconnectapp/Resource/images_repository.dart';
+import 'package:spmconnectapp/Resource/reports_repository.dart';
+import 'package:spmconnectapp/Resource/tasks_repository.dart';
 import 'package:spmconnectapp/models/images.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
-import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:spmconnectapp/utils/progress_dialog.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:f_logs/model/flog/flog_config.dart';
@@ -36,18 +39,8 @@ class ReportListUnpublished extends StatefulWidget {
 }
 
 class _ReportListUnpublishedState extends State<ReportListUnpublished> {
-  String _connectionStatus = 'Unknown';
-  final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
   DatabaseHelper databaseHelper = DatabaseHelper();
 
-  List<Report> reportlist;
-  List<Tasks> tasklist;
-  List<Images> imagelist;
-  int reportcount = 0;
-  int taskcount = 0;
-  int imagecount = 0;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   bool _saving = false;
   int listreportcount = 0;
@@ -74,9 +67,6 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   @override
   void initState() {
     super.initState();
-    initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     getSignatureStoragePath();
     getUserInfoSF();
     requestPermission(_permissionGroup);
@@ -96,19 +86,16 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (reportlist == null) {
-      reportlist = List<Report>();
-      tasklist = List<Tasks>();
-      imagelist = List<Images>();
-      getReportList();
-    }
-    if (_connectionStatus == 'ConnectivityResult.none' && _saving == true) {
+    MyReports myReports = Provider.of<MyReports>(context);
+    ReportTasks reportTasks = Provider.of<ReportTasks>(context);
+    ReportImages reportImages = Provider.of<ReportImages>(context);
+    ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
+    if (connectivity == ConnectivityStatus.Offline && _saving == true) {
       closeprudate();
     }
     return Scaffold(
@@ -128,16 +115,18 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         inAsyncCall: _saving,
         child: RefreshIndicator(
           key: refreshKey,
-          onRefresh: _handleRefresh,
-          child: _connectionStatus == 'ConnectivityResult.none'
-              ? FlareActor(
-                  "assets/no_wifi.flr",
-                  alignment: Alignment.center,
-                  fit: BoxFit.contain,
-                  animation: 'Untitled',
+          onRefresh: () => _handleRefresh(myReports),
+          child: connectivity == ConnectivityStatus.Offline
+              ? Center(
+                  child: FlareActor(
+                    "assets/no_wifi.flr",
+                    alignment: Alignment.center,
+                    fit: BoxFit.contain,
+                    animation: 'Untitled',
+                  ),
                 )
-              : reportcount > 0
-                  ? getReportListView()
+              : myReports.getCount > 0
+                  ? getReportListView(myReports)
                   : Center(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -148,8 +137,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _connectionStatus != 'ConnectivityResult.none'
-          ? reportcount > 0
+      floatingActionButton: connectivity != ConnectivityStatus.Offline
+          ? myReports.getCount > 0
               ? FloatingActionButton.extended(
                   onPressed: () async {
                     FLog.logThis(
@@ -161,7 +150,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                     setState(() {
                       _saving = true;
                     });
-                    await syncAll();
+                    await syncAll(myReports, reportTasks, reportImages);
                   },
                   tooltip: 'Sync reports to cloud',
                   icon: Icon(
@@ -175,11 +164,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     );
   }
 
-  ListView getReportListView() {
+  ListView getReportListView(MyReports myReports) {
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
-
     return ListView.builder(
-      itemCount: reportcount,
+      itemCount: myReports.getCount,
       itemBuilder: (BuildContext context, int position) {
         return Padding(
           padding: EdgeInsets.all(5.0),
@@ -195,19 +183,19 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 ),
               ),
               title: Text(
-                'Report No - ' + this.reportlist[position].reportno,
+                'Report No - ' + myReports.getReports[position].reportno,
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.5),
               ),
               subtitle: Text(
                 'Project - ' +
-                    this.reportlist[position].projectno +
+                    myReports.getReports[position].projectno +
                     " ( " +
-                    this.reportlist[position].customer +
+                    myReports.getReports[position].customer +
                     ' )' +
                     '\nCreated On (' +
-                    this.reportlist[position].date +
+                    myReports.getReports[position].date +
                     ')',
                 style: titleStyle,
               ),
@@ -218,10 +206,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     );
   }
 
-  Future<Null> _handleRefresh() async {
+  Future<Null> _handleRefresh(MyReports myReports) async {
     refreshKey.currentState?.show(atTop: false);
     await new Future.delayed(new Duration(seconds: 1));
-    getReportList();
+    await myReports.getReportListUnpublished();
     return null;
   }
 
@@ -230,68 +218,16 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     Navigator.pop(context, true);
   }
 
-// Retrieving list of all three modules : Report Task Images
-
-  Future<void> getReportList() async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    await dbFuture.then((database) async {
-      Future<List<Report>> reportListFuture =
-          databaseHelper.getReportListUnpublished();
-      await reportListFuture.then((reportlist) {
-        setState(() {
-          this.reportlist = reportlist;
-          this.reportcount = reportlist.length;
-        });
-        if (listreportcount <= 0) {
-          listreportcount = 0;
-        }
-      });
-    });
-  }
-
-  Future<void> getTaskList(String reportid) async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    await dbFuture.then((database) async {
-      Future<List<Tasks>> taskListFuture =
-          databaseHelper.getTaskListUnpublished(reportid);
-      await taskListFuture.then((tasklist) {
-        setState(() {
-          this.tasklist = tasklist;
-          this.taskcount = tasklist.length;
-        });
-        if (listtaskcount <= 0) {
-          print('finished syncing all tasks');
-        }
-      });
-    });
-  }
-
-  Future<void> getImageAttachList(String reportid) async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    await dbFuture.then((database) async {
-      Future<List<Images>> taskListFuture =
-          databaseHelper.getImageListUnpublished(reportid);
-      await taskListFuture.then((tasklist) {
-        setState(() {
-          this.imagelist = tasklist;
-          this.imagecount = tasklist.length;
-        });
-        if (listimagecount <= 0) {
-          print('finished syncing all images');
-        }
-      });
-    });
-  }
-
 // Making Post Request body for sharepoint Report and Tasks
 
   String getReportToJSON(Report report) {
-    String reporttojson =
-        ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.reportno}","ReportMapId": "${report.reportmapid}","Report_Id": "${report.id}",'
-            '"ProjectNo": "${report.projectno}","Customer": "${report.customer.replaceAll('"', '\\"')}","PlantLoc": "${report.plantloc.replaceAll('"', '\\"')}","ContactName": "${report.contactname.replaceAll('"', '\\"')}",'
-            '"Authorizedby": "${report.authorby.replaceAll('"', '\\"')}","Equipment": "${report.equipment.replaceAll('"', '\\"')}","TechName": "${report.techname.replaceAll('"', '\\"')}","DateCreated": "${report.date}",'
-            '"FurtherActions": "${report.furtheractions == null ? '' : report.furtheractions.replaceAll('"', '\\"')}","CustComments": "${report.custcomments == null ? '' : report.custcomments.replaceAll('"', '\\"')}","CustRep": "${report.custrep == null ? '' : report.custrep.replaceAll('"', '\\"')}","CustEmail": "${report.custemail == null ? '' : report.custemail.replaceAll('"', '\\"')}",'
-            '"CustContact": "${report.custcontact}","Published": "${report.reportpublished}","Signed": "${report.reportsigned}","Uploadedby": "$empName"}');
+    String reporttojson = ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.reportno}","ReportMapId": "${report.reportmapid}","Report_Id": "${report.id}",'
+        '"ProjectNo": "${report.projectno}","Customer": "${report.customer.replaceAll('"', '\\"')}","PlantLoc": "${report.plantloc.replaceAll('"', '\\"')}","ContactName": "${report.contactname.replaceAll('"', '\\"')}",'
+        '"Authorizedby": "${report.authorby.replaceAll('"', '\\"')}","Equipment": "${report.equipment.replaceAll('"', '\\"')}","TechName": "${report.techname.replaceAll('"', '\\"')}","DateCreated": "${report.date}",'
+        '"FurtherActions": "${report.furtheractions == null ? '' : report.furtheractions.replaceAll('"', '\\"')}","CustComments": "${report.custcomments == null ? '' : report.custcomments.replaceAll('"', '\\"')}",'
+        '"RefJob": "${report.refjob == null ? '' : report.refjob.replaceAll('"', '\\"')}","ProjectManager": "${report.projectmanager == null ? '' : report.projectmanager.replaceAll('"', '\\"')}",'
+        '"CustRep": "${report.custrep == null ? '' : report.custrep.replaceAll('"', '\\"')}","CustEmail": "${report.custemail == null ? '' : report.custemail.replaceAll('"', '\\"')}",'
+        '"CustContact": "${report.custcontact}","Published": "${report.reportpublished}","Signed": "${report.reportsigned}","Uploadedby": "$empName"}');
     // print(reporttojson);
     return reporttojson;
   }
@@ -325,8 +261,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 // Sync Method to control uploading data to sharepoint
 
-  Future<void> syncAll() async {
-    if (reportcount > 0) {
+  Future<void> syncAll(MyReports myReports, ReportTasks reportTasks,
+      ReportImages reportImages) async {
+    if (myReports.getCount > 0) {
       pr = new ProgressDialog(context, ProgressDialogType.Download);
       pr.setMessage('Access Token...');
       pr.show();
@@ -346,18 +283,20 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         });
         return;
       }
+
+      print(myReports.getCount);
       percentage += 10.0;
       pr.update(
           progress: percentage.roundToDouble(), message: 'Access Token...');
 
       if (_saving) {
-        if (reportcount > 0) {
-          print('No of reports found to be uploaded : $reportcount');
-          listreportcount = reportcount;
+        if (myReports.getCount > 0) {
+          print('No of reports found to be uploaded : ${myReports.getCount}');
+          listreportcount = myReports.getCount;
           FLog.logThis(
             className: "Sharepoint",
             methodName: "syncAll - Get Report List",
-            text: 'No of reports found to be uploaded : $reportcount',
+            text: 'No of reports found to be uploaded : ${myReports.getCount}',
             type: LogLevel.INFO,
           );
           pr.update(
@@ -367,66 +306,71 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
           pr.update(
               progress: percentage.roundToDouble(),
-              message: 'Report Count $reportcount');
+              message: 'Report Count ${myReports.getCount}');
           await Future.delayed(Duration(seconds: 1));
 
-          for (final i in reportlist) {
-            percentage += 10.0 / reportcount;
+          for (final i in myReports.getReports) {
+            percentage += 10.0 / myReports.getCount;
             pr.update(
                 progress: percentage.roundToDouble(),
                 message: 'Report ${i.reportno}');
             await Future.delayed(Duration(seconds: 2));
 
             listtaskcount = 0;
-            tasklist.clear();
-            await getTaskList(i.reportno);
+            // tasklist.clear();
+            await reportTasks.getTaskListUnpublished(i.reportno);
 
             print(
-                'No of task found in report ${i.reportno} to be uploaded is $taskcount');
+                'No of task found in report ${i.reportno} to be uploaded is ${reportTasks.getCount}');
 
             FLog.logThis(
               className: "Sharepoint",
               methodName: "syncAll - Get Task List",
               text:
-                  'No of task found in report ${i.reportno} to be uploaded is $taskcount',
+                  'No of task found in report ${i.reportno} to be uploaded is ${reportTasks.getCount}',
               type: LogLevel.INFO,
             );
 
             pr.update(
                 progress: percentage.roundToDouble(),
-                message: 'Task Count $taskcount');
+                message: 'Task Count ${reportTasks.getCount}');
             await Future.delayed(Duration(seconds: 1));
 
             var taskpercent = 0.0;
-            taskpercent = 25 / reportcount;
+            taskpercent = 25 / myReports.getCount;
             int taskResult = 0;
-            if (taskcount > 0) {
-              listtaskcount = taskcount;
-              for (final i in tasklist) {
+            if (reportTasks.getCount > 0) {
+              listtaskcount = reportTasks.getCount;
+              for (final i in reportTasks.getTasks) {
                 print(
-                    'Uploading task ${tasklist.indexOf(i) + 1} for report ${i.reportid}');
+                    'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid}');
 
                 FLog.logThis(
                   className: "Sharepoint",
                   methodName: "syncAll - Uploading Task",
                   text:
-                      'Uploading task ${tasklist.indexOf(i) + 1} for report ${i.reportid}',
+                      'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid}',
                   type: LogLevel.INFO,
                 );
 
-                percentage += taskpercent / taskcount;
+                percentage += taskpercent / reportTasks.getCount;
                 pr.update(
                     progress: percentage.roundToDouble(),
-                    message: 'Task No. ${tasklist.indexOf(i) + 1}');
+                    message: 'Task No. ${reportTasks.getTasks.indexOf(i) + 1}');
 
                 taskResult = await postTasksToSharepoint(
-                    i, accessToken, getTaskToJSON(i), taskcount);
+                  i,
+                  accessToken,
+                  getTaskToJSON(i),
+                  reportTasks.getCount,
+                  myReports,
+                );
                 if (taskResult == 0) {
                   FLog.logThis(
                     className: "Sharepoint",
                     methodName: "syncAll - Uploading Task Failed",
                     text:
-                        'Uploading task ${tasklist.indexOf(i) + 1} for report ${i.reportid} failed. task result == 0',
+                        'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid} failed. task result == 0',
                     type: LogLevel.ERROR,
                   );
                   break;
@@ -435,7 +379,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                     className: "Sharepoint",
                     methodName: "syncAll - task uploaded",
                     text:
-                        'Task ${tasklist.indexOf(i) + 1} for report ${i.reportid} successfully uploaded.',
+                        'Task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid} successfully uploaded.',
                     type: LogLevel.INFO,
                   );
                 }
@@ -476,22 +420,27 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 message: 'Tasks Uploaded');
 
             listimagecount = 0;
-            imagelist.clear();
 
-            await getImageAttachList(i.reportno);
+            await reportImages.fetchImages(i.reportno);
             print(
-                'No of images found in report ${i.reportno} to be uploaded is $imagecount');
+                'No of images found in report ${i.reportno} to be uploaded is ${reportImages.getCount}');
 
             FLog.logThis(
               className: "Sharepoint",
               methodName: "syncAll - Get Image Attachments List",
               text:
-                  'No of images found in report ${i.reportno} to be uploaded is $imagecount',
+                  'No of images found in report ${i.reportno} to be uploaded is ${reportImages.getCount}',
               type: LogLevel.INFO,
             );
 
             int resultreport = await postReportsToSharepoint(
-                i, accessToken, getReportToJSON(i), reportcount);
+              i,
+              accessToken,
+              getReportToJSON(i),
+              myReports.getCount,
+              myReports,
+              reportImages,
+            );
 
             if (resultreport == 0) {
               FLog.logThis(
@@ -506,7 +455,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           }
         }
       }
-      await closeUpload();
+      await closeUpload(myReports);
     } else {
       setState(() {
         _saving = false;
@@ -514,15 +463,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
   }
 
-  Future<void> closeUpload() async {
-    await prepareLogFile();
-    reportlist.clear();
-    reportcount = 0;
-    tasklist.clear();
-    taskcount = 0;
-    imagelist.clear();
-    imagecount = 0;
-    await getReportList();
+  Future<void> closeUpload(MyReports myReports) async {
+    await prepareLogFile(myReports);
+    await myReports.getReportListUnpublished();
     await closeprudate();
   }
 
@@ -537,7 +480,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 // Logs
 
-  Future<void> prepareLogFile() async {
+  Future<void> prepareLogFile(MyReports myReports) async {
     final logdir = await _localPath + "/FLogs";
     final dir = Directory(logdir);
 
@@ -552,7 +495,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print('file does not exist---------->_getLocalFile()');
     }
     FLog.exportLogs();
-    await postLogFile(accessToken, getLogToJSON(), reportcount, file);
+    await postLogFile(accessToken, getLogToJSON(), myReports.getCount, file);
     FLog.clearLogs();
   }
 
@@ -624,7 +567,12 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 // Uploading Report to sharepoint
 
   Future<int> postReportsToSharepoint(
-      Report report, String accesstoken, var _body, int count) async {
+      Report report,
+      String accesstoken,
+      var _body,
+      int count,
+      MyReports myReports,
+      ReportImages reportImages) async {
     int result = 0;
     try {
       print('Uploading report no ${report.reportno} to sharepoint');
@@ -664,18 +612,18 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           text: 'Token ID  : ${resJson["Id"].toString()}',
           type: LogLevel.INFO,
         );
-        percentage += 20.0 / reportcount;
+        percentage += 20.0 / myReports.getCount;
         pr.update(
             progress: percentage.roundToDouble(), message: 'Report Uploaded');
 
         print('Posting Signature to Sharepoint');
-        int postsign =
-            await postSignatureToSharepoint(resJson, report, accesstoken);
+        int postsign = await postSignatureToSharepoint(
+            resJson, report, accesstoken, myReports);
 
         if (postsign == 1) {
           print('Posting Images to Sharepoint');
-          int postattach =
-              await postAttachmentsToSharepoint(resJson, report, accesstoken);
+          int postattach = await postAttachmentsToSharepoint(
+              resJson, report, accesstoken, myReports, reportImages);
           if (postattach == 1) {
             result = 1;
           } else {
@@ -692,7 +640,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               'Report no ${report.reportno} is not uploaded with response code ${response.statusCode}',
           type: LogLevel.ERROR,
         );
-        await closeUpload();
+        await closeUpload(myReports);
         _showAlertDialog('SPM Connect',
             'Error occured while trying to sync Reports to cloud.');
         result = 0;
@@ -713,8 +661,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 // Uploading Task to sharepoint
 
-  Future<int> postTasksToSharepoint(
-      Tasks task, String accesstoken, var _body, int count) async {
+  Future<int> postTasksToSharepoint(Tasks task, String accesstoken, var _body,
+      int count, MyReports myReports) async {
     int result = 0;
     try {
       print('Uploading task no ${task.reportid} - ${task.id} to sharepoint');
@@ -738,14 +686,14 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           text: 'Task Uploaded with status code : ${response.statusCode}',
           type: LogLevel.INFO,
         );
-        int res = await _saveTask(task);
+        int res = await _saveTask(task, myReports);
         if (res != 0) {
           result = 1;
         } else {
           result = 0;
         }
       } else {
-        await closeUpload();
+        await closeUpload(myReports);
         _showAlertDialog('SPM Connect',
             'Error occured while trying to sync Tasks to cloud.');
         FLog.logThis(
@@ -771,8 +719,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 // Uploading signature to sharepoint
 
-  Future<int> postSignatureToSharepoint(
-      Map<String, dynamic> resJson, Report report, String accesstoken) async {
+  Future<int> postSignatureToSharepoint(Map<String, dynamic> resJson,
+      Report report, String accesstoken, MyReports myReports) async {
     int resultpost = 0;
     print(path);
     File file = File('$path${report.reportmapid.toString()}.png');
@@ -787,7 +735,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         await postSignatureCloud(resJson["Id"].toString(), accesstoken, file);
 
     if (result != 0) {
-      percentage += 10.0 / reportcount;
+      percentage += 10.0 / myReports.getCount;
       pr.update(
           progress: percentage.roundToDouble(), message: 'Signature Uploaded');
       await Future.delayed(Duration(seconds: 2));
@@ -801,7 +749,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
       resultpost = 1;
     } else {
-      await closeUpload();
+      await closeUpload(myReports);
       _showAlertDialog('SPM Connect',
           'Error occured while trying to sync signature png to cloud.');
       resultpost = 0;
@@ -861,22 +809,26 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 // Posting Image Attachment to sharepoint
 
   Future<int> postAttachmentsToSharepoint(
-      Map<String, dynamic> resJson, Report report, String accesstoken) async {
+      Map<String, dynamic> resJson,
+      Report report,
+      String accesstoken,
+      MyReports myReports,
+      ReportImages reportImages) async {
     int resultupload = 0;
     pr.update(
         progress: percentage.roundToDouble(),
-        message: 'Attachments $imagecount');
+        message: 'Attachments ${reportImages.getCount}');
     FLog.logThis(
       className: "Sharepoint",
       methodName: "postAttachmentsToSharepoint",
-      text: 'Posting Attachments, attachment count $imagecount',
+      text: 'Posting Attachments, attachment count ${reportImages.getCount}',
       type: LogLevel.INFO,
     );
 
     await Future.delayed(Duration(seconds: 2));
     var percent = 0.0;
-    percent = 25.0 / reportcount;
-    if (imagecount > 0) {
+    percent = 25.0 / myReports.getCount;
+    if (reportImages.getCount > 0) {
       print('sync started for images report ${report.reportno}');
       FLog.logThis(
         className: "Sharepoint",
@@ -885,48 +837,55 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         type: LogLevel.INFO,
       );
 
-      listimagecount = imagecount;
+      listimagecount = reportImages.getCount;
 
-      print('No of images found for ${report.reportno} - is $imagecount');
+      print(
+          'No of images found for ${report.reportno} - is ${reportImages.getCount}');
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postAttachmentsToSharepoint - imagecount > 0",
-        text: 'No of images found for ${report.reportno} - is $imagecount',
+        text:
+            'No of images found for ${report.reportno} - is ${reportImages.getCount}',
         type: LogLevel.INFO,
       );
 
-      for (final i in imagelist) {
+      for (final i in reportImages.getImages) {
         resultupload = 0;
-        print('uploading image count ${imagelist.indexOf(i) + 1}');
+        print('uploading image count ${reportImages.getImages.indexOf(i) + 1}');
 
         FLog.logThis(
           className: "Sharepoint",
           methodName: "postAttachmentsToSharepoint - in the loop",
-          text: 'uploading image count ${imagelist.indexOf(i) + 1}',
+          text:
+              'uploading image count ${reportImages.getImages.indexOf(i) + 1}',
           type: LogLevel.INFO,
         );
 
-        percentage += percent / imagecount;
+        percentage += percent / reportImages.getCount;
         pr.update(
             progress: percentage.roundToDouble(),
-            message: 'Attch. No. ${imagelist.indexOf(i) + 1}');
+            message: 'Attch. No. ${reportImages.getImages.indexOf(i) + 1}');
 
         Asset resultList;
         resultList = Asset(i.identifier, i.name, i.width, i.height);
         ByteData byteData = await resultList.getByteData(quality: 100);
         List<int> imageData = byteData.buffer.asUint8List();
         int result = await postImageSharepoint(
-            resJson["Id"].toString(), accesstoken, i.name, imageData);
+          resJson["Id"].toString(),
+          accesstoken,
+          i.name,
+          imageData,
+        );
 
         if (result != 0) {
           print('saving image');
-          int res = await _saveImage(i);
+          int res = await _saveImage(i, myReports);
           if (res != 0) {
             FLog.logThis(
               className: "Sharepoint",
               methodName: "postAttachmentsToSharepoint",
               text:
-                  'Success uploading the attachment ${i.name},  Attch. No. ${imagelist.indexOf(i) + 1}',
+                  'Success uploading the attachment ${i.name},  Attch. No. ${reportImages.getImages.indexOf(i) + 1}',
               type: LogLevel.INFO,
             );
             resultupload = 1;
@@ -934,7 +893,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             resultupload = 0;
           }
         } else {
-          await closeUpload();
+          await closeUpload(myReports);
           _showAlertDialog('SPM Connect',
               'Error occured while trying to sync attachments to cloud.');
           resultupload = 0;
@@ -942,7 +901,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             className: "Sharepoint",
             methodName: "postAttachmentsToSharepoint",
             text:
-                'Error uploading the attachment ${i.name}. Attch. No. ${imagelist.indexOf(i) + 1}',
+                'Error uploading the attachment ${i.name}. Attch. No. ${reportImages.getImages.indexOf(i) + 1}',
             type: LogLevel.ERROR,
           );
           break;
@@ -959,7 +918,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               'Completed uploading images for ${report.reportno}. Saving report.',
           type: LogLevel.INFO,
         );
-        await _saveReport(report);
+        await _saveReport(report, myReports);
         pr.update(progress: percentage.roundToDouble(), message: 'Completed');
         await Future.delayed(Duration(seconds: 2));
       }
@@ -976,7 +935,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             'No attachments found to be uploaded for ${report.reportno}. Saving report.',
         type: LogLevel.INFO,
       );
-      await _saveReport(report);
+      await _saveReport(report, myReports);
       pr.update(progress: percentage.roundToDouble(), message: 'Completed');
       await Future.delayed(Duration(seconds: 2));
       resultupload = 1;
@@ -985,7 +944,11 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
   Future<int> postImageSharepoint(
-      String id, String accesstoken, String file, List<int> imageData) async {
+    String id,
+    String accesstoken,
+    String file,
+    List<int> imageData,
+  ) async {
     int result = 0;
     try {
       http.Response response = await http.post(
@@ -1019,7 +982,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 // Set all three modules published to one : Report Task Images - Saving to local Database
 
-  Future<int> _saveReport(Report report) async {
+  Future<int> _saveReport(Report report, MyReports myReports) async {
     int result;
     if (report.id != null) {
       report.reportpublished = 1;
@@ -1036,7 +999,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         type: LogLevel.INFO,
       );
     } else {
-      await closeUpload();
+      await closeUpload(myReports);
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving Report to database.');
       print('failure saving report');
@@ -1050,7 +1013,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     return result;
   }
 
-  Future<int> _saveImage(Images image) async {
+  Future<int> _saveImage(Images image, MyReports myReports) async {
     int result;
     if (image.reportid != null) {
       image.published = 1;
@@ -1067,7 +1030,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
         type: LogLevel.INFO,
       );
     } else {
-      await closeUpload();
+      await closeUpload(myReports);
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving attachments to database.');
       print('failure saving images');
@@ -1081,7 +1044,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     return result;
   }
 
-  Future<int> _saveTask(Tasks task) async {
+  Future<int> _saveTask(Tasks task, MyReports myReports) async {
     int result;
     if (task.id != null) {
       task.published = 1;
@@ -1092,7 +1055,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       print('Success Saving task to database');
       print('Task to upload count is : $listtaskcount');
     } else {
-      await closeUpload();
+      await closeUpload(myReports);
       _showAlertDialog(
           'SPM Connect', 'Error occured while saving Task to database.');
       print('failure saving task');
@@ -1156,71 +1119,5 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     }
 
     return directory.path;
-  }
-
-// Lost Connectivity Region
-
-  Future<void> initConnectivity() async {
-    ConnectivityResult result;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      print(e.toString());
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return;
-    }
-
-    _updateConnectionStatus(result);
-  }
-
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    switch (result) {
-      case ConnectivityResult.wifi:
-        String wifiName, wifiBSSID, wifiIP;
-
-        try {
-          wifiName = await _connectivity.getWifiName();
-        } on PlatformException catch (e) {
-          print(e.toString());
-          wifiName = "Failed to get Wifi Name";
-        }
-
-        try {
-          wifiBSSID = await _connectivity.getWifiBSSID();
-        } on PlatformException catch (e) {
-          print(e.toString());
-          wifiBSSID = "Failed to get Wifi BSSID";
-        }
-
-        try {
-          wifiIP = await _connectivity.getWifiIP();
-        } on PlatformException catch (e) {
-          print(e.toString());
-          wifiIP = "Failed to get Wifi IP";
-        }
-
-        setState(() {
-          _connectionStatus = '$result\n'
-              'Wifi Name: $wifiName\n'
-              'Wifi BSSID: $wifiBSSID\n'
-              'Wifi IP: $wifiIP\n';
-        });
-        break;
-      case ConnectivityResult.mobile:
-      case ConnectivityResult.none:
-        setState(() {
-          _connectionStatus = result.toString();
-        });
-        break;
-      default:
-        setState(() => _connectionStatus = 'Failed to get connectivity.');
-        break;
-    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/consts.dart';
+import 'package:spmconnectapp/themes/appTheme.dart';
 
 class CustomDialog extends StatelessWidget {
   final String name, email, empid, jobtitle, id, profile, buttonText;
@@ -39,7 +40,7 @@ class CustomDialog extends StatelessWidget {
           ),
           margin: EdgeInsets.only(top: Consts.avatarRadius),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: AppTheme.getTheme().backgroundColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(Consts.padding),
             boxShadow: [

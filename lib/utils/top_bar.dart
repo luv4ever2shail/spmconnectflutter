@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spmconnectapp/themes/colors.dart';
+import 'package:spmconnectapp/themes/appTheme.dart';
 
 class TopBar extends StatelessWidget {
   @override
@@ -32,7 +32,7 @@ class CurvesPainter extends CustomPainter {
         size.width * 0.70, size.height * 0.90, size.width, 0);
     path.close();
 
-    paint.color = thirdColor;
+    paint.color = AppTheme.thirdColor;
     canvas.drawPath(path, paint);
 
     path = Path();
@@ -50,7 +50,7 @@ class CurvesPainter extends CustomPainter {
     path.lineTo(size.width, 0);
     path.close();
 
-    paint.color = secondColor;
+    paint.color = AppTheme.secondColor;
     canvas.drawPath(path, paint);
 
     path = Path();
@@ -66,7 +66,7 @@ class CurvesPainter extends CustomPainter {
     path.lineTo(size.width, 0);
     path.close();
 
-    paint.color = firstColor;
+    paint.color = AppTheme.firstColor;
     canvas.drawPath(path, paint);
   }
 

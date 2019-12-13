@@ -280,7 +280,7 @@ class ReportPreviewState extends State<ReportPreview> {
                   ? FadeInImage(
                       placeholder: AssetImage('assets/spm.png'),
                       image: FileImage(
-                        File('$path${report.reportmapid.toString()}.png'),
+                        File('$path'),
                       ),
                     )
                   : CircularProgressIndicator(),
@@ -296,7 +296,7 @@ class ReportPreviewState extends State<ReportPreview> {
       Directory directory = await getApplicationDocumentsDirectory();
       String _path = directory.path;
       print("$_path/$directoryName/");
-      path = "$_path/$directoryName/";
+      path = "$_path/$directoryName/${report.reportmapid.toString()}.png";
       setState(() {});
     } catch (e) {
       print(e);

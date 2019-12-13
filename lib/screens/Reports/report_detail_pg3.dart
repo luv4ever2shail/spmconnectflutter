@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:spmconnectapp/Resource/database_helper.dart';
 import 'package:spmconnectapp/models/report.dart';
-import 'package:spmconnectapp/utils/database_helper.dart';
 
 class ReportDetail3 extends StatefulWidget {
   final Report report;
@@ -17,35 +17,33 @@ class _ReportDetail3 extends State<ReportDetail3> {
   DatabaseHelper helper = DatabaseHelper();
 
   Report report;
-
+  TextEditingController furtheractionController;
+  TextEditingController custcommentsController;
   FocusNode custcommentsFocusNode;
-  FocusNode custrepFocusNode;
-  FocusNode contactnameFocusNode;
 
   @override
   void initState() {
     super.initState();
     custcommentsFocusNode = FocusNode();
+    furtheractionController = TextEditingController();
+    custcommentsController = TextEditingController();
+    furtheractionController.text = report.furtheractions;
+    custcommentsController.text = report.custcomments;
   }
 
   @override
   void dispose() {
     // Clean up the focus node when the Form is disposed
     custcommentsFocusNode.dispose();
+    furtheractionController.dispose();
+    custcommentsController.dispose();
     super.dispose();
   }
-
-  TextEditingController furtheractionController = TextEditingController();
-  TextEditingController custcommentsController = TextEditingController();
 
   _ReportDetail3(this.report);
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
-
-    furtheractionController.text = report.furtheractions;
-    custcommentsController.text = report.custcomments;
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -56,6 +54,10 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 keyboardType: TextInputType.text,
                 maxLines: 8,
                 textInputAction: TextInputAction.newline,
@@ -79,6 +81,10 @@ class _ReportDetail3 extends State<ReportDetail3> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 keyboardType: TextInputType.text,
                 maxLines: 8,
                 controller: custcommentsController,

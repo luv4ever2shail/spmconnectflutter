@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:spmconnectapp/themes/appTheme.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.getTheme().backgroundColor,
       appBar: AppBar(
           title: Text(
             'Privacy Policy',
@@ -14,8 +15,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           centerTitle: true,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black26),
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          backgroundColor: AppTheme.getTheme().backgroundColor,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,

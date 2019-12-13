@@ -31,6 +31,8 @@ class DatabaseHelper {
   String colreportmapid = 'reportmapid';
   String colreportpublished = 'reportpublished';
   String colreportsigned = 'reportsigned';
+  String colreportrefjob = 'refjob';
+  String colreportpm = 'projectmanager';
   String colspare1 = 'spare1';
   String colspare2 = 'spare2';
   String colspare3 = 'spare3';
@@ -54,7 +56,7 @@ class DatabaseHelper {
   String coltaskspare4 = 'taskspare4';
   String coltaskspare5 = 'taskspare5';
 
-  // ** Table column names for tasks
+  // ** Table column names for Images
   String imageTable = 'image_tbl';
   String colimageReportid = 'reportid';
   String colimageIdentifier = 'identifier';
@@ -100,7 +102,7 @@ class DatabaseHelper {
         'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, $colReportno TEXT, '
         '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
         '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,'
-        '$colreportpublished INTEGER,$colreportsigned INTEGER, $colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
+        '$colreportpublished INTEGER,$colreportsigned INTEGER, $colreportrefjob TEXT, $colreportpm TEXT, $colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
     await db.execute(
         'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid TEXT, '
         '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,$coltaskPublished INTEGER,'
@@ -244,7 +246,6 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getTasksMapList(String reportid) async {
     Database db = await this.database;
-
     var result = await db.rawQuery(
         'SELECT * FROM $taskTable where $coltaskreportid ="$reportid" order by $coltaskId ASC');
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
@@ -373,13 +374,13 @@ class DatabaseHelper {
     int count =
         taskMapList.length; // Count the number of map entries in db table
 
-    List<Images> tasklist = List<Images>();
+    List<Images> imageList = List<Images>();
     // For loop to create a 'Note List' from a 'Map List'
     for (int i = 0; i < count; i++) {
-      tasklist.add(Images.fromMapObject(taskMapList[i]));
+      imageList.add(Images.fromMapObject(taskMapList[i]));
     }
 
-    return tasklist;
+    return imageList;
   }
 
   Future<List<Map<String, dynamic>>> getImagesMapList(String reportid) async {

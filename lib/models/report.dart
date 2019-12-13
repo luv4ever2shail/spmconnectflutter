@@ -14,28 +14,43 @@ class Report {
   String _custrep;
   String _custemail;
   String _custcontact;
+  String _refjob;
+  String _projectmanager;
   int _reportmapid;
   int _published;
   int _signed;
+  String colspare1;
+  String colspare2;
+  String colspare3;
+  String colspare4;
+  String colspare5;
 
   Report(
-      this._reportno,
-      this._projectno,
-      this._customer,
-      this._planloc,
-      this._contactname,
-      this._authorby,
-      this._equipment,
-      this._techname,
-      this._date,
-      this._furtheractions,
-      this._custcomments,
-      this._custrep,
-      this._custemail,
-      this._custcontact,
-      this._reportmapid,
-      this._published,
-      this._signed);
+    this._reportno,
+    this._projectno,
+    this._customer,
+    this._planloc,
+    this._contactname,
+    this._authorby,
+    this._equipment,
+    this._techname,
+    this._date,
+    this._furtheractions,
+    this._custcomments,
+    this._custrep,
+    this._custemail,
+    this._custcontact,
+    this._refjob,
+    this._projectmanager,
+    this._reportmapid,
+    this._published,
+    this._signed,
+    this.colspare1,
+    this.colspare2,
+    this.colspare3,
+    this.colspare4,
+    this.colspare5,
+  );
 
   Report.withId(
       this._id,
@@ -92,6 +107,16 @@ class Report {
   String get custemail => _custemail;
 
   String get custcontact => _custcontact;
+
+  String get refjob => _refjob;
+
+  String get projectmanager => _projectmanager;
+
+  String get spare1 => colspare1;
+  String get spare2 => colspare2;
+  String get spare3 => colspare3;
+  String get spare4 => colspare4;
+  String get spare5 => colspare5;
 
   set reportmapid(int newReportid) {
     this._reportmapid = newReportid;
@@ -161,6 +186,34 @@ class Report {
     this._custcontact = custcontact;
   }
 
+  set refjob(String jobno) {
+    this._refjob = jobno;
+  }
+
+  set projectmanager(String pm) {
+    this._projectmanager = pm;
+  }
+
+  set spare1(String spare1) {
+    this.colspare1 = spare1;
+  }
+
+  set spare2(String spare2) {
+    this.colspare2 = spare2;
+  }
+
+  set spare3(String spare3) {
+    this.colspare3 = spare3;
+  }
+
+  set spare4(String spare4) {
+    this.colspare4 = spare4;
+  }
+
+  set spare5(String spare5) {
+    this.colspare5 = spare5;
+  }
+
 // Convert a Report object into a Map object
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -181,9 +234,17 @@ class Report {
     map['custrep'] = _custrep;
     map['custemail'] = _custemail;
     map['custcontact'] = _custcontact;
+    map['refjob'] = _refjob;
+    map['projectmanager'] = _projectmanager;
     map['reportmapid'] = _reportmapid;
     map['reportpublished'] = _published;
     map['reportsigned'] = _signed;
+
+    map['spare1'] = colspare1;
+    map['spare2'] = colspare2;
+    map['spare3'] = colspare3;
+    map['spare4'] = colspare4;
+    map['spare5'] = colspare5;
 
     return map;
   }
@@ -205,8 +266,16 @@ class Report {
     this._custrep = map['custrep'];
     this._custemail = map['custemail'];
     this._custcontact = map['custcontact'];
+    this._refjob = map['refjob'];
+    this._projectmanager = map['projectmanager'];
     this._reportmapid = map['reportmapid'];
     this._published = map['reportpublished'];
     this._signed = map['reportsigned'];
+
+    this.colspare1 = map['spare1'];
+    this.colspare2 = map['spare2'];
+    this.colspare3 = map['spare3'];
+    this.colspare4 = map['spare4'];
+    this.colspare5 = map['spare5'];
   }
 }

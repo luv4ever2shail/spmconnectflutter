@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/customers.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/themes/appTheme.dart';
 import 'package:spmconnectapp/utils/autocomplete_textfield.dart';
-import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:spmconnectapp/utils/dropdown.dart';
 
 class ReportDetail extends StatefulWidget {
   final Report report;
@@ -18,32 +19,64 @@ class ReportDetail extends StatefulWidget {
 }
 
 class _ReportDetail extends State<ReportDetail> {
-  DatabaseHelper helper = DatabaseHelper();
   String selectedState;
   String _placemark = '';
   bool _validate = false;
   _ReportDetail(this.report);
   List<Customer> customerList;
+  Customer selectedPerson;
+
+  String _projectManager;
+
   Report report;
   FocusNode customerFocusNode;
+  FocusNode refjobFocusNode;
   FocusNode plantlocFocusNode;
   FocusNode contactnameFocusNode;
   FocusNode authorbyFocusNode;
   FocusNode technameFocusNode;
   FocusNode equipFocusNode;
-  Customer selectedPerson;
+
+  TextEditingController projectController;
+  TextEditingController customerController;
+  TextEditingController planlocController;
+  TextEditingController contactnameController;
+  TextEditingController authorizedbyController;
+  TextEditingController equipmentController;
+  TextEditingController technameController;
+  TextEditingController refjobController;
 
   Geolocator geolocator = Geolocator();
   Position userLocation;
   @override
   void initState() {
     super.initState();
-    customerFocusNode = FocusNode();
-    plantlocFocusNode = FocusNode();
-    contactnameFocusNode = FocusNode();
-    authorbyFocusNode = FocusNode();
-    technameFocusNode = FocusNode();
-    equipFocusNode = FocusNode();
+    customerFocusNode = new FocusNode();
+    refjobFocusNode = new FocusNode();
+    plantlocFocusNode = new FocusNode();
+    contactnameFocusNode = new FocusNode();
+    authorbyFocusNode = new FocusNode();
+    technameFocusNode = new FocusNode();
+    equipFocusNode = new FocusNode();
+
+    projectController = new TextEditingController();
+    customerController = new TextEditingController();
+    planlocController = new TextEditingController();
+    contactnameController = new TextEditingController();
+    authorizedbyController = new TextEditingController();
+    equipmentController = new TextEditingController();
+    technameController = new TextEditingController();
+    refjobController = new TextEditingController();
+
+    projectController.text = report.projectno;
+    customerController.text = report.customer;
+    planlocController.text = report.plantloc;
+    contactnameController.text = report.contactname;
+    authorizedbyController.text = report.authorby;
+    equipmentController.text = report.equipment;
+    technameController.text = report.techname;
+    refjobController.text = report.refjob;
+    _projectManager = report.projectmanager;
 
     _getLocation().then((position) {
       userLocation = position;
@@ -113,30 +146,22 @@ class _ReportDetail extends State<ReportDetail> {
     authorbyFocusNode.dispose();
     technameFocusNode.dispose();
     equipFocusNode.dispose();
+    projectController.dispose();
+    customerController.dispose();
+    planlocController.dispose();
+    contactnameController.dispose();
+    authorizedbyController.dispose();
+    equipmentController.dispose();
+
     super.dispose();
   }
-
-  TextEditingController projectController = TextEditingController();
-  TextEditingController customerController = TextEditingController();
-  TextEditingController planlocController = TextEditingController();
-  TextEditingController contactnameController = TextEditingController();
-  TextEditingController authorizedbyController = TextEditingController();
-  TextEditingController equipmentController = TextEditingController();
-  TextEditingController technameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
 
-    projectController.text = report.projectno;
-    customerController.text = report.customer;
-    planlocController.text = report.plantloc;
-    contactnameController.text = report.contactname;
-    authorizedbyController.text = report.authorby;
-    equipmentController.text = report.equipment;
-    technameController.text = report.techname;
-
     return Scaffold(
+      backgroundColor: AppTheme.getTheme().backgroundColor,
       resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
@@ -146,16 +171,20 @@ class _ReportDetail extends State<ReportDetail> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 keyboardType: TextInputType.numberWithOptions(),
                 textInputAction: TextInputAction.next,
-                //autofocus: true,
+                // autofocus: true,
                 controller: projectController,
                 style: textStyle,
                 onEditingComplete: () {
                   projectController.text.isEmpty
                       ? _validate = true
                       : _validate = false;
-                  FocusScope.of(context).requestFocus(customerFocusNode);
+                  FocusScope.of(context).requestFocus(refjobFocusNode);
                 },
                 onChanged: (value) {
                   debugPrint('Something changed in Project Text Field');
@@ -165,6 +194,7 @@ class _ReportDetail extends State<ReportDetail> {
                   updateProjectno();
                 },
                 decoration: InputDecoration(
+                    hintText: 'Enter SPM Job No',
                     labelText: 'Project No.',
                     labelStyle: textStyle,
                     errorText: _validate ? 'Project No. Can\'t Be Empty' : null,
@@ -174,35 +204,77 @@ class _ReportDetail extends State<ReportDetail> {
             ),
 
             // Second Element - Customer Name
-            // Padding(
-            //   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-            //   child: TextField(
-            //     controller: customerController,
-            //     keyboardType: TextInputType.text,
-            //     style: textStyle,
-            //     focusNode: customerFocusNode,
-            //     textInputAction: TextInputAction.next,
-            //     onEditingComplete: () =>
-            //         FocusScope.of(context).requestFocus(plantlocFocusNode),
-            //     onChanged: (value) {
-            //       debugPrint('Something changed in Customer Text Field');
-            //       updateCustomername();
-            //     },
-            //     decoration: InputDecoration(
-            //         labelText: 'Customer',
-            //         labelStyle: textStyle,
-            //         border: OutlineInputBorder(
-            //             borderRadius: BorderRadius.circular(5.0))),
-            //   ),
-            // ),
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
+                controller: refjobController,
+                keyboardType: TextInputType.number,
+                style: textStyle,
+                focusNode: refjobFocusNode,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(customerFocusNode),
+                onChanged: (value) {
+                  debugPrint('Something changed in ref job Text Field');
+                  updateRefjob();
+                },
+                decoration: InputDecoration(
+                    hintText: 'Enter Ref. SPM Job No',
+                    labelText: 'Ref. Job',
+                    labelStyle: textStyle,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0))),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: DropDownFormField(
+                filled: false,
+                titleText: 'Project Manager',
+                hintText: 'Select project manager',
+                value: _projectManager,
+                onSaved: (value) {
+                  updatePM(value);
+                },
+                onChanged: (value) {
+                  setState(() {
+                    _projectManager = value;
+                    updatePM(value);
+                  });
+                },
+                dataSource: [
+                  {
+                    "display": "Chris Hotlkamp",
+                    "value": "Chris Hotlkamp",
+                  },
+                  {
+                    "display": "Curtis Butler",
+                    "value": "Curtis Butler",
+                  },
+                ],
+                textField: 'display',
+                valueField: 'value',
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15),
               child: SimpleAutocompleteFormField<Customer>(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 maxSuggestions: 20,
                 style: textStyle,
                 controller: customerController,
                 focusNode: customerFocusNode,
                 decoration: InputDecoration(
+                    hintText: 'Select customer from suggestions',
                     labelText: 'Customer',
                     labelStyle: textStyle,
                     border: OutlineInputBorder()),
@@ -241,6 +313,10 @@ class _ReportDetail extends State<ReportDetail> {
               child: Column(
                 children: <Widget>[
                   TextField(
+                    inputFormatters: [
+                      new BlacklistingTextInputFormatter(new RegExp(
+                          '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                    ],
                     controller: planlocController,
                     keyboardType: TextInputType.text,
                     style: textStyle,
@@ -262,6 +338,7 @@ class _ReportDetail extends State<ReportDetail> {
                       }
                     },
                     decoration: InputDecoration(
+                        hintText: 'Enter service plant location',
                         labelText: 'Plant Location',
                         labelStyle: textStyle,
                         border: OutlineInputBorder(
@@ -293,6 +370,10 @@ class _ReportDetail extends State<ReportDetail> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 controller: contactnameController,
                 keyboardType: TextInputType.text,
                 style: textStyle,
@@ -304,6 +385,7 @@ class _ReportDetail extends State<ReportDetail> {
                   updateContactname();
                 },
                 decoration: InputDecoration(
+                    hintText: 'Enter contact name',
                     labelText: 'Contact Name',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
@@ -315,6 +397,10 @@ class _ReportDetail extends State<ReportDetail> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 controller: authorizedbyController,
                 keyboardType: TextInputType.text,
                 style: textStyle,
@@ -326,6 +412,7 @@ class _ReportDetail extends State<ReportDetail> {
                   updateAuthorby();
                 },
                 decoration: InputDecoration(
+                    hintText: 'Enter authorized by',
                     labelText: 'Authorized By',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
@@ -337,6 +424,10 @@ class _ReportDetail extends State<ReportDetail> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 controller: equipmentController,
                 keyboardType: TextInputType.text,
                 style: textStyle,
@@ -348,6 +439,7 @@ class _ReportDetail extends State<ReportDetail> {
                   updateEquipment();
                 },
                 decoration: InputDecoration(
+                    hintText: 'Enter equipment name',
                     labelText: 'Equipment',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
@@ -359,6 +451,10 @@ class _ReportDetail extends State<ReportDetail> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                inputFormatters: [
+                  new BlacklistingTextInputFormatter(new RegExp(
+                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                ],
                 controller: technameController,
                 keyboardType: TextInputType.text,
                 style: textStyle,
@@ -367,6 +463,7 @@ class _ReportDetail extends State<ReportDetail> {
                   updateTechname();
                 },
                 decoration: InputDecoration(
+                    hintText: 'Enter technician name',
                     labelText: 'SPM Tech Name',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
@@ -387,6 +484,16 @@ class _ReportDetail extends State<ReportDetail> {
   // Update the customer namme of Note object
   void updateCustomername() {
     report.customer = customerController.text;
+  }
+
+  // Update ref job
+  void updateRefjob() {
+    report.refjob = refjobController.text;
+  }
+
+  // Update project manager
+  void updatePM(String value) {
+    report.projectmanager = value;
   }
 
   // Update the plant location namme of Note object

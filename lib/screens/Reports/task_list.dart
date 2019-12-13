@@ -1,14 +1,14 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:spmconnectapp/Resource/database_helper.dart';
+import 'package:spmconnectapp/Resource/tasks_repository.dart';
 import 'package:spmconnectapp/screens/Reports/report_detail_pg2.dart';
 import 'package:spmconnectapp/models/tasks.dart';
-import 'package:spmconnectapp/utils/database_helper.dart';
-import 'package:sqflite/sqflite.dart';
 
 class TaskList extends StatefulWidget {
   final String reportid;
-
-  TaskList(this.reportid);
+  final DatabaseHelper helper;
+  TaskList(this.reportid, this.helper);
   @override
   State<StatefulWidget> createState() {
     return _TaskListState(this.reportid);
@@ -16,40 +16,52 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  DatabaseHelper databaseHelper = DatabaseHelper();
-  List<Tasks> tasklist;
-  int count = 0;
   String reportid;
   _TaskListState(this.reportid);
   @override
   Widget build(BuildContext context) {
-    if (tasklist == null) {
-      tasklist = List<Tasks>();
-      updateListView();
-    }
+    ReportTasks reportTasks = Provider.of<ReportTasks>(context);
     return Scaffold(
-      body: Scrollbar(child: getReportListView()),
+      body: Scrollbar(child: getReportListView(reportTasks)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             debugPrint('FAB clicked');
-            navigateToDetail(Tasks(reportid, '', null, null, '', '', '', 0),
-                'Add New Task', reportid);
+            navigateToDetail(
+              Tasks(
+                reportid,
+                '',
+                null,
+                null,
+                '',
+                '',
+                '',
+                0,
+                '',
+                '',
+                '',
+                '',
+                '',
+              ),
+              'Add New Task',
+              reportid,
+              reportTasks,
+            );
           },
           icon: Icon(Icons.add),
           label: Text('Add a new task')),
     );
   }
 
-  ListView getReportListView() {
+  ListView getReportListView(ReportTasks reportTasks) {
     TextStyle titleStyle = Theme.of(context).textTheme.subhead;
 
     return ListView.builder(
-      itemCount: count,
+      itemCount: reportTasks.getCount,
       itemBuilder: (BuildContext context, int position) {
         return Dismissible(
           background: stackBehindDismiss(),
-          key: ObjectKey(tasklist[position]),
+          key: ObjectKey(reportTasks.getTasks[position]),
           child: Padding(
             padding: EdgeInsets.all(3),
             child: Card(
@@ -60,30 +72,30 @@ class _TaskListState extends State<TaskList> {
                   child: Icon(Icons.description),
                 ),
                 title: Text(
-                  this.tasklist[position].item,
+                  reportTasks.getTasks[position].item,
                   style: titleStyle.apply(fontSizeFactor: 1.5),
                 ),
                 subtitle: Text(
-                  'Added on :-' + this.tasklist[position].date,
+                  'Added on :-' + reportTasks.getTasks[position].date,
                 ),
                 onTap: () {
                   debugPrint("ListTile Tapped");
-                  navigateToDetail(
-                      this.tasklist[position], 'Edit Task', reportid);
+                  navigateToDetail(reportTasks.getTasks[position], 'Edit Task',
+                      reportid, reportTasks);
                 },
                 trailing: IconButton(
-                  onPressed: () {
-                    var item = tasklist.elementAt(position);
+                  onPressed: () async {
+                    var item = reportTasks.getTasks.elementAt(position);
                     print('object');
-                    deleteItem(position);
+                    await deleteItem(position, reportTasks);
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
-                        content:
-                            Text("Task deleted ${tasklist[position].item}"),
+                        content: Text(
+                            "Task deleted ${reportTasks.getTasks[position].item}"),
                         action: SnackBarAction(
                           label: "UNDO",
-                          onPressed: () {
-                            undoDeletion(item);
+                          onPressed: () async {
+                            await undoDeletion(item, reportTasks);
                           },
                         ),
                       ),
@@ -99,18 +111,19 @@ class _TaskListState extends State<TaskList> {
             ),
           ),
           direction: DismissDirection.horizontal,
-          onDismissed: (direction) {
-            var item = tasklist.elementAt(position);
+          onDismissed: (direction) async {
+            var item = reportTasks.getTasks.elementAt(position);
             //To delete
-            deleteItem(position);
+            await deleteItem(position, reportTasks);
             //To show a snackbar with the UNDO button
             Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Task deleted ${tasklist[position].item}"),
+                content:
+                    Text("Task deleted ${reportTasks.getTasks[position].item}"),
                 action: SnackBarAction(
                     label: "UNDO",
                     onPressed: () {
                       //To undo deletion
-                      undoDeletion(item);
+                      undoDeletion(item, reportTasks);
                     })));
           },
         );
@@ -118,14 +131,16 @@ class _TaskListState extends State<TaskList> {
     );
   }
 
-  void deleteItem(index) {
-    _delete(tasklist[index]);
-    updateListView();
+  Future<void> deleteItem(index, ReportTasks reportTasks) async {
+    if (index > -1) {
+      await _delete(reportTasks.getTasks[index]);
+      // await reportTasks.fetchTasks(reportid);
+    }
   }
 
-  void undoDeletion(item) async {
-    await databaseHelper.insertTask(item);
-    updateListView();
+  Future<void> undoDeletion(item, ReportTasks reportTasks) async {
+    await widget.helper.insertTask(item);
+    await reportTasks.fetchTasks(reportid);
   }
 
   Widget stackBehindDismiss() {
@@ -144,31 +159,18 @@ class _TaskListState extends State<TaskList> {
     Navigator.pop(context, true);
   }
 
-  void _delete(Tasks task) async {
-    await databaseHelper.deleteTask(task.id);
+  Future<void> _delete(Tasks task) async {
+    await widget.helper.deleteTask(task.id);
   }
 
-  void navigateToDetail(Tasks task, String title, String reportid) async {
+  Future<void> navigateToDetail(
+      Tasks task, String title, String reportid, ReportTasks reportTask) async {
     bool result =
         await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ReportDetail2(task, title, reportid);
+      return ReportDetail2(task, title, reportid, widget.helper);
     }));
     if (result == true) {
-      updateListView();
+      await reportTask.fetchTasks(reportid);
     }
-  }
-
-  void updateListView() {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
-    dbFuture.then((database) {
-      Future<List<Tasks>> taskListFuture =
-          databaseHelper.getTasksList(reportid);
-      taskListFuture.then((tasklist) {
-        setState(() {
-          this.tasklist = tasklist;
-          this.count = tasklist.length;
-        });
-      });
-    });
   }
 }
