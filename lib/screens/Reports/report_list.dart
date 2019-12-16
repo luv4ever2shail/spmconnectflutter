@@ -6,10 +6,13 @@ import 'package:spmconnectapp/Resource/database_helper.dart';
 import 'package:spmconnectapp/Resource/images_repository.dart';
 import 'package:spmconnectapp/Resource/reports_repository.dart';
 import 'package:spmconnectapp/Resource/tasks_repository.dart';
+import 'package:spmconnectapp/models/images.dart';
 import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/screens/Reports/report_preview.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:spmconnectapp/screens/Reports/reportdetailtabs.dart';
+import 'package:spmconnectapp/utils/dialog_spinner.dart';
 
 class ReportList extends StatefulWidget {
   @override
@@ -89,30 +92,31 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
             }
             navigateToDetail(
               Report(
-                  '$empId${mapid.toString()}',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  mapid,
-                  0,
-                  0,
-                  '',
-                  '',
-                  '',
-                  '',
-                  ''),
+                '$empId${mapid.toString()}',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                mapid,
+                0,
+                0,
+                '',
+                '',
+                '',
+                '',
+                '',
+              ),
               'Add New Report',
               myReports,
               databaseHelper,
@@ -218,10 +222,18 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
                               );
                             },
                             onLongPress: () async {
-                              await Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ReportPreview(reportlist[position]);
-                              }));
+                              if (reportlist[position].reportsigned == 1 &&
+                                  empId == '73') {
+                                await revertReport(
+                                  context,
+                                  reportlist[position],
+                                );
+                              } else {
+                                await Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ReportPreview(reportlist[position]);
+                                }));
+                              }
                             },
                           ),
                         ),
@@ -347,5 +359,110 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
       ],
     );
     showDialog(context: context, builder: (_) => alertDialog);
+  }
+
+  Future<void> revertReport(BuildContext contex, Report report) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete report?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure want to unpublish this report?')
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _saveReport(report);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<int> _saveReport(Report report) async {
+    showDialogSpinner(context, text: "Loading....");
+    int result;
+    if (report.id != null) {
+      report.reportpublished = 0;
+      result = await databaseHelper.updateReport(report);
+    }
+    if (result != 0) {
+      print('Success Saving Report to database');
+
+      await databaseHelper.getTasksList(report.reportno).then((tasklist) async {
+        for (var item in tasklist) {
+          await _saveTask(item);
+        }
+      });
+      await databaseHelper
+          .getImageList(report.reportno)
+          .then((imagelist) async {
+        for (var image in imagelist) {
+          await _saveImage(image);
+        }
+      });
+    } else {
+      print('failure saving report');
+    }
+    Navigator.pop(context);
+    return result;
+  }
+
+  Future<int> _saveImage(Images image) async {
+    int result;
+    if (image.reportid != null) {
+      image.published = 0;
+      result = await databaseHelper.updateImage(image);
+    }
+    if (result != 0) {
+      print('Success Saving image to database');
+    } else {
+      print('failure saving images');
+    }
+    return result;
+  }
+
+  Future<int> _saveTask(Tasks task) async {
+    int result;
+    if (task.id != null) {
+      task.published = 0;
+      result = await databaseHelper.updateTask(task);
+    }
+    if (result != 0) {
+      print('Success Saving task to database');
+    } else {}
+    return result;
+  }
+
+  void showDialogSpinner(
+    BuildContext context, {
+    String text,
+    TextStyle textStyle,
+  }) {
+    showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return DialogSpinner(
+            textStyle: textStyle,
+            text: text != null ? text : 'Loading...',
+          );
+        });
   }
 }

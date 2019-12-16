@@ -411,7 +411,7 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
       await removeUserInfoFromSF();
       await storeUserInfoToSF();
     } catch (e) {
-      print(e);
+      print("Get User Info : " + e);
     }
   }
 
@@ -433,7 +433,7 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
         setState(() {});
       }
     } catch (e) {
-      print(e);
+      print("Get User Picture : " + e);
     }
   }
 
@@ -456,7 +456,7 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
 
     setState(() {
       _deviceData = deviceData;
-      print(_deviceData[0]);
+      print(_deviceData[0].toString());
     });
   }
 

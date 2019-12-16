@@ -893,9 +893,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             resultupload = 0;
           }
         } else {
-          await closeUpload(myReports);
+          //await closeUpload(myReports);
           _showAlertDialog('SPM Connect',
-              'Error occured while trying to sync attachments to cloud.');
+              'Error occured while trying to sync attachment ${i.name} Attch. No. ${reportImages.getImages.indexOf(i) + 1} to cloud.');
           resultupload = 0;
           FLog.logThis(
             className: "Sharepoint",
@@ -904,7 +904,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 'Error uploading the attachment ${i.name}. Attch. No. ${reportImages.getImages.indexOf(i) + 1}',
             type: LogLevel.ERROR,
           );
-          break;
+          //break;
         }
       }
 

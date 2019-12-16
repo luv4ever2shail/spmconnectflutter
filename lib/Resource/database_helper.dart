@@ -11,62 +11,9 @@ class DatabaseHelper {
   static DatabaseHelper _databaseHelper;
   static Database _database; // Singleton Database
 
-// ** Table column names for Report
   String reportTable = 'servicerpt_tbl';
-  String colId = 'id';
-  String colProjectno = 'projectno';
-  String colReportno = 'reportno';
-  String colCustomer = 'customer';
-  String colPlantloc = 'plantloc';
-  String colContactname = 'contactname';
-  String colAuthorby = 'authorby';
-  String colEquipment = 'equipment';
-  String colTechname = 'techname';
-  String colDate = 'date';
-  String colfurteractions = 'furtheractions';
-  String colcustcomments = 'custcomments';
-  String colcustrep = 'custrep';
-  String colcustemail = 'custemail';
-  String colcustcontact = 'custcontact';
-  String colreportmapid = 'reportmapid';
-  String colreportpublished = 'reportpublished';
-  String colreportsigned = 'reportsigned';
-  String colreportrefjob = 'refjob';
-  String colreportpm = 'projectmanager';
-  String colspare1 = 'spare1';
-  String colspare2 = 'spare2';
-  String colspare3 = 'spare3';
-  String colspare4 = 'spare4';
-  String colspare5 = 'spare5';
-
-// ** Table column names for tasks
   String taskTable = 'tasks_tbl';
-  String coltaskId = 'id';
-  String coltaskreportid = 'reportid';
-  String coltaskItem = 'item';
-  String coltaskStartTime = 'starttime';
-  String coltaskEndTime = 'endtime';
-  String coltaskWork = 'workperformed';
-  String coltaskHours = 'hours';
-  String coltaskDate = 'date';
-  String coltaskPublished = 'taskpublished';
-  String coltaskspare1 = 'taskspare1';
-  String coltaskspare2 = 'taskspare2';
-  String coltaskspare3 = 'taskspare3';
-  String coltaskspare4 = 'taskspare4';
-  String coltaskspare5 = 'taskspare5';
-
-  // ** Table column names for Images
   String imageTable = 'image_tbl';
-  String colimageReportid = 'reportid';
-  String colimageIdentifier = 'identifier';
-  String colimageName = 'name';
-  String colimageWidth = 'width';
-  String colimageHeight = 'height';
-  String colimagePublished = 'imagepublished';
-  String colimagespare1 = 'spare1';
-  String colimagespare2 = 'spare2';
-  String colimagespare3 = 'spare3';
 
   DatabaseHelper._createInstance();
 
@@ -88,35 +35,97 @@ class DatabaseHelper {
   Future<Database> initializeDatabase() async {
     // Get the directory path for both Android and iOS to store database.
     Directory directory = await getApplicationDocumentsDirectory();
-    //String path = directory.path + 'servicereport.db';
     String path = join(directory.path, "servicereport.db");
 
-    // Open/create the database at a given path
-    var reportDatabase =
-        await openDatabase(path, version: 1, onCreate: _createDb);
-    return reportDatabase;
+    return await openDatabase(
+      path,
+      version: 1,
+      onOpen: (db) {},
+      onCreate: _createDb,
+      onUpgrade: _onUpgrade,
+      onDowngrade: onDatabaseDowngradeDelete,
+    );
   }
 
-  void _createDb(Database db, int newVersion) async {
-    await db.execute(
-        'CREATE TABLE $reportTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colProjectno TEXT, $colReportno TEXT, '
-        '$colCustomer TEXT, $colPlantloc TEXT,$colContactname TEXT,$colAuthorby TEXT,$colEquipment TEXT,$colTechname TEXT, $colDate TEXT, '
-        '$colfurteractions TEXT,$colcustcomments TEXT,$colcustrep TEXT,$colcustemail TEXT,$colcustcontact TEXT,$colreportmapid INTEGER,'
-        '$colreportpublished INTEGER,$colreportsigned INTEGER, $colreportrefjob TEXT, $colreportpm TEXT, $colspare1 TEXT, $colspare2 TEXT, $colspare3 TEXT, $colspare4 TEXT, $colspare5 TEXT)');
-    await db.execute(
-        'CREATE TABLE $taskTable($coltaskId INTEGER PRIMARY KEY AUTOINCREMENT, $coltaskreportid TEXT, '
-        '$coltaskItem TEXT, $coltaskStartTime TEXT, $coltaskEndTime TEXT,$coltaskWork TEXT,$coltaskHours TEXT,$coltaskDate TEXT,$coltaskPublished INTEGER,'
-        '$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT, $coltaskspare4 TEXT, $coltaskspare5 TEXT)');
-    await db.execute(
-        'CREATE TABLE $imageTable($colimageReportid TEXT , $colimageIdentifier TEXT, '
-        '$colimageName TEXT, $colimageWidth INTEGER, $colimageHeight INTEGER,$colimagePublished INTEGER,$coltaskspare1 TEXT, $coltaskspare2 TEXT, $coltaskspare3 TEXT)');
+  // UPGRADE DATABASE TABLES
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {
+      //await db.execute("ALTER TABLE $reportTable ADD COLUMN newSpare TEXT;");
+    }
+  }
+
+  Future<void> _createDb(Database db, int newVersion) async {
+    var batch = db.batch();
+    createReportTable(batch);
+    createReportTaskTable(batch);
+    createReportImagesTable(batch);
+    await batch.commit();
+  }
+
+  void createReportTable(Batch batch) {
+    batch.execute('CREATE TABLE $reportTable ('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'projectno TEXT, reportno TEXT,'
+        'customer TEXT,'
+        'plantloc TEXT,'
+        'contactname TEXT,'
+        'authorby TEXT,'
+        'equipment TEXT,'
+        'techname TEXT,'
+        'date TEXT,'
+        'furtheractions TEXT,'
+        'custcomments TEXT,'
+        'custrep TEXT,'
+        'custemail TEXT,'
+        'custcontact TEXT,'
+        'reportmapid INTEGER,'
+        'reportpublished INTEGER,'
+        'reportsigned INTEGER,'
+        'refjob TEXT,'
+        'projectmanager TEXT,'
+        'spare1 TEXT,'
+        'spare2 TEXT,'
+        'spare3 TEXT,'
+        'spare4 TEXT,'
+        'spare5 TEXT)');
+  }
+
+  void createReportTaskTable(Batch batch) {
+    batch.execute('CREATE TABLE $taskTable ('
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'reportid TEXT,'
+        'item TEXT,'
+        'starttime TEXT,'
+        'endtime TEXT,'
+        'workperformed TEXT,'
+        'hours TEXT,'
+        'date TEXT,'
+        'taskpublished INTEGER,'
+        'taskspare1 TEXT,'
+        'taskspare2 TEXT,'
+        'taskspare3 TEXT,'
+        'taskspare4 TEXT,'
+        'taskspare5 TEXT)');
+  }
+
+  void createReportImagesTable(Batch batch) {
+    batch.execute('CREATE TABLE $imageTable ('
+        'reportid TEXT,'
+        'identifier TEXT,'
+        'name TEXT,'
+        'width INTEGER,'
+        'height INTEGER,'
+        'imagepublished INTEGER,'
+        'spare1 TEXT,'
+        'spare2 TEXT,'
+        'spare3 TEXT)');
   }
 
   // Fetch Operation: Get all note objects from database
   Future<List<Map<String, dynamic>>> getReportMapList() async {
     Database db = await this.database;
     //		var result = await db.rawQuery('SELECT * FROM $noteTable order by $colPriority ASC');
-    var result = await db.query(reportTable, orderBy: '$colreportmapid DESC');
+    var result = await db.query(reportTable, orderBy: 'reportmapid DESC');
     return result;
   }
 
@@ -131,15 +140,14 @@ class DatabaseHelper {
   Future<int> updateReport(Report report) async {
     var db = await this.database;
     var result = await db.update(reportTable, report.toMap(),
-        where: '$colId = ?', whereArgs: [report.id]);
+        where: 'id = ?', whereArgs: [report.id]);
     return result;
   }
 
   // Delete Operation: Delete a Note object from database
   Future<int> deleteReport(int id) async {
     var db = await this.database;
-    int result =
-        await db.rawDelete('DELETE FROM $reportTable WHERE $colId = $id');
+    int result = await db.rawDelete('DELETE FROM $reportTable WHERE id = $id');
     return result;
   }
 
@@ -184,7 +192,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getNewreportidMap() async {
     Database db = await this.database;
     var result = await db.rawQuery(
-        'SELECT * FROM $reportTable WHERE $colreportmapid = (SELECT MAX($colreportmapid) FROM $reportTable) ');
+        'SELECT * FROM $reportTable WHERE reportmapid = (SELECT MAX(reportmapid) FROM $reportTable) ');
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }
@@ -200,23 +208,22 @@ class DatabaseHelper {
   // Update Operation: Update a Note object and save it to database
   Future<int> updateTask(Tasks task) async {
     var db = await this.database;
-    var result = await db.update(taskTable, task.toMap(),
-        where: '$coltaskId = ?', whereArgs: [task.id]);
+    var result = await db
+        .update(taskTable, task.toMap(), where: 'id = ?', whereArgs: [task.id]);
     return result;
   }
 
   // Delete Operation: Delete a Note object from database
   Future<int> deleteTask(int id) async {
     var db = await this.database;
-    int result =
-        await db.rawDelete('DELETE FROM $taskTable WHERE $coltaskId = $id');
+    int result = await db.rawDelete('DELETE FROM $taskTable WHERE id = $id');
     return result;
   }
 
   Future<int> deleteAllTasks(String reportmapid) async {
     var db = await this.database;
-    int result = await db.rawDelete(
-        'DELETE FROM $taskTable WHERE $coltaskreportid = $reportmapid');
+    int result = await db
+        .rawDelete('DELETE FROM $taskTable WHERE reportid = $reportmapid');
     return result;
   }
 
@@ -247,7 +254,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getTasksMapList(String reportid) async {
     Database db = await this.database;
     var result = await db.rawQuery(
-        'SELECT * FROM $taskTable where $coltaskreportid ="$reportid" order by $coltaskId ASC');
+        'SELECT * FROM $taskTable where reportid ="$reportid" order by id ASC');
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }
@@ -273,7 +280,7 @@ class DatabaseHelper {
     int published = 0;
     int signed = 1;
     var result = await db.rawQuery(
-        'SELECT * FROM $reportTable where $colreportpublished = $published AND $colreportsigned = $signed order by $colreportmapid ASC');
+        'SELECT * FROM $reportTable where reportpublished = $published AND reportsigned = $signed order by reportmapid ASC');
     return result;
   }
 
@@ -299,7 +306,7 @@ class DatabaseHelper {
     Database db = await this.database;
     int published = 0;
     var result = await db.rawQuery(
-        'SELECT * FROM $taskTable where $coltaskPublished = $published AND $coltaskreportid = $reportid order by $coltaskId ASC');
+        'SELECT * FROM $taskTable where taskpublished = $published AND reportid = $reportid order by id ASC');
     return result;
   }
 
@@ -324,7 +331,7 @@ class DatabaseHelper {
     Database db = await this.database;
     int published = 0;
     var result = await db.rawQuery(
-        'SELECT * FROM $imageTable where $colimagePublished = $published AND $colimageReportid = $reportid');
+        'SELECT * FROM $imageTable where imagepublished = $published AND reportid = $reportid');
     return result;
   }
 
@@ -340,22 +347,22 @@ class DatabaseHelper {
   Future<int> updateImage(Images image) async {
     var db = await this.database;
     var result = await db.update(imageTable, image.toMap(),
-        where: '$colimageReportid = ?', whereArgs: [image.reportid]);
+        where: 'reportid = ?', whereArgs: [image.reportid]);
     return result;
   }
 
   // Delete Operation: Delete a Note object from database
   Future<int> deleteImages(String id) async {
     var db = await this.database;
-    int result = await db
-        .rawDelete('DELETE FROM $imageTable WHERE $colimageReportid = $id');
+    int result =
+        await db.rawDelete('DELETE FROM $imageTable WHERE reportid = $id');
     return result;
   }
 
   Future<int> deleteAllImages(String reportmapid) async {
     var db = await this.database;
-    int result = await db.rawDelete(
-        'DELETE FROM $imageTable WHERE $colimageReportid = $reportmapid');
+    int result = await db
+        .rawDelete('DELETE FROM $imageTable WHERE reportid = $reportmapid');
     return result;
   }
 
@@ -386,8 +393,8 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getImagesMapList(String reportid) async {
     Database db = await this.database;
 
-    var result = await db.rawQuery(
-        'SELECT * FROM $imageTable where $colimageReportid =$reportid');
+    var result = await db
+        .rawQuery('SELECT * FROM $imageTable where reportid =$reportid');
     //var result = await db.query(reportTable, orderBy: '$colProjectno DESC');
     return result;
   }

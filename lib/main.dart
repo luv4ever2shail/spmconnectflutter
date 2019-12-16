@@ -27,14 +27,12 @@ Future openBox() async {
 
 class MyApp extends StatefulWidget {
   static restartApp(BuildContext context) {
-    final _MyAppState state =
-        context.ancestorStateOfType(const TypeMatcher<_MyAppState>());
+    final _MyAppState state = context.findAncestorStateOfType();
     state.restartApp();
   }
 
   static setCustomeTheme(BuildContext context) {
-    final _MyAppState state =
-        context.ancestorStateOfType(const TypeMatcher<_MyAppState>());
+    final _MyAppState state = context.findAncestorStateOfType();
     state.setCustomeTheme();
   }
 

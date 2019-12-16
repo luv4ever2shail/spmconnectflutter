@@ -177,8 +177,8 @@ class _ReportDetail2 extends State<ReportDetail2> {
                   final date = await showDatePicker(
                       context: context,
                       firstDate:
-                          _starttime != null ? _starttime : DateTime(1900),
-                      initialDate: currentValue ?? DateTime.now(),
+                          _starttime != null ? _starttime : DateTime(2019),
+                      initialDate: _starttime ?? DateTime.now(),
                       lastDate: DateTime(2100));
                   if (date != null) {
                     final time = await showTimePicker(

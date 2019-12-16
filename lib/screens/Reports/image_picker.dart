@@ -142,7 +142,17 @@ class _ImagePickerState extends State<ImagePicker> {
   Future<void> _save(
       String identifier, String name, int width, int height) async {
     int result = 0;
-    Images _image = Images(identifier, name, width, height, reportid, 0);
+    Images _image = Images(
+      identifier,
+      name,
+      width,
+      height,
+      reportid,
+      0,
+      '',
+      '',
+      '',
+    );
 
     result = await databaseHelper.insertImage(_image);
 

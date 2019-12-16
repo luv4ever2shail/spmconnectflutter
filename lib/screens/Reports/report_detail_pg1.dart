@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/customers.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/themes/appTheme.dart';
-import 'package:spmconnectapp/utils/autocomplete_textfield.dart';
+import 'package:spmconnectapp/utils/adropdown.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:spmconnectapp/utils/dropdown.dart';
@@ -19,13 +19,13 @@ class ReportDetail extends StatefulWidget {
 }
 
 class _ReportDetail extends State<ReportDetail> {
-  String selectedState;
   String _placemark = '';
   bool _validate = false;
   _ReportDetail(this.report);
   List<Customer> customerList;
   Customer selectedPerson;
-
+  List<DropdownMenuItem> items = [];
+  String selectedCustomer;
   String _projectManager;
 
   Report report;
@@ -89,6 +89,16 @@ class _ReportDetail extends State<ReportDetail> {
     customerList = CustomersList().getCustomerListFromJson(json.decode(
         await DefaultAssetBundle.of(context)
             .loadString("assets/customers.json")));
+
+    customerList.forEach((v) {
+      String data = v.name;
+      items.add(new DropdownMenuItem(
+        child: new Text(
+          data,
+        ),
+        value: data,
+      ));
+    });
 
     setState(() {});
   }
@@ -262,50 +272,72 @@ class _ReportDetail extends State<ReportDetail> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-              child: SimpleAutocompleteFormField<Customer>(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                maxSuggestions: 20,
-                style: textStyle,
-                controller: customerController,
-                focusNode: customerFocusNode,
-                decoration: InputDecoration(
-                    hintText: 'Select customer from suggestions',
-                    labelText: 'Customer',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder()),
-                suggestionsHeight: 80.0,
-                itemBuilder: (context, person) => Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(person.name,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ]),
-                ),
-                onSearch: (search) async => customerList
-                    .where((person) => person.name
-                        .toLowerCase()
-                        .contains(search.toLowerCase()))
-                    .toList(),
-                itemFromString: (string) => customerList.singleWhere(
-                    (person) =>
-                        person.name.toLowerCase() == string.toLowerCase(),
-                    orElse: () => null),
-                onChanged: (value) {
-                  updateCustomername();
-                  setState(() => selectedPerson = value);
-                },
-                onSaved: (value) => setState(() => selectedPerson = value),
-                validator: (person) =>
-                    person == null ? 'Invalid person.' : null,
+            SearchableDropdown(
+              controller: customerController,
+              items: items,
+              report: report,
+              focusNode: customerFocusNode,
+              isExpanded: true,
+              value: selectedCustomer,
+              isCaseSensitiveSearch: false,
+              hint: new Text('Select Customer'),
+              searchHint: new Text(
+                'Select Customer',
+                style: new TextStyle(fontSize: 20),
               ),
+              onChanged: (value) {
+                updateCustomername();
+                setState(() {
+                  selectedCustomer = value;
+                  customerController.text = value;
+                });
+              },
             ),
+
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+            //   child: SimpleAutocompleteFormField<Customer>(
+            //     inputFormatters: [
+            //       new BlacklistingTextInputFormatter(new RegExp(
+            //           '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+            //     ],
+            //     maxSuggestions: 20,
+            //     style: textStyle,
+            //     controller: customerController,
+            //     focusNode: customerFocusNode,
+            //     decoration: InputDecoration(
+            //         hintText: 'Select customer from suggestions',
+            //         labelText: 'Customer',
+            //         labelStyle: textStyle,
+            //         border: OutlineInputBorder()),
+            //     suggestionsHeight: 80.0,
+            //     itemBuilder: (context, person) => Padding(
+            //       padding: EdgeInsets.all(10.0),
+            //       child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Text(person.name,
+            //                 style: TextStyle(fontWeight: FontWeight.bold)),
+            //           ]),
+            //     ),
+            //     onSearch: (search) async => customerList
+            //         .where((person) => person.name
+            //             .toLowerCase()
+            //             .contains(search.toLowerCase()))
+            //         .toList(),
+            //     itemFromString: (string) => customerList.singleWhere(
+            //         (person) =>
+            //             person.name.toLowerCase() == string.toLowerCase(),
+            //         orElse: () => null),
+            //     onChanged: (value) {
+            //       updateCustomername();
+            //       setState(() => selectedPerson = value);
+            //     },
+            //     onSaved: (value) => setState(() => selectedPerson = value),
+            //     validator: (person) =>
+            //         person == null ? 'Invalid person.' : null,
+            //   ),
+            // ),
 
             // Third Element - Plant Location
             Padding(
