@@ -60,6 +60,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
                 ],
                 keyboardType: TextInputType.text,
                 maxLines: 8,
+                maxLength: 350,
                 textInputAction: TextInputAction.newline,
                 controller: furtheractionController,
                 style: textStyle,
@@ -88,6 +89,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
                 keyboardType: TextInputType.text,
                 maxLines: 8,
                 controller: custcommentsController,
+                maxLength: 350,
                 style: textStyle,
                 focusNode: custcommentsFocusNode,
                 textInputAction: TextInputAction.newline,
@@ -111,11 +113,11 @@ class _ReportDetail3 extends State<ReportDetail3> {
 
 // Update the project no.
   void updateFurtheraction() {
-    report.furtheractions = furtheractionController.text;
+    report.furtheractions = furtheractionController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateCustcomments() {
-    report.custcomments = custcommentsController.text;
+    report.custcomments = custcommentsController.text.trim();
   }
 }

@@ -32,7 +32,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
   @override
   void initState() {
     animationController =
-        AnimationController(duration: Duration(milliseconds: 800), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     animationController..forward();
     _box = Hive.box('myBox');
     super.initState();

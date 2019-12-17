@@ -183,7 +183,8 @@ class _Signpad2State extends State<Signpad2> {
             ((myReports.getReportMapId != 0)
                 ? (myReports.getReportMapId + 1).toString()
                 : '1001')) {
-          report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+          report.date =
+              DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
           result = await widget.helper.inserReport(report);
           await myReports.fetchReports();
           await myReports.fetchReportmapId();

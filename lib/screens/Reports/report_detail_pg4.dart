@@ -76,6 +76,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                maxLength: 30,
                 inputFormatters: [
                   new BlacklistingTextInputFormatter(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
@@ -103,6 +104,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
+                maxLength: 45,
                 inputFormatters: [
                   new BlacklistingTextInputFormatter(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
@@ -264,16 +266,16 @@ class _ReportDetail4 extends State<ReportDetail4> {
 
 // Update the project no.
   void updateCustContact() {
-    report.custcontact = custcontactController.text;
+    report.custcontact = custcontactController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateCustEmail() {
-    report.custemail = custemailController.text;
+    report.custemail = custemailController.text.trim();
   }
 
   // Update the plant location namme of Note object
   void updateCustrep() {
-    report.custrep = custrepController.text;
+    report.custrep = custrepController.text.trim();
   }
 }

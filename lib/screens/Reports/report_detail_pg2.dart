@@ -106,6 +106,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 textInputAction: TextInputAction.next,
+                maxLength: 30,
                 controller: itemController,
                 style: textStyle,
                 onChanged: (value) {
@@ -113,7 +114,8 @@ class _ReportDetail2 extends State<ReportDetail2> {
                   updateItem();
                 },
                 decoration: InputDecoration(
-                    labelText: 'ID',
+                    labelText: 'Task Id',
+                    hintText: 'Enter a short label for the task',
                     labelStyle: textStyle,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0))),
@@ -122,6 +124,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 15.0, bottom: 5.0),
               child: DateTimeField(
+                maxLength: 40,
                 inputFormatters: [
                   new BlacklistingTextInputFormatter(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
@@ -165,6 +168,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
             Padding(
               padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
               child: DateTimeField(
+                maxLength: 40,
                 inputFormatters: [
                   new BlacklistingTextInputFormatter(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
@@ -219,7 +223,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
                 keyboardType: TextInputType.multiline,
                 maxLines: 8,
                 controller: workperfrmController,
-
+                maxLength: 500,
                 style: textStyle,
                 //focusNode: wrkperfrmFocusNode,
                 textInputAction: TextInputAction.newline,
@@ -329,7 +333,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
 // Update the project no.
   void updateItem() {
-    task.item = itemController.text;
+    task.item = itemController.text.trim();
   }
 
   // Update the customer namme of Note object
@@ -378,11 +382,11 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   // Update the plant location namme of Note object
   void updateWorkperformed() {
-    task.workperformed = workperfrmController.text;
+    task.workperformed = workperfrmController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateHours() {
-    task.hours = hoursController.text;
+    task.hours = hoursController.text.trim();
   }
 }

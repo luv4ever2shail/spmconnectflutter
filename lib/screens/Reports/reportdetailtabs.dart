@@ -141,7 +141,8 @@ class _ReportDetTabState extends State<ReportDetTab> {
     } else {
       // Case 2: Insert Operation
       if (report.projectno.length > 0) {
-        report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+        report.date =
+            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
         result = await widget.helper.inserReport(report);
       }
     }

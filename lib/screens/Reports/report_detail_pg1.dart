@@ -175,334 +175,302 @@ class _ReportDetail extends State<ReportDetail> {
       resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-        child: ListView(
-          children: <Widget>[
-            // First Element - Project Number
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                keyboardType: TextInputType.numberWithOptions(),
-                textInputAction: TextInputAction.next,
-                // autofocus: true,
-                controller: projectController,
-                style: textStyle,
-                onEditingComplete: () {
-                  projectController.text.isEmpty
-                      ? _validate = true
-                      : _validate = false;
-                  FocusScope.of(context).requestFocus(refjobFocusNode);
-                },
-                onChanged: (value) {
-                  debugPrint('Something changed in Project Text Field');
-                  projectController.text.isEmpty
-                      ? _validate = true
-                      : _validate = false;
-                  updateProjectno();
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter SPM Job No',
-                    labelText: 'Project No.',
-                    labelStyle: textStyle,
-                    errorText: _validate ? 'Project No. Can\'t Be Empty' : null,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+        child: Scrollbar(
+          child: ListView(
+            children: <Widget>[
+              // First Element - Project Number
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new BlacklistingTextInputFormatter(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  keyboardType: TextInputType.numberWithOptions(),
+                  textInputAction: TextInputAction.next,
+                  // autofocus: true,
+                  maxLength: 10,
+                  controller: projectController,
+                  style: textStyle,
+                  onEditingComplete: () {
+                    projectController.text.isEmpty
+                        ? _validate = true
+                        : _validate = false;
+                    FocusScope.of(context).requestFocus(refjobFocusNode);
+                  },
+                  onChanged: (value) {
+                    debugPrint('Something changed in Project Text Field');
+                    projectController.text.isEmpty
+                        ? _validate = true
+                        : _validate = false;
+                    updateProjectno();
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter SPM Job No',
+                      labelText: 'Project No.',
+                      labelStyle: textStyle,
+                      errorText:
+                          _validate ? 'Project No. Can\'t Be Empty' : null,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
               ),
-            ),
 
-            // Second Element - Customer Name
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: refjobController,
-                keyboardType: TextInputType.number,
-                style: textStyle,
-                focusNode: refjobFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(customerFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in ref job Text Field');
-                  updateRefjob();
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter Ref. SPM Job No',
-                    labelText: 'Ref. Job',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              // Second Element - Customer Name
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new BlacklistingTextInputFormatter(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: refjobController,
+                  keyboardType: TextInputType.number,
+                  style: textStyle,
+                  maxLines: 1,
+                  focusNode: refjobFocusNode,
+                  maxLength: 10,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(customerFocusNode),
+                  onChanged: (value) {
+                    debugPrint('Something changed in ref job Text Field');
+                    updateRefjob();
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter Ref. SPM Job No',
+                      labelText: 'Ref. Job',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
               ),
-            ),
 
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: DropDownFormField(
-                filled: false,
-                titleText: 'Project Manager',
-                hintText: 'Select project manager',
-                value: _projectManager,
-                onSaved: (value) {
-                  updatePM(value);
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _projectManager = value;
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: DropDownFormField(
+                  filled: false,
+                  titleText: 'Project Manager',
+                  hintText: 'Select project manager',
+                  value: _projectManager,
+                  onSaved: (value) {
                     updatePM(value);
-                  });
-                },
-                dataSource: [
-                  {
-                    "display": "Chris Hotlkamp",
-                    "value": "Chris Hotlkamp",
                   },
-                  {
-                    "display": "Curtis Butler",
-                    "value": "Curtis Butler",
+                  onChanged: (value) {
+                    setState(() {
+                      _projectManager = value;
+                      updatePM(value);
+                    });
                   },
-                ],
-                textField: 'display',
-                valueField: 'value',
-              ),
-            ),
-
-            SearchableDropdown(
-              controller: customerController,
-              items: items,
-              report: report,
-              focusNode: customerFocusNode,
-              isExpanded: true,
-              value: selectedCustomer,
-              isCaseSensitiveSearch: false,
-              hint: new Text('Select Customer'),
-              searchHint: new Text(
-                'Select Customer',
-                style: new TextStyle(fontSize: 20),
-              ),
-              onChanged: (value) {
-                updateCustomername();
-                setState(() {
-                  selectedCustomer = value;
-                  customerController.text = value;
-                });
-              },
-            ),
-
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-            //   child: SimpleAutocompleteFormField<Customer>(
-            //     inputFormatters: [
-            //       new BlacklistingTextInputFormatter(new RegExp(
-            //           '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-            //     ],
-            //     maxSuggestions: 20,
-            //     style: textStyle,
-            //     controller: customerController,
-            //     focusNode: customerFocusNode,
-            //     decoration: InputDecoration(
-            //         hintText: 'Select customer from suggestions',
-            //         labelText: 'Customer',
-            //         labelStyle: textStyle,
-            //         border: OutlineInputBorder()),
-            //     suggestionsHeight: 80.0,
-            //     itemBuilder: (context, person) => Padding(
-            //       padding: EdgeInsets.all(10.0),
-            //       child: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Text(person.name,
-            //                 style: TextStyle(fontWeight: FontWeight.bold)),
-            //           ]),
-            //     ),
-            //     onSearch: (search) async => customerList
-            //         .where((person) => person.name
-            //             .toLowerCase()
-            //             .contains(search.toLowerCase()))
-            //         .toList(),
-            //     itemFromString: (string) => customerList.singleWhere(
-            //         (person) =>
-            //             person.name.toLowerCase() == string.toLowerCase(),
-            //         orElse: () => null),
-            //     onChanged: (value) {
-            //       updateCustomername();
-            //       setState(() => selectedPerson = value);
-            //     },
-            //     onSaved: (value) => setState(() => selectedPerson = value),
-            //     validator: (person) =>
-            //         person == null ? 'Invalid person.' : null,
-            //   ),
-            // ),
-
-            // Third Element - Plant Location
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 0.0),
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    inputFormatters: [
-                      new BlacklistingTextInputFormatter(new RegExp(
-                          '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                    ],
-                    controller: planlocController,
-                    keyboardType: TextInputType.text,
-                    style: textStyle,
-                    focusNode: plantlocFocusNode,
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context)
-                        .requestFocus(contactnameFocusNode),
-                    onChanged: (value) {
-                      updatePlantloc();
+                  dataSource: [
+                    {
+                      "display": "Chris Holtkamp",
+                      "value": "Chris Holtkamp",
                     },
-                    onTap: () {
-                      if (planlocController.text.length <= 0) {
-                        _getLocation().then((position) {
-                          userLocation = position;
-                          _onLookupAddressPressed();
-                        });
-                        planlocController.text = _placemark;
-                        updatePlantloc();
-                      }
+                    {
+                      "display": "Curtis Butler",
+                      "value": "Curtis Butler",
                     },
-                    decoration: InputDecoration(
-                        hintText: 'Enter service plant location',
-                        labelText: 'Plant Location',
-                        labelStyle: textStyle,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0))),
+                  ],
+                  textField: 'display',
+                  valueField: 'value',
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: SearchableDropdown(
+                  controller: customerController,
+                  items: items,
+                  report: report,
+                  focusNode: customerFocusNode,
+                  isExpanded: true,
+                  value: selectedCustomer,
+                  isCaseSensitiveSearch: false,
+                  hint: new Text('Select Customer'),
+                  searchHint: new Text(
+                    'Select Customer',
+                    style: new TextStyle(fontSize: 20),
                   ),
-                  FutureBuilder<GeolocationStatus>(
-                      future: Geolocator().checkGeolocationPermissionStatus(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<GeolocationStatus> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                  onChanged: (value) {
+                    updateCustomername();
+                    setState(() {
+                      selectedCustomer = value;
+                      customerController.text = value;
+                    });
+                  },
+                ),
+              ),
+
+              // Third Element - Plant Location
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      inputFormatters: [
+                        new BlacklistingTextInputFormatter(new RegExp(
+                            '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                      ],
+                      controller: planlocController,
+                      keyboardType: TextInputType.text,
+                      style: textStyle,
+                      focusNode: plantlocFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => FocusScope.of(context)
+                          .requestFocus(contactnameFocusNode),
+                      onChanged: (value) {
+                        updatePlantloc();
+                      },
+                      onTap: () {
+                        if (planlocController.text.length <= 0) {
+                          _getLocation().then((position) {
+                            userLocation = position;
+                            _onLookupAddressPressed();
+                          });
+                          planlocController.text = _placemark;
+                          updatePlantloc();
                         }
-                        if (snapshot.data == GeolocationStatus.denied) {
-                          return const Text(
-                              'Allow access to the location services for this App using the device settings.');
-                        }
-                        if (userLocation == null) {
-                          return Text('');
-                        }
-                        return Text(userLocation.toString());
-                      }),
-                  Text(_placemark),
-                ],
+                      },
+                      decoration: InputDecoration(
+                          hintText: 'Enter service plant location',
+                          labelText: 'Plant Location',
+                          labelStyle: textStyle,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
+                    ),
+                    FutureBuilder<GeolocationStatus>(
+                        future: Geolocator().checkGeolocationPermissionStatus(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<GeolocationStatus> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          if (snapshot.data == GeolocationStatus.denied) {
+                            return const Text(
+                                'Allow access to the location services for this App using the device settings.');
+                          }
+                          if (userLocation == null) {
+                            return Text('');
+                          }
+                          return Text(userLocation.toString());
+                        }),
+                    Text(_placemark),
+                  ],
+                ),
               ),
-            ),
 
-            //Fourth Element - Contact Name
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: contactnameController,
-                keyboardType: TextInputType.text,
-                style: textStyle,
-                focusNode: contactnameFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(authorbyFocusNode),
-                onChanged: (value) {
-                  updateContactname();
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter contact name',
-                    labelText: 'Contact Name',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              //Fourth Element - Contact Name
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new BlacklistingTextInputFormatter(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: contactnameController,
+                  maxLength: 30,
+                  keyboardType: TextInputType.text,
+                  style: textStyle,
+                  focusNode: contactnameFocusNode,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(authorbyFocusNode),
+                  onChanged: (value) {
+                    updateContactname();
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter contact name',
+                      labelText: 'Contact Name',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
               ),
-            ),
 
-            //Fifth Element - Authorized By
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: authorizedbyController,
-                keyboardType: TextInputType.text,
-                style: textStyle,
-                focusNode: authorbyFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(equipFocusNode),
-                onChanged: (value) {
-                  updateAuthorby();
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter authorized by',
-                    labelText: 'Authorized By',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              //Fifth Element - Authorized By
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new BlacklistingTextInputFormatter(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: authorizedbyController,
+                  keyboardType: TextInputType.text,
+                  style: textStyle,
+                  focusNode: authorbyFocusNode,
+                  textInputAction: TextInputAction.next,
+                  maxLength: 30,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(equipFocusNode),
+                  onChanged: (value) {
+                    updateAuthorby();
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter authorized by',
+                      labelText: 'Authorized By',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
               ),
-            ),
 
-            //Sixth Element - Equipment
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: equipmentController,
-                keyboardType: TextInputType.text,
-                style: textStyle,
-                focusNode: equipFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(technameFocusNode),
-                onChanged: (value) {
-                  updateEquipment();
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter equipment name',
-                    labelText: 'Equipment',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              //Sixth Element - Equipment
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new BlacklistingTextInputFormatter(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: equipmentController,
+                  keyboardType: TextInputType.text,
+                  style: textStyle,
+                  maxLength: 60,
+                  focusNode: equipFocusNode,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(technameFocusNode),
+                  onChanged: (value) {
+                    updateEquipment();
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter equipment name',
+                      labelText: 'Equipment',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
               ),
-            ),
 
-            //Seventh Element - Technician Name
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: technameController,
-                keyboardType: TextInputType.text,
-                style: textStyle,
-                focusNode: technameFocusNode,
-                onChanged: (value) {
-                  updateTechname();
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter technician name',
-                    labelText: 'SPM Tech Name',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
+              //Seventh Element - Technician Name
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new BlacklistingTextInputFormatter(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: technameController,
+                  maxLength: 30,
+                  keyboardType: TextInputType.text,
+                  style: textStyle,
+                  focusNode: technameFocusNode,
+                  onChanged: (value) {
+                    updateTechname();
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Enter technician name',
+                      labelText: 'SPM Tech Name',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -510,47 +478,47 @@ class _ReportDetail extends State<ReportDetail> {
 
 // Update the project no.
   void updateProjectno() {
-    report.projectno = projectController.text;
+    report.projectno = projectController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateCustomername() {
-    report.customer = customerController.text;
+    report.customer = customerController.text.trim();
   }
 
   // Update ref job
   void updateRefjob() {
-    report.refjob = refjobController.text;
+    report.refjob = refjobController.text.trim();
   }
 
   // Update project manager
   void updatePM(String value) {
-    report.projectmanager = value;
+    report.projectmanager = value.trim();
   }
 
   // Update the plant location namme of Note object
   void updatePlantloc() {
-    report.plantloc = planlocController.text;
+    report.plantloc = planlocController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateContactname() {
-    report.contactname = contactnameController.text;
+    report.contactname = contactnameController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateAuthorby() {
-    report.authorby = authorizedbyController.text;
+    report.authorby = authorizedbyController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateEquipment() {
-    report.equipment = equipmentController.text;
+    report.equipment = equipmentController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateTechname() {
-    report.techname = technameController.text;
+    report.techname = technameController.text.trim();
   }
 }
 

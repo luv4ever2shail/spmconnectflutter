@@ -40,7 +40,7 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
   @override
   void initState() {
     animationController =
-        AnimationController(duration: Duration(milliseconds: 600), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     animationController..forward();
     _box = Hive.box('myBox');
     if (accessToken != null) {
