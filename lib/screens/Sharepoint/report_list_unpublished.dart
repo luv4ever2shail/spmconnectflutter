@@ -10,8 +10,6 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:sharepoint_auth/model/config.dart';
-import 'package:sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/Resource/connectivity.dart';
 import 'package:spmconnectapp/Resource/database_helper.dart';
@@ -21,6 +19,8 @@ import 'package:spmconnectapp/Resource/tasks_repository.dart';
 import 'package:spmconnectapp/models/images.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
+import 'package:spmconnectapp/sharepoint_auth/model/config.dart';
+import 'package:spmconnectapp/sharepoint_auth/sharepoint_auth.dart';
 import 'package:spmconnectapp/utils/progress_dialog.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:f_logs/model/flog/flog.dart';
@@ -249,9 +249,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
 // Get and remove sharepoint token
 
-  Future<void> getSharepointToken() async {
+  Future<String> getSharepointToken() async {
     await restapi.login();
-    accessToken = await restapi.getAccessToken();
+    return await restapi.getAccessToken();
     //print('Access Token Sharepoint $accessToken');
   }
 
@@ -268,7 +268,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       pr.setMessage('Access Token...');
       pr.show();
 
-      await getSharepointToken();
+      accessToken = await getSharepointToken();
       if (accessToken == null) {
         _showAlertDialog('SPM Connect',
             'Unable to retrieve access token. Please check your network connections.');
