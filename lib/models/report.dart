@@ -1,24 +1,28 @@
+import 'dart:convert';
+
+Report reportFromJson(String str) => Report.fromJson(json.decode(str));
+
 class Report {
-  int _id;
-  String _reportno;
-  String _projectno;
-  String _customer;
-  String _planloc;
-  String _contactname;
-  String _authorby;
-  String _equipment;
-  String _techname;
-  String _date;
-  String _furtheractions;
-  String _custcomments;
-  String _custrep;
-  String _custemail;
-  String _custcontact;
-  String _refjob;
-  String _projectmanager;
-  int _reportmapid;
-  int _published;
-  int _signed;
+  int id;
+  String reportno;
+  String projectno;
+  String customer;
+  String planloc;
+  String contactname;
+  String authorby;
+  String equipment;
+  String techname;
+  String date;
+  String furtheractions;
+  String custcomments;
+  String custrep;
+  String custemail;
+  String custcontact;
+  String refjob;
+  String projectmanager;
+  int reportmapid;
+  int published;
+  int signed;
   String colspare1;
   String colspare2;
   String colspare3;
@@ -26,25 +30,25 @@ class Report {
   String colspare5;
 
   Report(
-    this._reportno,
-    this._projectno,
-    this._customer,
-    this._planloc,
-    this._contactname,
-    this._authorby,
-    this._equipment,
-    this._techname,
-    this._date,
-    this._furtheractions,
-    this._custcomments,
-    this._custrep,
-    this._custemail,
-    this._custcontact,
-    this._refjob,
-    this._projectmanager,
-    this._reportmapid,
-    this._published,
-    this._signed,
+    this.reportno,
+    this.projectno,
+    this.customer,
+    this.planloc,
+    this.contactname,
+    this.authorby,
+    this.equipment,
+    this.techname,
+    this.date,
+    this.furtheractions,
+    this.custcomments,
+    this.custrep,
+    this.custemail,
+    this.custcontact,
+    this.refjob,
+    this.projectmanager,
+    this.reportmapid,
+    this.published,
+    this.signed,
     this.colspare1,
     this.colspare2,
     this.colspare3,
@@ -52,194 +56,201 @@ class Report {
     this.colspare5,
   );
 
-  Report.withId(
-      this._id,
-      this._reportno,
-      this._projectno,
-      this._customer,
-      this._planloc,
-      this._contactname,
-      this._authorby,
-      this._equipment,
-      this._techname,
-      this._date,
-      this._furtheractions,
-      this._custcomments,
-      this._custrep,
-      this._custemail,
-      this._custcontact,
-      this._reportmapid,
-      this._published,
-      this._signed);
+  Report.withId({
+    this.id,
+    this.reportno,
+    this.projectno,
+    this.customer,
+    this.planloc,
+    this.contactname,
+    this.authorby,
+    this.equipment,
+    this.techname,
+    this.date,
+    this.furtheractions,
+    this.custcomments,
+    this.custrep,
+    this.custemail,
+    this.custcontact,
+    this.refjob,
+    this.projectmanager,
+    this.reportmapid,
+    this.signed,
+    this.published,
+    this.colspare1,
+    this.colspare2,
+    this.colspare3,
+    this.colspare4,
+    this.colspare5,
+  });
 
-  int get id => _id;
+  int get getId => id;
 
-  int get reportmapid => _reportmapid;
+  int get getreportmapid => reportmapid;
 
-  int get reportpublished => _published;
+  int get getreportpublished => published;
 
-  int get reportsigned => _signed;
+  int get getreportsigned => signed;
 
-  String get projectno => _projectno;
+  String get getprojectno => projectno;
 
-  String get reportno => _reportno;
+  String get getreportno => reportno;
 
-  String get customer => _customer;
+  String get getcustomer => customer;
 
-  String get plantloc => _planloc;
+  String get getplantloc => planloc;
 
-  String get contactname => _contactname;
+  String get getcontactname => contactname;
 
-  String get authorby => _authorby;
+  String get getauthorby => authorby;
 
-  String get equipment => _equipment;
+  String get getequipment => equipment;
 
-  String get techname => _techname;
+  String get gettechname => techname;
 
-  String get date => _date;
+  String get getdate => date;
 
-  String get furtheractions => _furtheractions;
+  String get getfurtheractions => furtheractions;
 
-  String get custcomments => _custcomments;
+  String get getcustcomments => custcomments;
 
-  String get custrep => _custrep;
+  String get getcustrep => custrep;
 
-  String get custemail => _custemail;
+  String get getcustemail => custemail;
 
-  String get custcontact => _custcontact;
+  String get getcustcontact => custcontact;
 
-  String get refjob => _refjob;
+  String get getrefjob => refjob;
 
-  String get projectmanager => _projectmanager;
+  String get getprojectmanager => projectmanager;
 
-  String get spare1 => colspare1;
-  String get spare2 => colspare2;
-  String get spare3 => colspare3;
-  String get spare4 => colspare4;
-  String get spare5 => colspare5;
+  String get getspare1 => colspare1;
+  String get getspare2 => colspare2;
+  String get getspare3 => colspare3;
+  String get getspare4 => colspare4;
+  String get getspare5 => colspare5;
 
-  set reportmapid(int newReportid) {
-    this._reportmapid = newReportid;
+  set getreportmapid(int newReportid) {
+    this.reportmapid = newReportid;
   }
 
-  set reportpublished(int newPublishid) {
-    this._published = newPublishid;
+  set getreportpublished(int newPublishid) {
+    this.published = newPublishid;
   }
 
-  set reportsigned(int newSigned) {
-    this._signed = newSigned;
+  set getreportsigned(int newSigned) {
+    this.signed = newSigned;
   }
 
-  set projectno(String newProject) {
-    this._projectno = newProject;
+  set getprojectno(String newProject) {
+    this.projectno = newProject;
   }
 
   set repotno(String newReport) {
-    this._reportno = newReport;
+    this.reportno = newReport;
   }
 
-  set customer(String newCustomer) {
-    this._customer = newCustomer;
+  set getcustomer(String newCustomer) {
+    this.customer = newCustomer;
   }
 
-  set plantloc(String newPlantloc) {
-    this._planloc = newPlantloc;
+  set getplantloc(String newPlantloc) {
+    this.planloc = newPlantloc;
   }
 
-  set contactname(String newContactname) {
-    this._contactname = newContactname;
+  set getcontactname(String newContactname) {
+    this.contactname = newContactname;
   }
 
-  set authorby(String newAuthorby) {
-    this._authorby = newAuthorby;
+  set getauthorby(String newAuthorby) {
+    this.authorby = newAuthorby;
   }
 
-  set equipment(String newEquipment) {
-    this._equipment = newEquipment;
+  set getequipment(String newEquipment) {
+    this.equipment = newEquipment;
   }
 
-  set techname(String newTechname) {
-    this._techname = newTechname;
+  set gettechname(String newTechname) {
+    this.techname = newTechname;
   }
 
-  set date(String newDate) {
-    this._date = newDate;
+  set getdate(String newDate) {
+    this.date = newDate;
   }
 
-  set furtheractions(String furtheractions) {
-    this._furtheractions = furtheractions;
+  set getfurtheractions(String furtheractions) {
+    this.furtheractions = furtheractions;
   }
 
-  set custcomments(String custcomments) {
-    this._custcomments = custcomments;
+  set getcustcomments(String custcomments) {
+    this.custcomments = custcomments;
   }
 
-  set custrep(String custrep) {
-    this._custrep = custrep;
+  set getcustrep(String custrep) {
+    this.custrep = custrep;
   }
 
-  set custemail(String custemail) {
-    this._custemail = custemail;
+  set getcustemail(String custemail) {
+    this.custemail = custemail;
   }
 
-  set custcontact(String custcontact) {
-    this._custcontact = custcontact;
+  set getcustcontact(String custcontact) {
+    this.custcontact = custcontact;
   }
 
-  set refjob(String jobno) {
-    this._refjob = jobno;
+  set getrefjob(String jobno) {
+    this.refjob = jobno;
   }
 
-  set projectmanager(String pm) {
-    this._projectmanager = pm;
+  set getprojectmanager(String pm) {
+    this.projectmanager = pm;
   }
 
-  set spare1(String spare1) {
+  set getspare1(String spare1) {
     this.colspare1 = spare1;
   }
 
-  set spare2(String spare2) {
+  set getspare2(String spare2) {
     this.colspare2 = spare2;
   }
 
-  set spare3(String spare3) {
+  set getspare3(String spare3) {
     this.colspare3 = spare3;
   }
 
-  set spare4(String spare4) {
+  set getspare4(String spare4) {
     this.colspare4 = spare4;
   }
 
-  set spare5(String spare5) {
+  set getspare5(String spare5) {
     this.colspare5 = spare5;
   }
 
 // Convert a Report object into a Map object
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = _id;
+    if (getId != null) {
+      map['id'] = id;
     }
-    map['projectno'] = _projectno;
-    map['reportno'] = _reportno;
-    map['customer'] = _customer;
-    map['plantloc'] = _planloc;
-    map['contactname'] = _contactname;
-    map['authorby'] = _authorby;
-    map['equipment'] = _equipment;
-    map['techname'] = _techname;
-    map['date'] = _date;
-    map['furtheractions'] = _furtheractions;
-    map['custcomments'] = _custcomments;
-    map['custrep'] = _custrep;
-    map['custemail'] = _custemail;
-    map['custcontact'] = _custcontact;
-    map['refjob'] = _refjob;
-    map['projectmanager'] = _projectmanager;
-    map['reportmapid'] = _reportmapid;
-    map['reportpublished'] = _published;
-    map['reportsigned'] = _signed;
-
+    map['projectno'] = projectno;
+    map['reportno'] = reportno;
+    map['customer'] = customer;
+    map['plantloc'] = planloc;
+    map['contactname'] = contactname;
+    map['authorby'] = authorby;
+    map['equipment'] = equipment;
+    map['techname'] = techname;
+    map['date'] = date;
+    map['furtheractions'] = furtheractions;
+    map['custcomments'] = custcomments;
+    map['custrep'] = custrep;
+    map['custemail'] = custemail;
+    map['custcontact'] = custcontact;
+    map['refjob'] = refjob;
+    map['projectmanager'] = projectmanager;
+    map['reportmapid'] = reportmapid;
+    map['reportpublished'] = published;
+    map['reportsigned'] = signed;
     map['spare1'] = colspare1;
     map['spare2'] = colspare2;
     map['spare3'] = colspare3;
@@ -251,31 +262,58 @@ class Report {
 
   // Extract a Report object from a Map object
   Report.fromMapObject(Map<String, dynamic> map) {
-    this._id = map['id'];
-    this._projectno = map['projectno'];
-    this._reportno = map['reportno'];
-    this._customer = map['customer'];
-    this._planloc = map['plantloc'];
-    this._contactname = map['contactname'];
-    this._authorby = map['authorby'];
-    this._equipment = map['equipment'];
-    this._techname = map['techname'];
-    this._date = map['date'];
-    this._furtheractions = map['furtheractions'];
-    this._custcomments = map['custcomments'];
-    this._custrep = map['custrep'];
-    this._custemail = map['custemail'];
-    this._custcontact = map['custcontact'];
-    this._refjob = map['refjob'];
-    this._projectmanager = map['projectmanager'];
-    this._reportmapid = map['reportmapid'];
-    this._published = map['reportpublished'];
-    this._signed = map['reportsigned'];
-
+    this.id = map['id'];
+    this.projectno = map['projectno'] ?? '';
+    this.reportno = map['reportno'];
+    this.customer = map['customer'] ?? '';
+    this.planloc = map['plantloc'] ?? '';
+    this.contactname = map['contactname'] ?? '';
+    this.authorby = map['authorby'] ?? '';
+    this.equipment = map['equipment'] ?? '';
+    this.techname = map['techname'] ?? '';
+    this.date = map['date'] ?? '';
+    this.furtheractions = map['furtheractions'] ?? '';
+    this.custcomments = map['custcomments'] ?? '';
+    this.custrep = map['custrep'] ?? '';
+    this.custemail = map['custemail'] ?? '';
+    this.custcontact = map['custcontact'] ?? '';
+    this.refjob = map['refjob'];
+    this.projectmanager = map['projectmanager'] ?? '';
+    this.reportmapid = map['reportmapid'];
+    this.published = map['reportpublished'];
+    this.signed = map['reportsigned'];
     this.colspare1 = map['spare1'];
     this.colspare2 = map['spare2'];
     this.colspare3 = map['spare3'];
     this.colspare4 = map['spare4'];
     this.colspare5 = map['spare5'];
   }
+
+  factory Report.fromJson(Map<String, dynamic> json) => Report.withId(
+        reportno: json["Title"],
+        id: int.parse(json["Report_Id"]),
+        projectno: json["ProjectNo"],
+        customer: json["Customer"],
+        planloc: json["PlantLoc"],
+        contactname: json["ContactName"],
+        authorby: json["Authorizedby"],
+        equipment: json["Equipment"],
+        techname: json["TechName"],
+        date: json["DateCreated"],
+        furtheractions: json["FurtherActions"],
+        custcomments: json["CustComments"],
+        custrep: json["CustRep"],
+        custemail: json["CustEmail"],
+        custcontact: json["CustContact"],
+        reportmapid: int.parse(json["ReportMapId"]),
+        published: 1,
+        signed: int.parse(json["Signed"]),
+        colspare1: json["Spare1"],
+        colspare2: json["Spare2"],
+        colspare3: json["Spare3"],
+        colspare4: json["Spare4"],
+        colspare5: json["Spare5"],
+        refjob: json["RefJob"],
+        projectmanager: json["ProjectManager"],
+      );
 }

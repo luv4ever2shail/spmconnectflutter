@@ -63,6 +63,7 @@ flutter:
   assets:
     - assets/officelogo.png
     - assets/spm.png
+    - assets/spmwhite.png
     - assets/no_wifi.flr
     - assets/double_ring_loading_io.gif
     - assets/customers.json

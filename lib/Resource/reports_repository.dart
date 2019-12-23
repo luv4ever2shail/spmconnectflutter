@@ -8,12 +8,10 @@ class MyReports with ChangeNotifier {
   int reportmapid;
   int count;
   MyReports();
-  DatabaseHelper databaseHelper;
 
   MyReports.instance() : reports = new List<Report>() {
     reportmapid = 0;
     count = 0;
-    databaseHelper = new DatabaseHelper();
   }
   @override
   void dispose() {
@@ -44,26 +42,26 @@ class MyReports with ChangeNotifier {
   int get getCount => count;
 
   Future<void> fetchReports() async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    final Future<Database> dbFuture = DBProvider.db.initializeDatabase();
     dbFuture.then((database) async {
-      List<Report> reportListFuture = await databaseHelper.getReportList();
+      List<Report> reportListFuture = await DBProvider.db.getReportList();
       setReports(reportListFuture);
     });
   }
 
   Future<void> fetchReportmapId() async {
-    List<Report> reportListFuture = await databaseHelper.getNewreportid();
+    List<Report> reportListFuture = await DBProvider.db.getNewreportid();
     if (reportListFuture.length > 0)
-      setReportMapId(reportListFuture[0].reportmapid);
+      setReportMapId(reportListFuture[0].getreportmapid);
     else
       setReportMapId(0);
   }
 
   Future<void> getReportListUnpublished() async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    final Future<Database> dbFuture = DBProvider.db.initializeDatabase();
     dbFuture.then((database) async {
       List<Report> reportListFuture =
-          await databaseHelper.getReportListUnpublished();
+          await DBProvider.db.getReportListUnpublished();
       setReports(reportListFuture);
     });
   }

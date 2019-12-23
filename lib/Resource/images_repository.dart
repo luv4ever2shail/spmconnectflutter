@@ -10,13 +10,11 @@ class ReportImages with ChangeNotifier {
   int count;
   int assetcount;
   ReportImages();
-  DatabaseHelper databaseHelper;
 
   ReportImages.instance() : images = new List<Images>() {
     imageassets = new List<Asset>();
     count = 0;
     assetcount = 0;
-    databaseHelper = new DatabaseHelper();
   }
   @override
   void dispose() {
@@ -58,9 +56,9 @@ class ReportImages with ChangeNotifier {
   int get getCount => count;
 
   Future<void> fetchImages(String reportid) async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    final Future<Database> dbFuture = DBProvider.db.initializeDatabase();
     await dbFuture.then((database) async {
-      List<Images> taskListFuture = await databaseHelper.getImageList(reportid);
+      List<Images> taskListFuture = await DBProvider.db.getImageList(reportid);
       setImages(taskListFuture);
     });
   }

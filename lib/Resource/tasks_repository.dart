@@ -7,11 +7,9 @@ class ReportTasks with ChangeNotifier {
   List<Tasks> tasks;
   int count;
   ReportTasks();
-  DatabaseHelper databaseHelper;
 
   ReportTasks.instance() : tasks = new List<Tasks>() {
     count = 0;
-    databaseHelper = new DatabaseHelper();
   }
   @override
   void dispose() {
@@ -34,18 +32,18 @@ class ReportTasks with ChangeNotifier {
   int get getCount => count;
 
   Future<void> fetchTasks(String reportid) async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    final Future<Database> dbFuture = DBProvider.db.initializeDatabase();
     await dbFuture.then((database) async {
-      List<Tasks> taskListFuture = await databaseHelper.getTasksList(reportid);
+      List<Tasks> taskListFuture = await DBProvider.db.getTasksList(reportid);
       await setTasks(taskListFuture);
     });
   }
 
   Future<void> getTaskListUnpublished(String reportid) async {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    final Future<Database> dbFuture = DBProvider.db.initializeDatabase();
     await dbFuture.then((database) async {
       List<Tasks> taskListFuture =
-          await databaseHelper.getTaskListUnpublished(reportid);
+          await DBProvider.db.getTaskListUnpublished(reportid);
       setTasks(taskListFuture);
     });
   }

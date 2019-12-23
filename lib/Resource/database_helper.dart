@@ -7,23 +7,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 
-class DatabaseHelper {
-  static DatabaseHelper _databaseHelper;
-  static Database _database; // Singleton Database
+class DBProvider {
+  DBProvider._();
+  static final DBProvider db = DBProvider._();
+
+  static Database _database;
 
   String reportTable = 'servicerpt_tbl';
   String taskTable = 'tasks_tbl';
   String imageTable = 'image_tbl';
-
-  DatabaseHelper._createInstance();
-
-  factory DatabaseHelper() {
-    if (_databaseHelper == null) {
-      _databaseHelper = DatabaseHelper
-          ._createInstance(); // This is executed only once, singleton object
-    }
-    return _databaseHelper;
-  }
 
   Future<Database> get database async {
     if (_database == null) {
@@ -129,6 +121,12 @@ class DatabaseHelper {
     return result;
   }
 
+  Future<Report> getReport(int id) async {
+    Database db = await this.database;
+    var res = await db.query(reportTable, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Report.fromMapObject(res.first) : null;
+  }
+
   // Insert Operation: Insert a Note object to database
   Future<int> inserReport(Report report) async {
     Database db = await this.database;
@@ -140,7 +138,7 @@ class DatabaseHelper {
   Future<int> updateReport(Report report) async {
     var db = await this.database;
     var result = await db.update(reportTable, report.toMap(),
-        where: 'id = ?', whereArgs: [report.id]);
+        where: 'id = ?', whereArgs: [report.getId]);
     return result;
   }
 
@@ -205,11 +203,17 @@ class DatabaseHelper {
     return result;
   }
 
+  Future<Tasks> getTask(int id) async {
+    Database db = await this.database;
+    var res = await db.query(taskTable, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Tasks.fromMapObject(res.first) : null;
+  }
+
   // Update Operation: Update a Note object and save it to database
   Future<int> updateTask(Tasks task) async {
     var db = await this.database;
-    var result = await db
-        .update(taskTable, task.toMap(), where: 'id = ?', whereArgs: [task.id]);
+    var result = await db.update(taskTable, task.toMap(),
+        where: 'id = ?', whereArgs: [task.getid]);
     return result;
   }
 

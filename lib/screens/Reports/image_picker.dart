@@ -15,7 +15,6 @@ class ImagePicker extends StatefulWidget {
 }
 
 class _ImagePickerState extends State<ImagePicker> {
-  DatabaseHelper databaseHelper = DatabaseHelper();
   List<Asset> images = List<Asset>();
   String reportid;
   _ImagePickerState(this.reportid);
@@ -154,7 +153,7 @@ class _ImagePickerState extends State<ImagePicker> {
       '',
     );
 
-    result = await databaseHelper.insertImage(_image);
+    result = await DBProvider.db.insertImage(_image);
 
     if (result != 0) {
       print('success');
@@ -164,7 +163,7 @@ class _ImagePickerState extends State<ImagePicker> {
   }
 
   Future<void> _delete() async {
-    int result2 = await databaseHelper.deleteAllImages(reportid);
+    int result2 = await DBProvider.db.deleteAllImages(reportid);
     if (result2 != 0) {
       debugPrint('deleted all images');
     }

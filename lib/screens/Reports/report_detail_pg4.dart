@@ -10,7 +10,7 @@ import 'package:spmconnectapp/utils/validator.dart';
 
 class ReportDetail4 extends StatefulWidget {
   final Report report;
-  final DatabaseHelper helper;
+  final DBProvider helper;
 
   ReportDetail4(this.report, this.helper);
   @override
@@ -40,9 +40,9 @@ class _ReportDetail4 extends State<ReportDetail4> {
     custrepFocusNode = FocusNode();
     custemailFocusNode = FocusNode();
     custcontactFocusNode = FocusNode();
-    custrepController.text = report.custrep;
-    custemailController.text = report.custemail;
-    custcontactController.text = report.custcontact;
+    custrepController.text = report.getcustrep;
+    custemailController.text = report.getcustemail;
+    custcontactController.text = report.getcustcontact;
     if (Platform.isAndroid) {
       requestPermission();
     }
@@ -243,7 +243,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
           context,
           MaterialPageRoute(builder: (context) {
             return Signpad2(
-                report.reportmapid.toString(), report, widget.helper);
+                report.getreportmapid.toString(), report, widget.helper);
           }),
         );
       } else {
@@ -252,7 +252,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
             context,
             MaterialPageRoute(builder: (context) {
               return Signpad2(
-                  report.reportmapid.toString(), report, widget.helper);
+                  report.getreportmapid.toString(), report, widget.helper);
             }),
           );
         } else {
@@ -266,16 +266,16 @@ class _ReportDetail4 extends State<ReportDetail4> {
 
 // Update the project no.
   void updateCustContact() {
-    report.custcontact = custcontactController.text.trim();
+    report.getcustcontact = custcontactController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateCustEmail() {
-    report.custemail = custemailController.text.trim();
+    report.getcustemail = custemailController.text.trim();
   }
 
   // Update the plant location namme of Note object
   void updateCustrep() {
-    report.custrep = custrepController.text.trim();
+    report.getcustrep = custrepController.text.trim();
   }
 }

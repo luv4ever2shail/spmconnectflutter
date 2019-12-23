@@ -39,8 +39,6 @@ class ReportListUnpublished extends StatefulWidget {
 }
 
 class _ReportListUnpublishedState extends State<ReportListUnpublished> {
-  DatabaseHelper databaseHelper = DatabaseHelper();
-
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   bool _saving = false;
   int listreportcount = 0;
@@ -183,19 +181,19 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 ),
               ),
               title: Text(
-                'Report No - ' + myReports.getReports[position].reportno,
+                'Report No - ' + myReports.getReports[position].getreportno,
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.5),
               ),
               subtitle: Text(
                 'Project - ' +
-                    myReports.getReports[position].projectno +
+                    myReports.getReports[position].getprojectno +
                     " ( " +
-                    myReports.getReports[position].customer +
+                    myReports.getReports[position].getcustomer +
                     ' )' +
                     '\nCreated On (' +
-                    myReports.getReports[position].date +
+                    myReports.getReports[position].getdate +
                     ')',
                 style: titleStyle,
               ),
@@ -213,30 +211,30 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     return null;
   }
 
-  void movetolastscreen() {
-    //removeSharepointToken();
+  Future<void> movetolastscreen() async {
+    //await removeSharepointToken();
     Navigator.pop(context, true);
   }
 
 // Making Post Request body for sharepoint Report and Tasks
 
   String getReportToJSON(Report report) {
-    String reporttojson = ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.reportno}","ReportMapId": "${report.reportmapid}","Report_Id": "${report.id}",'
-        '"ProjectNo": "${report.projectno}","Customer": "${report.customer.replaceAll('"', '\\"')}","PlantLoc": "${report.plantloc.replaceAll('"', '\\"')}","ContactName": "${report.contactname.replaceAll('"', '\\"')}",'
-        '"Authorizedby": "${report.authorby.replaceAll('"', '\\"')}","Equipment": "${report.equipment.replaceAll('"', '\\"')}","TechName": "${report.techname.replaceAll('"', '\\"')}","DateCreated": "${report.date}",'
-        '"FurtherActions": "${report.furtheractions == null ? '' : report.furtheractions.replaceAll('"', '\\"')}","CustComments": "${report.custcomments == null ? '' : report.custcomments.replaceAll('"', '\\"')}",'
-        '"RefJob": "${report.refjob == null ? '' : report.refjob.replaceAll('"', '\\"')}","ProjectManager": "${report.projectmanager == null ? '' : report.projectmanager.replaceAll('"', '\\"')}",'
-        '"CustRep": "${report.custrep == null ? '' : report.custrep.replaceAll('"', '\\"')}","CustEmail": "${report.custemail == null ? '' : report.custemail.replaceAll('"', '\\"')}",'
-        '"CustContact": "${report.custcontact}","Published": "${report.reportpublished}","Signed": "${report.reportsigned}","Uploadedby": "$empName"}');
+    String reporttojson = ('{"__metadata": { "type": "SP.Data.ConnectReportBaseListItem" },"Title": "${report.getreportno}","ReportMapId": "${report.getreportmapid}","Report_Id": "${report.getId}",'
+        '"ProjectNo": "${report.getprojectno}","Customer": "${report.getcustomer.replaceAll('"', '\\"')}","PlantLoc": "${report.getplantloc.replaceAll('"', '\\"')}","ContactName": "${report.getcontactname.replaceAll('"', '\\"')}",'
+        '"Authorizedby": "${report.getauthorby.replaceAll('"', '\\"')}","Equipment": "${report.getequipment.replaceAll('"', '\\"')}","TechName": "${report.gettechname.replaceAll('"', '\\"')}","DateCreated": "${report.getdate}",'
+        '"FurtherActions": "${report.getfurtheractions == null ? '' : report.getfurtheractions.replaceAll('"', '\\"')}","CustComments": "${report.getcustcomments == null ? '' : report.getcustcomments.replaceAll('"', '\\"')}",'
+        '"RefJob": "${report.getrefjob == null ? '' : report.getrefjob.replaceAll('"', '\\"')}","ProjectManager": "${report.getprojectmanager == null ? '' : report.getprojectmanager.replaceAll('"', '\\"')}",'
+        '"CustRep": "${report.getcustrep == null ? '' : report.getcustrep.replaceAll('"', '\\"')}","CustEmail": "${report.getcustemail == null ? '' : report.getcustemail.replaceAll('"', '\\"')}",'
+        '"CustContact": "${report.getcustcontact}","Published": "${report.getreportpublished}","Signed": "${report.getreportsigned}","Uploadedby": "$empName"}');
     // print(reporttojson);
     return reporttojson;
   }
 
   String getTaskToJSON(Tasks task) {
     String tasktojson =
-        ('{"__metadata": { "type": "SP.Data.ConnectTasksListItem" },"Title": "${task.reportid} - ${task.id}","ReportId": "${task.reportid}","Taskid": "${task.id}",'
-            '"ItemNo": "${task.item.replaceAll('"', '\\"')}","Starttime": "${task.starttime}","Endtime": "${task.endtime}","Hours": "${task.hours}",'
-            '"WorkPerformed": "${task.workperformed == null ? '' : task.workperformed.replaceAll('"', '\\"')}","Datecreated": "${task.date}","Uploadedby": "$empName"}');
+        ('{"__metadata": { "type": "SP.Data.ConnectTasksListItem" },"Title": "${task.getreportid} - ${task.getid}","ReportId": "${task.getreportid}","Taskid": "${task.getid}",'
+            '"ItemNo": "${task.getitem.replaceAll('"', '\\"')}","Starttime": "${task.getstarttime}","Endtime": "${task.getendtime}","Hours": "${task.gethours}",'
+            '"WorkPerformed": "${task.getworkperformed == null ? '' : task.getworkperformed.replaceAll('"', '\\"')}","Datecreated": "${task.getdate}","Uploadedby": "$empName"}');
     //print(tasktojson);
     return tasktojson;
   }
@@ -255,7 +253,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     //print('Access Token Sharepoint $accessToken');
   }
 
-  void removeSharepointToken() async {
+  Future<void> removeSharepointToken() async {
     await restapi.logout();
   }
 
@@ -313,21 +311,21 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             percentage += 10.0 / myReports.getCount;
             pr.update(
                 progress: percentage.roundToDouble(),
-                message: 'Report ${i.reportno}');
+                message: 'Report ${i.getreportno}');
             await Future.delayed(Duration(seconds: 2));
 
             listtaskcount = 0;
             // tasklist.clear();
-            await reportTasks.getTaskListUnpublished(i.reportno);
+            await reportTasks.getTaskListUnpublished(i.getreportno);
 
             print(
-                'No of task found in report ${i.reportno} to be uploaded is ${reportTasks.getCount}');
+                'No of task found in report ${i.getreportno} to be uploaded is ${reportTasks.getCount}');
 
             FLog.logThis(
               className: "Sharepoint",
               methodName: "syncAll - Get Task List",
               text:
-                  'No of task found in report ${i.reportno} to be uploaded is ${reportTasks.getCount}',
+                  'No of task found in report ${i.getreportno} to be uploaded is ${reportTasks.getCount}',
               type: LogLevel.INFO,
             );
 
@@ -343,13 +341,13 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               listtaskcount = reportTasks.getCount;
               for (final i in reportTasks.getTasks) {
                 print(
-                    'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid}');
+                    'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.getreportid}');
 
                 FLog.logThis(
                   className: "Sharepoint",
                   methodName: "syncAll - Uploading Task",
                   text:
-                      'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid}',
+                      'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.getreportid}',
                   type: LogLevel.INFO,
                 );
 
@@ -370,7 +368,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                     className: "Sharepoint",
                     methodName: "syncAll - Uploading Task Failed",
                     text:
-                        'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid} failed. task result == 0',
+                        'Uploading task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.getreportid} failed. task result == 0',
                     type: LogLevel.ERROR,
                   );
                   break;
@@ -379,7 +377,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                     className: "Sharepoint",
                     methodName: "syncAll - task uploaded",
                     text:
-                        'Task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.reportid} successfully uploaded.',
+                        'Task ${reportTasks.getTasks.indexOf(i) + 1} for report ${i.getreportid} successfully uploaded.',
                     type: LogLevel.INFO,
                   );
                 }
@@ -388,7 +386,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               FLog.logThis(
                 className: "Sharepoint",
                 methodName: "syncAll - Uploading Task",
-                text: 'All tasks uploaded for report ${i.reportno}.',
+                text: 'All tasks uploaded for report ${i.getreportno}.',
                 type: LogLevel.INFO,
               );
             } else {
@@ -400,7 +398,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
               FLog.logThis(
                 className: "Sharepoint",
                 methodName: "syncAll - No tasks to upload",
-                text: 'no task to upload for report ${i.reportno}.',
+                text: 'no task to upload for report ${i.getreportno}.',
                 type: LogLevel.INFO,
               );
             }
@@ -409,7 +407,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 className: "Sharepoint",
                 methodName: "syncAll - Uploading Task Failed",
                 text:
-                    'Error occured in uploading task loop for repot ${i.reportno}. exiting from loop.',
+                    'Error occured in uploading task loop for repot ${i.getreportno}. exiting from loop.',
                 type: LogLevel.ERROR,
               );
               break;
@@ -421,15 +419,15 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
             listimagecount = 0;
 
-            await reportImages.fetchImages(i.reportno);
+            await reportImages.fetchImages(i.getreportno);
             print(
-                'No of images found in report ${i.reportno} to be uploaded is ${reportImages.getCount}');
+                'No of images found in report ${i.getreportno} to be uploaded is ${reportImages.getCount}');
 
             FLog.logThis(
               className: "Sharepoint",
               methodName: "syncAll - Get Image Attachments List",
               text:
-                  'No of images found in report ${i.reportno} to be uploaded is ${reportImages.getCount}',
+                  'No of images found in report ${i.getreportno} to be uploaded is ${reportImages.getCount}',
               type: LogLevel.INFO,
             );
 
@@ -447,7 +445,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                 className: "Sharepoint",
                 methodName: "syncAll - uploading",
                 text:
-                    'Report no ${i.reportno} error occured. Breaking the loop of uploading all reports',
+                    'Report no ${i.getreportno} error occured. Breaking the loop of uploading all reports',
                 type: LogLevel.INFO,
               );
               break;
@@ -575,11 +573,11 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       ReportImages reportImages) async {
     int result = 0;
     try {
-      print('Uploading report no ${report.reportno} to sharepoint');
+      print('Uploading report no ${report.getreportno} to sharepoint');
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postReportsToSharepoint",
-        text: 'Uploading report no ${report.reportno} to sharepoint',
+        text: 'Uploading report no ${report.getreportno} to sharepoint',
         type: LogLevel.INFO,
       );
 
@@ -593,7 +591,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           },
           body: _body);
 
-      print('Report no ${report.reportno} is uploaded ${response.statusCode}');
+      print(
+          'Report no ${report.getreportno} is uploaded ${response.statusCode}');
       Map<String, dynamic> resJson = json.decode(response.body);
       print('Token Type : ' + resJson["Id"].toString());
 
@@ -602,7 +601,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           className: "Sharepoint",
           methodName: "postReportsToSharepoint",
           text:
-              'Report no ${report.reportno} is uploaded ${response.statusCode}',
+              'Report no ${report.getreportno} is uploaded ${response.statusCode}',
           type: LogLevel.INFO,
         );
 
@@ -637,7 +636,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
           className: "Sharepoint",
           methodName: "postReportsToSharepoint",
           text:
-              'Report no ${report.reportno} is not uploaded with response code ${response.statusCode}',
+              'Report no ${report.getreportno} is not uploaded with response code ${response.statusCode}',
           type: LogLevel.ERROR,
         );
         await closeUpload(myReports);
@@ -665,7 +664,8 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       int count, MyReports myReports) async {
     int result = 0;
     try {
-      print('Uploading task no ${task.reportid} - ${task.id} to sharepoint');
+      print(
+          'Uploading task no ${task.getreportid} - ${task.getid} to sharepoint');
 
       http.Response response = await http.post(
           Uri.encodeFull(
@@ -723,7 +723,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       Report report, String accesstoken, MyReports myReports) async {
     int resultpost = 0;
     print(path);
-    File file = File('$path${report.reportmapid.toString()}.png');
+    File file = File('$path${report.getreportmapid.toString()}.png');
     print('Signature File Name : $file');
     FLog.logThis(
       className: "Sharepoint",
@@ -743,7 +743,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postSignatureToSharepoint",
-        text: 'Uploaded signature for report ${report.reportno}',
+        text: 'Uploaded signature for report ${report.getreportno}',
         type: LogLevel.INFO,
       );
 
@@ -757,7 +757,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postSignatureToSharepoint",
-        text: 'Uploading signature failed for report ${report.reportno}',
+        text: 'Uploading signature failed for report ${report.getreportno}',
         type: LogLevel.ERROR,
       );
     }
@@ -829,23 +829,23 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     var percent = 0.0;
     percent = 25.0 / myReports.getCount;
     if (reportImages.getCount > 0) {
-      print('sync started for images report ${report.reportno}');
+      print('sync started for images report ${report.getreportno}');
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postAttachmentsToSharepoint",
-        text: 'sync started for images report ${report.reportno}',
+        text: 'sync started for images report ${report.getreportno}',
         type: LogLevel.INFO,
       );
 
       listimagecount = reportImages.getCount;
 
       print(
-          'No of images found for ${report.reportno} - is ${reportImages.getCount}');
+          'No of images found for ${report.getreportno} - is ${reportImages.getCount}');
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postAttachmentsToSharepoint - imagecount > 0",
         text:
-            'No of images found for ${report.reportno} - is ${reportImages.getCount}',
+            'No of images found for ${report.getreportno} - is ${reportImages.getCount}',
         type: LogLevel.INFO,
       );
 
@@ -909,13 +909,13 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       }
 
       print(
-          'Completed uploading images for ${report.reportno}. Saving report.');
+          'Completed uploading images for ${report.getreportno}. Saving report.');
       if (resultupload == 1) {
         FLog.logThis(
           className: "Sharepoint",
           methodName: "postAttachmentsToSharepoint",
           text:
-              'Completed uploading images for ${report.reportno}. Saving report.',
+              'Completed uploading images for ${report.getreportno}. Saving report.',
           type: LogLevel.INFO,
         );
         await _saveReport(report, myReports);
@@ -927,12 +927,12 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       pr.update(
           progress: percentage.roundToDouble(), message: 'Attch. uploaded');
       print(
-          'No attachments found to be uploaded for ${report.reportno}. Saving report.');
+          'No attachments found to be uploaded for ${report.getreportno}. Saving report.');
       FLog.logThis(
         className: "Sharepoint",
         methodName: "postAttachmentsToSharepoint",
         text:
-            'No attachments found to be uploaded for ${report.reportno}. Saving report.',
+            'No attachments found to be uploaded for ${report.getreportno}. Saving report.',
         type: LogLevel.INFO,
       );
       await _saveReport(report, myReports);
@@ -984,9 +984,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future<int> _saveReport(Report report, MyReports myReports) async {
     int result;
-    if (report.id != null) {
-      report.reportpublished = 1;
-      result = await databaseHelper.updateReport(report);
+    if (report.getId != null) {
+      report.getreportpublished = 1;
+      result = await DBProvider.db.updateReport(report);
     }
     if (result != 0) {
       listreportcount--;
@@ -995,7 +995,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       FLog.logThis(
         className: "Sharepoint",
         methodName: "_saveReport",
-        text: 'Success Saving Report ${report.reportno} to database',
+        text: 'Success Saving Report ${report.getreportno} to database',
         type: LogLevel.INFO,
       );
     } else {
@@ -1006,7 +1006,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
       FLog.logThis(
         className: "Sharepoint",
         methodName: "_saveReport",
-        text: 'Failure Saving Report ${report.reportno} to database',
+        text: 'Failure Saving Report ${report.getreportno} to database',
         type: LogLevel.ERROR,
       );
     }
@@ -1017,7 +1017,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     int result;
     if (image.reportid != null) {
       image.published = 1;
-      result = await databaseHelper.updateImage(image);
+      result = await DBProvider.db.updateImage(image);
     }
     if (result != 0) {
       listimagecount--;
@@ -1046,9 +1046,9 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
 
   Future<int> _saveTask(Tasks task, MyReports myReports) async {
     int result;
-    if (task.id != null) {
-      task.published = 1;
-      result = await databaseHelper.updateTask(task);
+    if (task.getid != null) {
+      task.getpublished = 1;
+      result = await DBProvider.db.updateTask(task);
     }
     if (result != 0) {
       listtaskcount--;

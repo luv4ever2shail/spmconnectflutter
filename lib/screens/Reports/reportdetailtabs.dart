@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:spmconnectapp/themes/appTheme.dart';
 
 class ReportDetTab extends StatefulWidget {
-  final DatabaseHelper helper;
+  final DBProvider helper;
   final String appBarTitle;
   final Report report;
 
@@ -39,7 +39,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(appBarTitle + ' - ' + report.reportno),
+        title: Text(appBarTitle + ' - ' + report.getreportno),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => movetolastscreen(),
@@ -49,13 +49,13 @@ class _ReportDetTabState extends State<ReportDetTab> {
         controller: controller,
         children: <Widget>[
           ReportDetail(report),
-          TaskList(report.reportno, widget.helper),
+          TaskList(report.getreportno, widget.helper),
           ReportDetail3(report),
-          ImagePicker(report.reportno),
+          ImagePicker(report.getreportno),
           ReportDetail4(report, widget.helper),
         ],
         onPageChanged: (int index) {
-          if (report.projectno.length == 0 && index == 1) {
+          if (report.getprojectno.length == 0 && index == 1) {
             _showAlertDialog('Error!', 'Project number cannot be empty.');
             controller.jumpToPage(0);
           } else {
@@ -80,7 +80,7 @@ class _ReportDetTabState extends State<ReportDetTab> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,
         onTap: (int index) {
-          if (report.projectno.length == 0 &&
+          if (report.getprojectno.length == 0 &&
               (index == 1 || index == 2 || index == 3 || index == 4)) {
             _showAlertDialog('Error!', 'Project number cannot be empty.');
           } else {
@@ -135,13 +135,13 @@ class _ReportDetTabState extends State<ReportDetTab> {
     //movetolastscreen();
 
     int result;
-    if (report.id != null) {
+    if (report.getId != null) {
       // Case 1: Update operation
       result = await widget.helper.updateReport(report);
     } else {
       // Case 2: Insert Operation
-      if (report.projectno.length > 0) {
-        report.date =
+      if (report.getprojectno.length > 0) {
+        report.getdate =
             DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
         result = await widget.helper.inserReport(report);
       }

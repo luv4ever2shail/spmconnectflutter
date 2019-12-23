@@ -1,13 +1,17 @@
+import 'dart:convert';
+
+Tasks reportFromJson(String str) => Tasks.fromJson(json.decode(str));
+
 class Tasks {
-  int _id;
-  String _reportid;
-  int _published;
-  String _item;
-  DateTime _starttime;
-  DateTime _endtime;
-  String _workperformed;
-  String _hours;
-  String _date;
+  int id;
+  String reportid;
+  int published;
+  String item;
+  DateTime starttime;
+  DateTime endtime;
+  String workperformed;
+  String hours;
+  String date;
   String colspare1;
   String colspare2;
   String colspare3;
@@ -15,14 +19,14 @@ class Tasks {
   String colspare5;
 
   Tasks(
-    this._reportid,
-    this._item,
-    this._starttime,
-    this._endtime,
-    this._workperformed,
-    this._hours,
-    this._date,
-    this._published,
+    this.reportid,
+    this.item,
+    this.starttime,
+    this.endtime,
+    this.workperformed,
+    this.hours,
+    this.date,
+    this.published,
     this.colspare1,
     this.colspare2,
     this.colspare3,
@@ -30,107 +34,113 @@ class Tasks {
     this.colspare5,
   );
 
-  Tasks.withId(
-      this._id,
-      this._reportid,
-      this._item,
-      this._starttime,
-      this._endtime,
-      this._workperformed,
-      this._hours,
-      this._date,
-      this._published);
+  Tasks.withId({
+    this.id,
+    this.reportid,
+    this.item,
+    this.starttime,
+    this.endtime,
+    this.workperformed,
+    this.hours,
+    this.date,
+    this.published,
+    this.colspare1,
+    this.colspare2,
+    this.colspare3,
+    this.colspare4,
+    this.colspare5,
+  });
 
-  int get id => _id;
+  int get getid => id;
 
-  String get reportid => _reportid;
+  String get getreportid => reportid;
 
-  int get published => _published;
+  int get getpublished => published;
 
-  String get item => _item;
+  String get getitem => item;
 
-  DateTime get starttime => _starttime;
+  DateTime get getstarttime => starttime;
 
-  DateTime get endtime => _endtime;
+  DateTime get getendtime => endtime;
 
-  String get workperformed => _workperformed;
+  String get getworkperformed => workperformed;
 
-  String get hours => _hours;
+  String get gethours => hours;
 
-  String get date => _date;
+  String get getdate => date;
 
-  String get spare1 => colspare1;
-  String get spare2 => colspare2;
-  String get spare3 => colspare3;
-  String get spare4 => colspare4;
-  String get spare5 => colspare5;
+  String get getspare1 => colspare1;
+  String get getspare2 => colspare2;
+  String get getspare3 => colspare3;
+  String get getspare4 => colspare4;
+  String get getspare5 => colspare5;
 
-  set reportid(String newReportid) {
-    this._reportid = newReportid;
+  set getreportid(String newReportid) {
+    this.reportid = newReportid;
   }
 
-  set published(int newPublishid) {
-    this._published = newPublishid;
+  set getpublished(int newPublishid) {
+    this.published = newPublishid;
   }
 
-  set item(String newItem) {
-    this._item = newItem;
+  set getitem(String newItem) {
+    this.item = newItem;
   }
 
-  set starttime(DateTime newStarttime) {
-    this._starttime = newStarttime;
+  set getstarttime(DateTime newStarttime) {
+    this.starttime = newStarttime;
   }
 
-  set endtime(DateTime newEndtime) {
-    this._endtime = newEndtime;
+  set getendtime(DateTime newEndtime) {
+    this.endtime = newEndtime;
   }
 
-  set workperformed(String newWorkperformed) {
-    this._workperformed = newWorkperformed;
+  set getworkperformed(String newWorkperformed) {
+    this.workperformed = newWorkperformed;
   }
 
-  set hours(String newHours) {
-    this._hours = newHours;
+  set gethours(String newHours) {
+    this.hours = newHours;
   }
 
-  set date(String newDate) {
-    this._date = newDate;
+  set getdate(String newDate) {
+    this.date = newDate;
   }
 
-  set spare1(String spare1) {
+  set getspare1(String spare1) {
     this.colspare1 = spare1;
   }
 
-  set spare2(String spare2) {
+  set getspare2(String spare2) {
     this.colspare2 = spare2;
   }
 
-  set spare3(String spare3) {
+  set getspare3(String spare3) {
     this.colspare3 = spare3;
   }
 
-  set spare4(String spare4) {
+  set getspare4(String spare4) {
     this.colspare4 = spare4;
   }
 
-  set spare5(String spare5) {
+  set getspare5(String spare5) {
     this.colspare5 = spare5;
   }
 
 // Convert a Report object into a Map object
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = _id;
+    if (getid != null) {
+      map['id'] = id;
     }
-    map['reportid'] = _reportid;
-    map['item'] = _item;
-    map['starttime'] = _starttime.toString();
-    map['endtime'] = _endtime.toString();
-    map['workperformed'] = _workperformed;
-    map['hours'] = _hours;
-    map['date'] = _date;
-    map['taskpublished'] = _published;
+    map['reportid'] = reportid;
+    map['item'] = item;
+    map['starttime'] = starttime.toString();
+    map['endtime'] = endtime.toString();
+    map['workperformed'] = workperformed;
+    map['hours'] = hours;
+    map['date'] = date;
+    map['taskpublished'] = published;
     map['taskspare1'] = colspare1;
     map['taskspare2'] = colspare2;
     map['taskspare3'] = colspare3;
@@ -141,21 +151,38 @@ class Tasks {
 
   // Extract a Report object from a Map object
   Tasks.fromMapObject(Map<String, dynamic> map) {
-    this._id = map['id'];
-    this._reportid = map['reportid'];
-    this._item = map['item'];
-    this._starttime =
+    this.id = map['id'];
+    this.reportid = map['reportid'];
+    this.item = map['item'];
+    this.starttime =
         map['starttime'] != "null" ? DateTime.parse(map['starttime']) : '';
-    this._endtime =
+    this.endtime =
         map['endtime'] != "null" ? DateTime.parse(map['endtime']) : '';
-    this._workperformed = map['workperformed'];
-    this._hours = map['hours'];
-    this._date = map['date'];
-    this._published = map['taskpublished'];
+    this.workperformed = map['workperformed'];
+    this.hours = map['hours'];
+    this.date = map['date'];
+    this.published = map['taskpublished'];
     this.colspare1 = map['taskspare1'];
     this.colspare2 = map['taskspare2'];
     this.colspare3 = map['taskspare3'];
     this.colspare4 = map['taskspare4'];
     this.colspare5 = map['taskspare5'];
   }
+
+  factory Tasks.fromJson(Map<String, dynamic> json) => Tasks.withId(
+        reportid: json["ReportId"],
+        id: int.parse(json["Taskid"]),
+        item: json["ItemNo"],
+        starttime: DateTime.parse(json["Starttime"]),
+        endtime: DateTime.parse(json["Endtime"]),
+        hours: json["Hours"],
+        workperformed: json["WorkPerformed"],
+        date: json["Datecreated"],
+        published: 1,
+        colspare1: json["Spare1"],
+        colspare2: json["Spare2"],
+        colspare3: json["Spare3"],
+        colspare4: json["Spare4"],
+        colspare5: json["Spare5"],
+      );
 }

@@ -1,9 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
+import 'package:spmconnectapp/Resource/database_helper.dart';
 import 'package:spmconnectapp/aad_auth/aad_oauth.dart';
 import 'package:spmconnectapp/aad_auth/model/config.dart';
+import 'package:spmconnectapp/models/report.dart';
+import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/screens/home.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:spmconnectapp/sharepoint_auth/model/config.dart';
+import 'package:spmconnectapp/sharepoint_auth/sharepoint_auth.dart';
+import 'package:spmconnectapp/utils/dialog_spinner.dart';
 import 'dart:async';
 
 import 'package:spmconnectapp/utils/top_bar.dart';
@@ -30,9 +39,21 @@ class _MyLoginPageState extends State<MyLoginPage> {
   );
 
   final AadOAuth oauth = AadOAuth(config);
-
+  static final SharepointConfig _config = new SharepointConfig(
+      Apikeys.sharepointClientId,
+      Apikeys.sharepointClientSecret,
+      Apikeys.sharepointResource,
+      Apikeys.sharepointSite,
+      Apikeys.sharepointTenanttId);
+  final Sharepointauth restapi = Sharepointauth(_config);
   bool _saving = false;
   String accessToken;
+
+  Future<String> getSharepointToken() async {
+    await restapi.login();
+    return await restapi.getAccessToken();
+    //print('Access Token Sharepoint $accessToken');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +89,16 @@ class _MyLoginPageState extends State<MyLoginPage> {
       ),
       child: Column(
         children: <Widget>[
-          TopBar(),
+          Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              TopBar(),
+              Container(
+                padding: EdgeInsets.only(top: 50),
+                child: Image.asset("assets/spmwhite.png"),
+              ),
+            ],
+          ),
           Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,6 +197,73 @@ class _MyLoginPageState extends State<MyLoginPage> {
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
 
+  void showDialogSpinner(
+    BuildContext context, {
+    String text,
+    TextStyle textStyle,
+  }) {
+    showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return DialogSpinner(
+            textStyle: textStyle,
+            text: text != null ? text : 'Loading...',
+          );
+        });
+  }
+
+  Future<void> fetchAllReports() async {
+    showDialogSpinner(context, text: 'Downloading Reports...');
+    String _accesstoken = await getSharepointToken();
+    Response response = await get(
+      Uri.encodeFull(
+          "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/Items"),
+      headers: {
+        "Authorization": "Bearer " + _accesstoken,
+        "Accept": "application/json"
+      },
+    );
+    // print(response.body);
+    var data = json.decode(response.body);
+    (data['value'] as List).map((report) {
+      // print('Inserting $report');
+      DBProvider.db.getReport(Report.fromJson(report).id).then((exist) {
+        if (exist != null)
+          return;
+        else {
+          print('inserting report ' + report['Title']);
+          DBProvider.db.inserReport(Report.fromJson(report));
+        }
+      });
+    }).toList();
+    await fetchAllTasks(_accesstoken);
+  }
+
+  Future<void> fetchAllTasks(String accesstoken) async {
+    Response response = await get(
+      Uri.encodeFull(
+          "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectTasks')/Items"),
+      headers: {
+        "Authorization": "Bearer " + accesstoken,
+        "Accept": "application/json"
+      },
+    );
+    // print(response.body);
+    var data = json.decode(response.body);
+    (data['value'] as List).map((task) {
+      // print('Inserting $report');
+      DBProvider.db.getTask(Tasks.fromJson(task).id).then((exist) {
+        if (exist != null)
+          return;
+        else {
+          print('inserting task ' + task['Title']);
+          DBProvider.db.insertTask(Tasks.fromJson(task));
+        }
+      });
+    }).toList();
+  }
+
   Future<void> login() async {
     try {
       setState(() {
@@ -177,7 +274,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
       //showMessage("Logged in successfully, your access token: $accessToken",true);
       //print("Logged in successfully, your access token: $accessToken");
       if (accessToken.length > 0) {
-        new Future.delayed(new Duration(seconds: 1), () {
+        new Future.delayed(new Duration(seconds: 1), () async {
+          await fetchAllReports();
           setState(() {
             _saving = false;
             navigateToDetail();

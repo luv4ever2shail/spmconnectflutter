@@ -10,7 +10,7 @@ class ReportDetail2 extends StatefulWidget {
   final String appBarTitle;
   final Tasks task;
   final String reportid;
-  final DatabaseHelper helper;
+  final DBProvider helper;
 
   ReportDetail2(this.task, this.appBarTitle, this.reportid, this.helper);
   @override
@@ -45,15 +45,15 @@ class _ReportDetail2 extends State<ReportDetail2> {
     workperfrmController = TextEditingController();
     hoursController = MaskedTextController(mask: '00:00');
 
-    itemController.text = task.item;
+    itemController.text = task.getitem;
     starttimeController.text =
-        task.starttime != null ? format.format(task.starttime).toString() : '';
+        task.getstarttime != null ? format.format(task.getstarttime).toString() : '';
     endtimeController.text =
-        task.endtime != null ? format.format(task.endtime).toString() : '';
-    workperfrmController.text = task.workperformed;
-    hoursController.text = task.hours;
-    _starttime = task.starttime != null ? task.starttime : null;
-    _endtime = task.endtime != null ? task.endtime : null;
+        task.getendtime != null ? format.format(task.getendtime).toString() : '';
+    workperfrmController.text = task.getworkperformed;
+    hoursController.text = task.gethours;
+    _starttime = task.getstarttime != null ? task.getstarttime : null;
+    _endtime = task.getendtime != null ? task.getendtime : null;
   }
 
   @override
@@ -303,15 +303,15 @@ class _ReportDetail2 extends State<ReportDetail2> {
       return;
     }
     if (!(_validate)) {
-      task.reportid = reportid;
+      task.getreportid = reportid;
       int result = 0;
-      if (task.id != null) {
+      if (task.getid != null) {
         // Case 1: Update operation
         result = await widget.helper.updateTask(task);
       } else {
         // Case 2: Insert Operation
-        if (task.item.length > 0) {
-          task.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
+        if (task.getitem.length > 0) {
+          task.getdate = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
           result = await widget.helper.insertTask(task);
         }
       }
@@ -333,18 +333,18 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
 // Update the project no.
   void updateItem() {
-    task.item = itemController.text.trim();
+    task.getitem = itemController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateStartTime(DateTime startime) {
     // task.starttime = starttimeController.text;
-    task.starttime = startime;
+    task.getstarttime = startime;
     calculateHours();
   }
 
   void updateEndTime(DateTime endtime) {
-    task.endtime = endtime;
+    task.getendtime = endtime;
     // task.endtime = endtimeController.text;
     calculateHours();
   }
@@ -382,11 +382,11 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   // Update the plant location namme of Note object
   void updateWorkperformed() {
-    task.workperformed = workperfrmController.text.trim();
+    task.getworkperformed = workperfrmController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateHours() {
-    task.hours = hoursController.text.trim();
+    task.gethours = hoursController.text.trim();
   }
 }

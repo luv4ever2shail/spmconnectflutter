@@ -119,7 +119,7 @@ class _SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
             });
         if (widget.onChanged != null && value != null) {
           widget.controller.text = value.toString();
-          widget.report.customer = value.toString();
+          widget.report.getcustomer = value.toString();
           widget.onChanged(value);
         }
       },
@@ -132,7 +132,7 @@ class _SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
           style: _textStyle,
           controller: widget.controller,
           onChanged: (val) {
-            widget.report.customer = val;
+            widget.report.getcustomer = val;
           },
           enabled: enabled,
           decoration: InputDecoration(
@@ -233,6 +233,10 @@ class _DropdownDialogState extends State<DropdownDialog> {
       child: new Stack(
         children: <Widget>[
           new TextField(
+            inputFormatters: [
+              new BlacklistingTextInputFormatter(new RegExp(
+                  '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+            ],
             controller: txtSearch,
             decoration: InputDecoration(
                 contentPadding:

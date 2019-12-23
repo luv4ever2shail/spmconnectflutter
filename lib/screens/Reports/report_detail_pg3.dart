@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spmconnectapp/Resource/database_helper.dart';
 import 'package:spmconnectapp/models/report.dart';
 
 class ReportDetail3 extends StatefulWidget {
@@ -14,8 +13,6 @@ class ReportDetail3 extends StatefulWidget {
 }
 
 class _ReportDetail3 extends State<ReportDetail3> {
-  DatabaseHelper helper = DatabaseHelper();
-
   Report report;
   TextEditingController furtheractionController;
   TextEditingController custcommentsController;
@@ -27,8 +24,8 @@ class _ReportDetail3 extends State<ReportDetail3> {
     custcommentsFocusNode = FocusNode();
     furtheractionController = TextEditingController();
     custcommentsController = TextEditingController();
-    furtheractionController.text = report.furtheractions;
-    custcommentsController.text = report.custcomments;
+    furtheractionController.text = report.getfurtheractions;
+    custcommentsController.text = report.getcustcomments;
   }
 
   @override
@@ -113,11 +110,11 @@ class _ReportDetail3 extends State<ReportDetail3> {
 
 // Update the project no.
   void updateFurtheraction() {
-    report.furtheractions = furtheractionController.text.trim();
+    report.getfurtheractions = furtheractionController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateCustcomments() {
-    report.custcomments = custcommentsController.text.trim();
+    report.getcustcomments = custcommentsController.text.trim();
   }
 }

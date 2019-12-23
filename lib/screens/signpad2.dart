@@ -12,7 +12,7 @@ import 'package:spmconnectapp/utils/painter.dart';
 class Signpad2 extends StatefulWidget {
   final String reportno;
   final Report report;
-  final DatabaseHelper helper;
+  final DBProvider helper;
   Signpad2(this.reportno, this.report, this.helper);
   @override
   _Signpad2State createState() => new _Signpad2State(reportno, report);
@@ -101,10 +101,21 @@ class _Signpad2State extends State<Signpad2> {
               },
             ),
           ),
+          floatingActionButton: FloatingActionButton.extended(
+            label: Text('Complete'),
+            icon: Icon(Icons.check_box),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => ReportList()),
+                ModalRoute.withName('login'),
+              );
+            },
+          ),
           body: new Container(
             alignment: Alignment.center,
             child: new FutureBuilder<Uint8List>(
-              future: picture.toPNG('${report.reportmapid}'),
+              future: picture.toPNG('${report.getreportmapid}'),
               builder:
                   (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
                 switch (snapshot.connectionState) {
@@ -172,18 +183,18 @@ class _Signpad2State extends State<Signpad2> {
 
   Future<void> _save(MyReports myReports) async {
     int result;
-    report.reportsigned = 1;
-    if (report.id != null) {
+    report.getreportsigned = 1;
+    if (report.getId != null) {
       // Case 1: Update operation
       result = await widget.helper.updateReport(report);
     } else {
       // Case 2: Insert Operation
-      if (report.projectno.length > 0) {
+      if (report.getprojectno.length > 0) {
         if (reportno ==
             ((myReports.getReportMapId != 0)
                 ? (myReports.getReportMapId + 1).toString()
                 : '1001')) {
-          report.date =
+          report.getdate =
               DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
           result = await widget.helper.inserReport(report);
           await myReports.fetchReports();

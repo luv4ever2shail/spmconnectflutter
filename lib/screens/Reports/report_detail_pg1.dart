@@ -68,15 +68,15 @@ class _ReportDetail extends State<ReportDetail> {
     technameController = new TextEditingController();
     refjobController = new TextEditingController();
 
-    projectController.text = report.projectno;
-    customerController.text = report.customer;
-    planlocController.text = report.plantloc;
-    contactnameController.text = report.contactname;
-    authorizedbyController.text = report.authorby;
-    equipmentController.text = report.equipment;
-    technameController.text = report.techname;
-    refjobController.text = report.refjob;
-    _projectManager = report.projectmanager;
+    projectController.text = report.getprojectno;
+    customerController.text = report.getcustomer;
+    planlocController.text = report.getplantloc;
+    contactnameController.text = report.getcontactname;
+    authorizedbyController.text = report.getauthorby;
+    equipmentController.text = report.getequipment;
+    technameController.text = report.gettechname;
+    refjobController.text = report.getrefjob;
+    _projectManager = report.getprojectmanager;
 
     _getLocation().then((position) {
       userLocation = position;
@@ -478,47 +478,47 @@ class _ReportDetail extends State<ReportDetail> {
 
 // Update the project no.
   void updateProjectno() {
-    report.projectno = projectController.text.trim();
+    report.getprojectno = projectController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateCustomername() {
-    report.customer = customerController.text.trim();
+    report.getcustomer = customerController.text.trim();
   }
 
   // Update ref job
   void updateRefjob() {
-    report.refjob = refjobController.text.trim();
+    report.getrefjob = refjobController.text.trim();
   }
 
   // Update project manager
   void updatePM(String value) {
-    report.projectmanager = value.trim();
+    report.getprojectmanager = value.trim();
   }
 
   // Update the plant location namme of Note object
   void updatePlantloc() {
-    report.plantloc = planlocController.text.trim();
+    report.getplantloc = planlocController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateContactname() {
-    report.contactname = contactnameController.text.trim();
+    report.getcontactname = contactnameController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateAuthorby() {
-    report.authorby = authorizedbyController.text.trim();
+    report.getauthorby = authorizedbyController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateEquipment() {
-    report.equipment = equipmentController.text.trim();
+    report.getequipment = equipmentController.text.trim();
   }
 
   // Update the customer namme of Note object
   void updateTechname() {
-    report.techname = technameController.text.trim();
+    report.gettechname = technameController.text.trim();
   }
 }
 

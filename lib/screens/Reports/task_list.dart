@@ -7,7 +7,7 @@ import 'package:spmconnectapp/models/tasks.dart';
 
 class TaskList extends StatefulWidget {
   final String reportid;
-  final DatabaseHelper helper;
+  final DBProvider helper;
   TaskList(this.reportid, this.helper);
   @override
   State<StatefulWidget> createState() {
@@ -72,11 +72,11 @@ class _TaskListState extends State<TaskList> {
                   child: Icon(Icons.description),
                 ),
                 title: Text(
-                  reportTasks.getTasks[position].item,
+                  reportTasks.getTasks[position].getitem,
                   style: titleStyle.apply(fontSizeFactor: 1.5),
                 ),
                 subtitle: Text(
-                  'Added on :-' + reportTasks.getTasks[position].date,
+                  'Added on :-' + reportTasks.getTasks[position].getdate,
                 ),
                 onTap: () {
                   debugPrint("ListTile Tapped");
@@ -91,7 +91,7 @@ class _TaskListState extends State<TaskList> {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                            "Task deleted ${reportTasks.getTasks[position].item}"),
+                            "Task deleted ${reportTasks.getTasks[position].getitem}"),
                         action: SnackBarAction(
                           label: "UNDO",
                           onPressed: () async {
@@ -117,8 +117,8 @@ class _TaskListState extends State<TaskList> {
             await deleteItem(position, reportTasks);
             //To show a snackbar with the UNDO button
             Scaffold.of(context).showSnackBar(SnackBar(
-                content:
-                    Text("Task deleted ${reportTasks.getTasks[position].item}"),
+                content: Text(
+                    "Task deleted ${reportTasks.getTasks[position].getitem}"),
                 action: SnackBarAction(
                     label: "UNDO",
                     onPressed: () {
@@ -160,7 +160,7 @@ class _TaskListState extends State<TaskList> {
   }
 
   Future<void> _delete(Tasks task) async {
-    await widget.helper.deleteTask(task.id);
+    await widget.helper.deleteTask(task.getid);
   }
 
   Future<void> navigateToDetail(

@@ -21,7 +21,6 @@ import 'package:spmconnectapp/utils/profiledialog.dart';
 
 class Myhome extends StatefulWidget {
   final String accessToken;
-
   Myhome(this.accessToken);
   @override
   State<StatefulWidget> createState() {
@@ -37,6 +36,7 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
   Map<String, dynamic> _deviceData = <String, dynamic>{};
   _MyhomeState(this.accessToken);
   Users _users;
+
   @override
   void initState() {
     animationController =
@@ -47,6 +47,7 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
       getUserInfo(accessToken);
       getUserPic(accessToken);
     }
+
     initPlatformState();
     super.initState();
   }
@@ -318,9 +319,16 @@ class _MyhomeState extends State<Myhome> with TickerProviderStateMixin {
     if (result) {
       await removeUserInfoFromSF();
       await oauth.logout();
-      await Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MyLoginPage();
-      }));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => MyLoginPage()),
+        ModalRoute.withName('login'),
+      );
+      // await Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+      //   builder: (context) {
+      //     return MyLoginPage();
+      //   },
+      // ));
     }
   }
 

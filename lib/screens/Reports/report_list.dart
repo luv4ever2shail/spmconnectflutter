@@ -22,11 +22,9 @@ class ReportList extends StatefulWidget {
 }
 
 class _ReportList extends State<ReportList> with TickerProviderStateMixin {
-  DatabaseHelper databaseHelper = DatabaseHelper();
   Box _box;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   String empId;
-
   AnimationController animationController;
 
   @override
@@ -119,7 +117,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
               ),
               'Add New Report',
               myReports,
-              databaseHelper,
+              DBProvider.db,
               reportTasks,
               reportImages,
             );
@@ -162,7 +160,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
                             isThreeLine: true,
                             leading: CircleAvatar(
                               backgroundColor:
-                                  reportlist[position].reportsigned == 0
+                                  reportlist[position].getreportsigned == 0
                                       ? Colors.blue
                                       : Colors.green,
                               child: Icon(
@@ -171,31 +169,32 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
                               ),
                             ),
                             title: Text(
-                              'Report No - ' + reportlist[position].reportno,
+                              'Report No - ' + reportlist[position].getreportno,
                               style: DefaultTextStyle.of(context)
                                   .style
                                   .apply(fontSizeFactor: 1.5),
                             ),
                             subtitle: Text(
                               'Project - ' +
-                                  reportlist[position].projectno +
+                                  reportlist[position].getprojectno +
                                   " ( " +
-                                  reportlist[position].customer +
+                                  reportlist[position].getcustomer +
                                   ' )' +
                                   '\nCreated On (' +
-                                  reportlist[position].date +
+                                  reportlist[position].getdate +
                                   ')',
                               style: titleStyle,
                             ),
                             trailing: GestureDetector(
-                              child: reportlist[position].reportsigned == 0 ||
-                                      empId == '73'
+                              child: reportlist[position].getreportsigned ==
+                                          0 ||
+                                      (empId == '73' || empId == '25')
                                   ? Icon(
                                       Icons.delete,
                                       size: 40,
                                       color: Colors.grey,
                                     )
-                                  : reportlist[position].reportpublished == 0
+                                  : reportlist[position].getreportpublished == 0
                                       ? SizedBox(
                                           width: 1,
                                           height: 1,
@@ -216,14 +215,14 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
                                 reportlist[position],
                                 'Edit Report',
                                 myReports,
-                                databaseHelper,
+                                DBProvider.db,
                                 reportTasks,
                                 reportImages,
                               );
                             },
                             onLongPress: () async {
-                              if (reportlist[position].reportsigned == 1 &&
-                                  empId == '73') {
+                              if (reportlist[position].getreportsigned == 1 &&
+                                  (empId == '73' || empId == '25')) {
                                 await revertReport(
                                   context,
                                   reportlist[position],
@@ -257,7 +256,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
   }
 
   Future<void> _delete(Report report, MyReports myReports) async {
-    int result = await databaseHelper.deleteReport(report.id);
+    int result = await DBProvider.db.deleteReport(report.getId);
     if (result != 0) {
       debugPrint('deleted report');
       // updateListView();
@@ -265,11 +264,11 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
       await myReports.setReportMapId(0);
       await myReports.fetchReportmapId();
     }
-    int result2 = await databaseHelper.deleteAllTasks(report.reportno);
+    int result2 = await DBProvider.db.deleteAllTasks(report.getreportno);
     if (result2 != 0) {
       debugPrint('deleted all tasks');
     }
-    int result3 = await databaseHelper.deleteAllImages(report.reportno);
+    int result3 = await DBProvider.db.deleteAllImages(report.getreportno);
     if (result3 != 0) {
       debugPrint('deleted all image references');
     }
@@ -279,13 +278,13 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
     Report report,
     String title,
     MyReports myReports,
-    DatabaseHelper helper,
+    DBProvider helper,
     ReportTasks reportTasks,
     ReportImages reportImages,
   ) async {
-    await reportTasks.fetchTasks(report.reportno);
-    await reportImages.fetchImages(report.reportno);
-    if (report.reportsigned == 1 && empId != '73') {
+    await reportTasks.fetchTasks(report.getreportno);
+    await reportImages.fetchImages(report.getreportno);
+    if (report.getreportsigned == 1 && (empId != '73' || empId != '25')) {
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
         return ReportPreview(report);
       }));
@@ -398,20 +397,22 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
   Future<int> _saveReport(Report report) async {
     showDialogSpinner(context, text: "Loading....");
     int result;
-    if (report.id != null) {
-      report.reportpublished = 0;
-      result = await databaseHelper.updateReport(report);
+    if (report.getId != null) {
+      report.getreportpublished = 0;
+      result = await DBProvider.db.updateReport(report);
     }
     if (result != 0) {
       print('Success Saving Report to database');
 
-      await databaseHelper.getTasksList(report.reportno).then((tasklist) async {
+      await DBProvider.db
+          .getTasksList(report.getreportno)
+          .then((tasklist) async {
         for (var item in tasklist) {
           await _saveTask(item);
         }
       });
-      await databaseHelper
-          .getImageList(report.reportno)
+      await DBProvider.db
+          .getImageList(report.getreportno)
           .then((imagelist) async {
         for (var image in imagelist) {
           await _saveImage(image);
@@ -428,7 +429,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
     int result;
     if (image.reportid != null) {
       image.published = 0;
-      result = await databaseHelper.updateImage(image);
+      result = await DBProvider.db.updateImage(image);
     }
     if (result != 0) {
       print('Success Saving image to database');
@@ -440,9 +441,9 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
 
   Future<int> _saveTask(Tasks task) async {
     int result;
-    if (task.id != null) {
-      task.published = 0;
-      result = await databaseHelper.updateTask(task);
+    if (task.getid != null) {
+      task.getpublished = 0;
+      result = await DBProvider.db.updateTask(task);
     }
     if (result != 0) {
       print('Success Saving task to database');
