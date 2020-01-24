@@ -95,9 +95,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<ReportImages>(
           create: (_) => ReportImages.instance(),
         ),
-        StreamProvider<ConnectivityStatus>(
-          create: (context) =>
-              ConnectivityService().connectionStatusController.stream,
+        StreamProvider<ConnectivityStatus>.controller(
+          create: (context) => ConnectivityService().connectionStatusController,
         ),
       ],
       child: MainWidget(
