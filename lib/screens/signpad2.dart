@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:spmconnectapp/Resource/database_helper.dart';
+import 'package:spmconnectapp/Resource/reports_repository.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/screens/Reports/report_list.dart';
-import 'package:spmconnectapp/utils/database_helper.dart';
 import 'package:spmconnectapp/utils/painter.dart';
 
 class Signpad2 extends StatefulWidget {
   final String reportno;
   final Report report;
-
-  Signpad2(this.reportno, this.report);
+  final DBProvider helper;
+  Signpad2(this.reportno, this.report, this.helper);
   @override
   _Signpad2State createState() => new _Signpad2State(reportno, report);
 }
 
 class _Signpad2State extends State<Signpad2> {
-  DatabaseHelper helper = DatabaseHelper();
   Report report;
   bool _finished;
   PainterController _controller;
   String reportno;
   _Signpad2State(this.reportno, this.report);
+  List<Widget> actions;
+
   @override
   void initState() {
     super.initState();
@@ -41,107 +44,162 @@ class _Signpad2State extends State<Signpad2> {
   @override
   Widget build(BuildContext context) {
     final barColor = const Color(0xFF192A56);
-    List<Widget> actions;
-    if (_finished) {
-      actions = <Widget>[
-        new IconButton(
-          icon: new Icon(Icons.content_copy),
-          tooltip: 'Customer Signature',
-          onPressed: () => setState(() {
-                _finished = false;
-                _controller = _newController();
-              }),
-        ),
-      ];
-    } else {
-      actions = <Widget>[
-        new IconButton(
-            icon: new Icon(Icons.undo),
-            tooltip: 'Undo',
-            onPressed: _controller.undo),
-        new IconButton(
-            icon: new Icon(Icons.delete),
-            tooltip: 'Clear',
-            onPressed: _controller.clear),
-        new IconButton(
-            icon: new Icon(Icons.check),
-            onPressed: () => _show(_controller.finish(), context)),
-      ];
-    }
+    MyReports myReports = Provider.of<MyReports>(context);
     return new Scaffold(
       backgroundColor: Colors.grey,
       appBar: new AppBar(
-        backgroundColor: barColor,
-        title: Text('Signature'),
-        actions: actions,
-      ),
+          backgroundColor: barColor,
+          title: Text('Signature'),
+          actions: _finished
+              ? <Widget>[
+                  new IconButton(
+                    icon: new Icon(Icons.content_copy),
+                    tooltip: 'Customer Signature',
+                    onPressed: () => setState(() {
+                      _finished = false;
+                      _controller = _newController();
+                    }),
+                  ),
+                ]
+              : <Widget>[
+                  new IconButton(
+                      icon: new Icon(Icons.undo),
+                      tooltip: 'Undo',
+                      onPressed: _controller.undo),
+                  new IconButton(
+                      icon: new Icon(Icons.delete),
+                      tooltip: 'Clear',
+                      onPressed: _controller.clear),
+                  new IconButton(
+                      icon: new Icon(Icons.check),
+                      onPressed: () async {
+                        if (_controller.isSigned()) {
+                          await _neverSatisfied(myReports);
+                        }
+                      }),
+                ]),
       body: new Center(
           child: new AspectRatio(
               aspectRatio: 1.0, child: new Painter(_controller))),
     );
   }
 
-  void _show(PictureDetails picture, BuildContext context) {
+  void _show(
+      PictureDetails picture, BuildContext context, MyReports myReports) {
     setState(() {
       _finished = true;
     });
-    Navigator.of(context)
-        .push(new MaterialPageRoute(builder: (BuildContext context) {
-      return WillPopScope(
-          onWillPop: () {
-            _save();
-          },
-          child: Scaffold(
-            appBar: new AppBar(
-              title: const Text('Signed'),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  _save();
-                },
-              ),
+    Navigator.of(context).push(
+      new MaterialPageRoute(builder: (BuildContext context) {
+        return Scaffold(
+          appBar: new AppBar(
+            title: const Text('Signed'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () async {
+                navigateToReports();
+              },
             ),
-            body: new Container(
-                alignment: Alignment.center,
-                child: new FutureBuilder<Uint8List>(
-                  future: picture.toPNG('${report.reportmapid}'),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<Uint8List> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.done:
-                        if (snapshot.hasError) {
-                          return new Text('Error: ${snapshot.error}');
-                        } else {
-                          return Image.memory(snapshot.data);
-                        }
-                        break;
-                      default:
-                        return new Container(
-                            child: new FractionallySizedBox(
-                          widthFactor: 0.1,
-                          child: new AspectRatio(
-                              aspectRatio: 1.0,
-                              child: new CircularProgressIndicator()),
-                          alignment: Alignment.center,
-                        ));
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            label: Text('Complete'),
+            icon: Icon(Icons.check_box),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => ReportList()),
+                ModalRoute.withName('login'),
+              );
+            },
+          ),
+          body: new Container(
+            alignment: Alignment.center,
+            child: new FutureBuilder<Uint8List>(
+              future: picture.toPNG('${report.getreportmapid}'),
+              builder:
+                  (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+                      return new Text('Error: ${snapshot.error}');
+                    } else {
+                      return Image.memory(snapshot.data);
                     }
-                  },
-                )),
-          ));
-    }));
+                    break;
+                  default:
+                    return new Container(
+                        child: new FractionallySizedBox(
+                      widthFactor: 0.1,
+                      child: new AspectRatio(
+                          aspectRatio: 1.0,
+                          child: new CircularProgressIndicator()),
+                      alignment: Alignment.center,
+                    ));
+                }
+              },
+            ),
+          ),
+        );
+      }),
+    );
   }
 
-  void _save() async {
+  Future<void> _neverSatisfied(MyReports myReports) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submit report?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Are you sure want to sign and submit this report? Once "Confirmed", report will not be available for edit or delete to the user.')
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Confirm'),
+              onPressed: () async {
+                // Navigator.of(context).pop();
+                //await _controller.finish().toPNG('${report.reportmapid}');
+                await _save(myReports);
+                _show(_controller.finish(), context, myReports);
+              },
+            ),
+            FlatButton(
+              child: Text('Discard'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _save(MyReports myReports) async {
     int result;
-    report.reportsigned = 1;
-    if (report.id != null) {
+    report.getreportsigned = 1;
+    if (report.getId != null) {
       // Case 1: Update operation
-      result = await helper.updateReport(report);
+      result = await widget.helper.updateReport(report);
     } else {
       // Case 2: Insert Operation
-      if (report.projectno.length > 0) {
-        report.date = DateFormat('yyyy-MM-dd h:m:ss').format(DateTime.now());
-        result = await helper.inserReport(report);
+      if (report.getprojectno.length > 0) {
+        if (reportno ==
+            ((myReports.getReportMapId != 0)
+                ? (myReports.getReportMapId + 1).toString()
+                : '1001')) {
+          report.getdate =
+              DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+          result = await widget.helper.inserReport(report);
+          await myReports.fetchReports();
+          await myReports.fetchReportmapId();
+        }
       }
     }
     if (result != 0) {
@@ -152,7 +210,7 @@ class _Signpad2State extends State<Signpad2> {
     navigateToReports();
   }
 
-  void navigateToReports() async {
+  Future<void> navigateToReports() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportList();
     }));
@@ -175,8 +233,8 @@ class DrawBar extends StatelessWidget {
               child: new Slider(
             value: _controller.thickness,
             onChanged: (double value) => setState(() {
-                  _controller.thickness = value;
-                }),
+              _controller.thickness = value;
+            }),
             min: 1.0,
             max: 20.0,
             activeColor: Colors.white,
@@ -225,7 +283,6 @@ class _ColorPickerButtonState extends State<ColorPickerButton> {
               colorPickerWidth: 1000.0,
               pickerAreaHeightPercent: 0.8,
               enableAlpha: true,
-              enableLabel: true,
             ),
           ),
         );

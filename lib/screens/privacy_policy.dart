@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:spmconnectapp/themes/appTheme.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        Navigator.pop(context, true);
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-            title: Text(
-              'Privacy Policy',
-              style: TextStyle(color: Colors.black),
+    return Scaffold(
+      backgroundColor: AppTheme.getTheme().backgroundColor,
+      appBar: AppBar(
+          title: Text(
+            'Privacy Policy',
+            style: TextStyle(color: Colors.black),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.black26),
+          backgroundColor: AppTheme.getTheme().backgroundColor,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
             ),
-            centerTitle: true,
-            elevation: 0,
-            iconTheme: IconThemeData(color: Colors.black26),
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-            )),
-        body: Markdown(data: _PRIVACY_POLICY),
-      ),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+          )),
+      body: Markdown(data: _PRIVACY_POLICY),
     );
   }
 
@@ -135,7 +133,7 @@ By phone number: 5197370320
 By mail: 5445 Outer Drive, Windsor, OIN N9A 6J3, Canada
 
 **Contact Developer**
-Developed by : Shail Patel
-If you have any questions or suggestions about my application, do not hesitate to contact me at shail@spm-automation.com
+Developed by : **Shail Patel**
+If you have any questions or suggestions about my application, do not hesitate to contact me at **shail@spm-automation.com**
 """;
 }

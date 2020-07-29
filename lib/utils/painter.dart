@@ -112,7 +112,7 @@ class _PathHistory {
 
   void undo() {
     if (!_inDrag) {
-      _paths.removeLast();
+      if (_paths.length > 0) _paths.removeLast();
     }
   }
 
@@ -277,5 +277,9 @@ class PainterController extends ChangeNotifier {
 
   bool isFinished() {
     return _cached != null;
+  }
+
+  bool isSigned() {
+    return _pathHistory._paths.length > 0;
   }
 }

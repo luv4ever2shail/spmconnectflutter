@@ -1,0 +1,2182 @@
+﻿{
+    "Customers": [
+        {
+            "Name": "10-TECH INDUSTRIAL INC."
+        },
+        {
+            "Name": "360 Guarding"
+        },
+        {
+            "Name": "A - Max Precision"
+        },
+        {
+            "Name": "A & J Industries"
+        },
+        {
+            "Name": "A V Gauge & Fixture Inc"
+        },
+        {
+            "Name": "A. P. Plasman"
+        },
+        {
+            "Name": "A. P. Plasman Inc."
+        },
+        {
+            "Name": "A. P. Plasman Thermotech"
+        },
+        {
+            "Name": "A. P. PLASMAN** QT"
+        },
+        {
+            "Name": "A.P. PLASMAN"
+        },
+        {
+            "Name": "A.P.Plasman"
+        },
+        {
+            "Name": "A.V. GAUGE & FIXTURE INC."
+        },
+        {
+            "Name": "ABB"
+        },
+        {
+            "Name": "ABB Automation Group"
+        },
+        {
+            "Name": "ABC"
+        },
+        {
+            "Name": "ABC (Brampton)"
+        },
+        {
+            "Name": "ABC Group"
+        },
+        {
+            "Name": "ABC GROUP FUEL SYSTEMS INC **"
+        },
+        {
+            "Name": "ABC Group Fuel Systems Inc."
+        },
+        {
+            "Name": "ABC Group Fuel Systems, MI"
+        },
+        {
+            "Name": "ABC GROUP PRODUCT DEVELOPMENT"
+        },
+        {
+            "Name": "ABC Group Production Development **"
+        },
+        {
+            "Name": "ABC GROUP, Brampton"
+        },
+        {
+            "Name": "ABC INOAC"
+        },
+        {
+            "Name": "ABC Supreme Tooling Division  - Brampton **"
+        },
+        {
+            "Name": "ABC Supreme Tooling Division **"
+        },
+        {
+            "Name": "Absolute Industrial Automation Inc"
+        },
+        {
+            "Name": "ABTECH BLAST & PAINT WORKS LTD."
+        },
+        {
+            "Name": "ACCUWORX"
+        },
+        {
+            "Name": "ACE CONTROLS INC."
+        },
+        {
+            "Name": "ACETRONIC INDUSTRIAL CONTROLS INC"
+        },
+        {
+            "Name": "Acklands Grainger"
+        },
+        {
+            "Name": "ACROLAB LTD."
+        },
+        {
+            "Name": "ACTION SIGNS & DESIGNS INC."
+        },
+        {
+            "Name": "ADAFRUIT INDUSTRIES"
+        },
+        {
+            "Name": "ADAPTIVE INNOVATIONS CORP"
+        },
+        {
+            "Name": "Advanced Automation"
+        },
+        {
+            "Name": "ADVANCED AUTOMATION SYSTEMS"
+        },
+        {
+            "Name": "ADVANCED MACHINE & ENGINEERING"
+        },
+        {
+            "Name": "Advantage Engineering"
+        },
+        {
+            "Name": "Advantage Industries"
+        },
+        {
+            "Name": "Agri Industrial Plastics"
+        },
+        {
+            "Name": "AIR TURBINE TECHNOLOGY, INC"
+        },
+        {
+            "Name": "AKLANDS GRAINGER"
+        },
+        {
+            "Name": "Alaron Instruments"
+        },
+        {
+            "Name": "ALL STATE FASTENER CORPORATION CAN"
+        },
+        {
+            "Name": "AMAZON CANADA"
+        },
+        {
+            "Name": "ANCHOR DANLY"
+        },
+        {
+            "Name": "Anchor Danly Inc."
+        },
+        {
+            "Name": "ANIXTER"
+        },
+        {
+            "Name": "AON REED STENHOUSE INC."
+        },
+        {
+            "Name": "AP Plasman"
+        },
+        {
+            "Name": "AP PLASMAN PLANT 3"
+        },
+        {
+            "Name": "APC"
+        },
+        {
+            "Name": "APPLASMAN"
+        },
+        {
+            "Name": "ARCY Solutions"
+        },
+        {
+            "Name": "AREMCO PRODUCTS INC,"
+        },
+        {
+            "Name": "ARGO INTERNATIONAL CORPORATION"
+        },
+        {
+            "Name": "ARMOLOY OF WESTERN PA INC."
+        },
+        {
+            "Name": "Artisan Masonry"
+        },
+        {
+            "Name": "ASCO Numatics"
+        },
+        {
+            "Name": "Ashford, Kory"
+        },
+        {
+            "Name": "ASTONRISE INC."
+        },
+        {
+            "Name": "ASUS SERVICE CENTER"
+        },
+        {
+            "Name": "ATG Industrial Automation, Inc."
+        },
+        {
+            "Name": "ATLAS COPCO TOOL & ASSEMBLY (CANADA)"
+        },
+        {
+            "Name": "ATS Robotics and Controls"
+        },
+        {
+            "Name": "AUTODESK INC. DEPT 8"
+        },
+        {
+            "Name": "AUTOMATION DIRECT"
+        },
+        {
+            "Name": "Automation Guarding Systems"
+        },
+        {
+            "Name": "AUTOMOTIVE COMPONENT HOLDINGS INC."
+        },
+        {
+            "Name": "Automotive Components Holdings, LLC"
+        },
+        {
+            "Name": "Autosystems"
+        },
+        {
+            "Name": "Autosystems America Inc"
+        },
+        {
+            "Name": "Autosystems America Inc."
+        },
+        {
+            "Name": "AUTOSYSTEMS MAGNA (IOR)"
+        },
+        {
+            "Name": "AZTECH ELECTRICAL"
+        },
+        {
+            "Name": "BAUMEIER CORPORATION"
+        },
+        {
+            "Name": "BEMIS CORPORATE"
+        },
+        {
+            "Name": "BEMIS MANUFACTURING"
+        },
+        {
+            "Name": "BEMIS Manufacturing Co"
+        },
+        {
+            "Name": "BEMIS MANUFACTURING COMPANY**"
+        },
+        {
+            "Name": "BEMIS MFG"
+        },
+        {
+            "Name": "BEMIS SOUTHEAST"
+        },
+        {
+            "Name": "Bielomatik"
+        },
+        {
+            "Name": "BLUE STAR"
+        },
+        {
+            "Name": "Bobrick  Washroom Equipment Company"
+        },
+        {
+            "Name": "BOCK OPTRONICS INC."
+        },
+        {
+            "Name": "BONNEAU FREIGHT MANAGEMENT INC."
+        },
+        {
+            "Name": "BOOMERANG LIGHTING"
+        },
+        {
+            "Name": "BRAVE CONTROLS SOLUTIONS"
+        },
+        {
+            "Name": "BRITMAN SPECIALTY PRODUCTS"
+        },
+        {
+            "Name": "BUSCH VACUUM"
+        },
+        {
+            "Name": "CAMBRIDGE TECHNOLOGY**A NOVANTA CO."
+        },
+        {
+            "Name": "CANADA COMPUTERS"
+        },
+        {
+            "Name": "Canadian Engravers Supply Co. Ltd."
+        },
+        {
+            "Name": "Case N Drum"
+        },
+        {
+            "Name": "CENDIRECT"
+        },
+        {
+            "Name": "Ceramic Products Inc."
+        },
+        {
+            "Name": "CERAMICX LTD."
+        },
+        {
+            "Name": "CHANGSHA MAGNA AUTOMOTIVE EXTERIOR PARTS CO., LTD."
+        },
+        {
+            "Name": "CHECKER INDUSTRIAL LTD."
+        },
+        {
+            "Name": "CIE AUTOMOTIVE"
+        },
+        {
+            "Name": "CK Industrial"
+        },
+        {
+            "Name": "CK TECHNOLOGIES"
+        },
+        {
+            "Name": "CK TECHNOLOGIES BROWNSVILLE"
+        },
+        {
+            "Name": "CLINTON ALUMINUM & STAINLESS"
+        },
+        {
+            "Name": "CMF GROUP"
+        },
+        {
+            "Name": "CNC Specialty Store"
+        },
+        {
+            "Name": "COGAN WIRE AND METAL LTD."
+        },
+        {
+            "Name": "COLUMBIA MACHINE TOOL OF WINDSOR INC."
+        },
+        {
+            "Name": "COMPLETE PROTOTYPE SERVICES INC."
+        },
+        {
+            "Name": "CONAIR"
+        },
+        {
+            "Name": "CONSTELLIUM"
+        },
+        {
+            "Name": "CONTINENTAL STRUCTURAL PLASTICS"
+        },
+        {
+            "Name": "CONTINENTL STRUCTURAL PLASTICS"
+        },
+        {
+            "Name": "Controlparts.com"
+        },
+        {
+            "Name": "COOPER PLATING INC."
+        },
+        {
+            "Name": "COOPER STANDARD AUTOMOTIVE"
+        },
+        {
+            "Name": "CORBETTA srl"
+        },
+        {
+            "Name": "CORTECH MACHINE & MOULD INC."
+        },
+        {
+            "Name": "COTRONICS CORPORATION"
+        },
+        {
+            "Name": "COVAL VACUUM TECHNOLOGY INC."
+        },
+        {
+            "Name": "Coxon Sales and Leasing (CSR)"
+        },
+        {
+            "Name": "CUSTOM CONCEPTS"
+        },
+        {
+            "Name": "Custom Concepts Perfomance - Coatings & Components"
+        },
+        {
+            "Name": "CUSTOM STEEL"
+        },
+        {
+            "Name": "Cutting Edge Technologies Ltd."
+        },
+        {
+            "Name": "D & D Plastics"
+        },
+        {
+            "Name": "D&D Manufacturing"
+        },
+        {
+            "Name": "DART MACHINE INC."
+        },
+        {
+            "Name": "DAVID  MONCUR ENGINEERING"
+        },
+        {
+            "Name": "DEBORAH FLORES (DICEX)"
+        },
+        {
+            "Name": "Decofinmex"
+        },
+        {
+            "Name": "DECOFINMEX SA DE CV"
+        },
+        {
+            "Name": "Decofinmex, S.A. de C.V."
+        },
+        {
+            "Name": "DECOMA - MAGNA EXTERIORS"
+        },
+        {
+            "Name": "DECONFINMEX S.A. de C.V."
+        },
+        {
+            "Name": "DECONFINMEX SA DE CV**"
+        },
+        {
+            "Name": "DELCAM"
+        },
+        {
+            "Name": "DELL SMALL BUSINESS"
+        },
+        {
+            "Name": "DELPHI TECH"
+        },
+        {
+            "Name": "Delta Power Company"
+        },
+        {
+            "Name": "Denso Manufacturing"
+        },
+        {
+            "Name": "DETROIT CHROME"
+        },
+        {
+            "Name": "DEWALT FACTORY SERVICE"
+        },
+        {
+            "Name": "DEZYNTECH"
+        },
+        {
+            "Name": "DICEX/KYLE JOHNSON"
+        },
+        {
+            "Name": "Dieffenbacher North America"
+        },
+        {
+            "Name": "Diequa Corporation"
+        },
+        {
+            "Name": "DIRECT IMAGE DESIGN"
+        },
+        {
+            "Name": "Directdial.com"
+        },
+        {
+            "Name": "DISCOUNT FILTER STORE"
+        },
+        {
+            "Name": "DIVISION MACHINE"
+        },
+        {
+            "Name": "Dixon Automatic Tool Inc."
+        },
+        {
+            "Name": "DME of Canada Ltd."
+        },
+        {
+            "Name": "DMS - DETROIT MANUFACTURING SYSTEMS"
+        },
+        {
+            "Name": "DOTHERM INDUSTRIAL INSULATION GmbH & Co."
+        },
+        {
+            "Name": "Douglas Stamping Company"
+        },
+        {
+            "Name": "DUAL ELECTRIC & REFRIGERATION SERVICES LTD."
+        },
+        {
+            "Name": "DUKANE"
+        },
+        {
+            "Name": "DURA MAGNETICS, INC"
+        },
+        {
+            "Name": "DYC SUPPLY COMPANY"
+        },
+        {
+            "Name": "DYDD SYSTEMS INC."
+        },
+        {
+            "Name": "Dynatect Manufacturing Inc."
+        },
+        {
+            "Name": "E.L. STONE CO."
+        },
+        {
+            "Name": "EAGLE OFFICE FURNISHINGS INC."
+        },
+        {
+            "Name": "EAGLE STEEL INC."
+        },
+        {
+            "Name": "EARTHPIGMENTS.COM"
+        },
+        {
+            "Name": "EDMUND OPTICS - ONLINE"
+        },
+        {
+            "Name": "EIGEN INNOVATIONS"
+        },
+        {
+            "Name": "EIGEN INNOVATIONS INC."
+        },
+        {
+            "Name": "EISSMANN"
+        },
+        {
+            "Name": "ELECTRO-METERS"
+        },
+        {
+            "Name": "ELECTROZAD"
+        },
+        {
+            "Name": "ELLWOOD SPECIALTY METALS"
+        },
+        {
+            "Name": "Elring Klinger"
+        },
+        {
+            "Name": "EM PLASTICS & ELECTRIC PRODUCTS LTD."
+        },
+        {
+            "Name": "EMI"
+        },
+        {
+            "Name": "EMPIRE ROOFING CORPORATION"
+        },
+        {
+            "Name": "ENERQUEST SERVICES INC"
+        },
+        {
+            "Name": "EO COATINGS"
+        },
+        {
+            "Name": "EPLAN Software & Services"
+        },
+        {
+            "Name": "ePlastics"
+        },
+        {
+            "Name": "EQUIPMENT CORPS"
+        },
+        {
+            "Name": "Erico"
+        },
+        {
+            "Name": "ESAFE FIELD EVALUATION"
+        },
+        {
+            "Name": "E-W METAL WORKS (1993) INC."
+        },
+        {
+            "Name": "EXAIR"
+        },
+        {
+            "Name": "EXO-S"
+        },
+        {
+            "Name": "EXTOL INC."
+        },
+        {
+            "Name": "EZ-ENVIRO SUPPLY & SERVICE"
+        },
+        {
+            "Name": "FABTECH"
+        },
+        {
+            "Name": "FAIRLANE MACHINE TOOLS LTD."
+        },
+        {
+            "Name": "FANNON PRODUCTS"
+        },
+        {
+            "Name": "FANUC ROBOTICS CANADA LTD"
+        },
+        {
+            "Name": "FARO TECHNOLOGIES INC."
+        },
+        {
+            "Name": "FASTSIGNS"
+        },
+        {
+            "Name": "FAURECIA"
+        },
+        {
+            "Name": "FCF CUSTOM FAB INC."
+        },
+        {
+            "Name": "FENNER DRIVES"
+        },
+        {
+            "Name": "Fentek Industrial Inc"
+        },
+        {
+            "Name": "FENTEK INDUSTRIAL INC * *"
+        },
+        {
+            "Name": "Fentek Industrial Inc."
+        },
+        {
+            "Name": "Festo Inc. 2"
+        },
+        {
+            "Name": "Fiberstore"
+        },
+        {
+            "Name": "FIPA"
+        },
+        {
+            "Name": "Fischer Automotive"
+        },
+        {
+            "Name": "Fixtureworks, LLC"
+        },
+        {
+            "Name": "Flex N Gate"
+        },
+        {
+            "Name": "FLEX N GATE - MICHIGAN TECHNOLOGY CENTER"
+        },
+        {
+            "Name": "Flex N Gate (Spain)"
+        },
+        {
+            "Name": "FLEX-N-GATE ALLEN PARK TECHNICAL CENTER"
+        },
+        {
+            "Name": "FLEXNGATE DETROIT**"
+        },
+        {
+            "Name": "FLEX-N-GATE FOWLERVILLE**"
+        },
+        {
+            "Name": "FLEX-N-GATE PLASTICOS S.L.**"
+        },
+        {
+            "Name": "FLEX-N-GATE PLASTICS - DANVILLE"
+        },
+        {
+            "Name": "FLEX-N-GATE TOOLING"
+        },
+        {
+            "Name": "FLEX-N-GATE TOOLING **"
+        },
+        {
+            "Name": "FLODRAULIC"
+        },
+        {
+            "Name": "Flodraulic Group"
+        },
+        {
+            "Name": "Flo-draulic**"
+        },
+        {
+            "Name": "FORD MOTOR CO"
+        },
+        {
+            "Name": "Ford Motor Company"
+        },
+        {
+            "Name": "Ford Product Development Center (PDC)"
+        },
+        {
+            "Name": "FOREST MACHINE & MANUFACTURING"
+        },
+        {
+            "Name": "Forjay Machine Shop"
+        },
+        {
+            "Name": "FRIMO INC."
+        },
+        {
+            "Name": "FSAE 2008 DRIVER ERGONOMICS"
+        },
+        {
+            "Name": "Fumex, Inc"
+        },
+        {
+            "Name": "GEFRAN CANADA"
+        },
+        {
+            "Name": "GEFRAN INC"
+        },
+        {
+            "Name": "GM- VEC SOUTH"
+        },
+        {
+            "Name": "Great Events International"
+        },
+        {
+            "Name": "GUDEL"
+        },
+        {
+            "Name": "Gudel Inc"
+        },
+        {
+            "Name": "GUDEL, INC."
+        },
+        {
+            "Name": "H. B. Etlin Company Ltd."
+        },
+        {
+            "Name": "Haas Precision"
+        },
+        {
+            "Name": "Habitat for Humanity"
+        },
+        {
+            "Name": "HALE MANUFACTURING INC."
+        },
+        {
+            "Name": "Hans Oxenfarth"
+        },
+        {
+            "Name": "Hapco Inc."
+        },
+        {
+            "Name": "HAUG NORTH AMERICA"
+        },
+        {
+            "Name": "HAWK ELECTRONICS"
+        },
+        {
+            "Name": "HeatsinkUSA LLC"
+        },
+        {
+            "Name": "Herald Press"
+        },
+        {
+            "Name": "Hermle Machine Company, LLC"
+        },
+        {
+            "Name": "HERRMANN ULTRASONICS INC."
+        },
+        {
+            "Name": "Higher Precision.com, LLC"
+        },
+        {
+            "Name": "Hildreth Manufacturing, LLC"
+        },
+        {
+            "Name": "Hoffman"
+        },
+        {
+            "Name": "Holwin Tooling Systems Inc"
+        },
+        {
+            "Name": "Holwin Tooling Systems Inc."
+        },
+        {
+            "Name": "HOLWIN TOOLING SYTEMS INC. (US)"
+        },
+        {
+            "Name": "HOTSET AMERICA CORPORATION - GA"
+        },
+        {
+            "Name": "http://www.miniinthebox.com/"
+        },
+        {
+            "Name": "HYDRA-ZORB COMPANY"
+        },
+        {
+            "Name": "Hyndman Industrial Products, Inc."
+        },
+        {
+            "Name": "IAC Group"
+        },
+        {
+            "Name": "IATGlobal (Controls) Ltd."
+        },
+        {
+            "Name": "IBC GROUP"
+        },
+        {
+            "Name": "ICOTEK"
+        },
+        {
+            "Name": "ICS LASER TECHNOLOGIES INC."
+        },
+        {
+            "Name": "ICS TECHNOLOGIES"
+        },
+        {
+            "Name": "ID ENGINEERING"
+        },
+        {
+            "Name": "IFM EFFECTOR CANADA INC."
+        },
+        {
+            "Name": "Igus Inc."
+        },
+        {
+            "Name": "IMAGINIT TECHNOLOGIES"
+        },
+        {
+            "Name": "IMC"
+        },
+        {
+            "Name": "INDUSTRIAL AUTOMATION REPAIR"
+        },
+        {
+            "Name": "INDUSTRIAL METAL FABRICATORS (CHATHAM) LTD."
+        },
+        {
+            "Name": "INERGY AUTOMOTIVE SYSTEMS"
+        },
+        {
+            "Name": "Inergy Automotive Systems - Adrian"
+        },
+        {
+            "Name": "INERGY AUTOMOTIVE SYSTEMS - ADRIAN **"
+        },
+        {
+            "Name": "INERGY AUTOMOTIVE SYSTEMS - ANDERSON **"
+        },
+        {
+            "Name": "INERGY AUTOMOTIVE SYSTEMS - MILAN **"
+        },
+        {
+            "Name": "INERGY AUTOMOTIVE SYSTEMS - RAMOS"
+        },
+        {
+            "Name": "Inergy Automotive Systems - Troy"
+        },
+        {
+            "Name": "INERGY AUTOMOTIVE SYSTEMS ANDERSON"
+        },
+        {
+            "Name": "INGRAMS WATER & AIR EQUIPMENT"
+        },
+        {
+            "Name": "INNOVATIVE APPLIED TECH., INC."
+        },
+        {
+            "Name": "INNOVATIVE APPLIED TECHNOLOGIES"
+        },
+        {
+            "Name": "INNOVATIVE COATINGS SYSTEMS INC."
+        },
+        {
+            "Name": "INNOVATIVE CONTROL SOLUTIONS INC."
+        },
+        {
+            "Name": "Innovative Material Handling Systems Inc"
+        },
+        {
+            "Name": "INOAC"
+        },
+        {
+            "Name": "INSPECTION AIR GAUGE LTD."
+        },
+        {
+            "Name": "INTEGRITY TOOL AND MOLD"
+        },
+        {
+            "Name": "INTEGRITY TOOL AND MOLD - HEAVY MACHINE DIV."
+        },
+        {
+            "Name": "INTERCONTINENTAL PRESIDENTE MEXICO CITY"
+        },
+        {
+            "Name": "INTERNATIONAL HARDCOAT"
+        },
+        {
+            "Name": "Intertec - JCI"
+        },
+        {
+            "Name": "Intertec Systems"
+        },
+        {
+            "Name": "Inteva"
+        },
+        {
+            "Name": "INTEVA - MEXICO S DE RL DE CV**"
+        },
+        {
+            "Name": "Inteva - Troy"
+        },
+        {
+            "Name": "INTEVA BROWNSVILLE OPERATIONS"
+        },
+        {
+            "Name": "INTEVA GADSDEN"
+        },
+        {
+            "Name": "Inteva Matamoros Operations"
+        },
+        {
+            "Name": "INTEVA MATAMOROS OPERATIONS **"
+        },
+        {
+            "Name": "INTEVA Mexico"
+        },
+        {
+            "Name": "INTEVA MEXICO S de RL de CV"
+        },
+        {
+            "Name": "Inteva Products"
+        },
+        {
+            "Name": "INTEVA PRODUCTS - ADRIAN"
+        },
+        {
+            "Name": "Inteva Products Gadsden Operation"
+        },
+        {
+            "Name": "INTEVA PRODUCTS LLC - BROWNSVILLE **"
+        },
+        {
+            "Name": "INTEVA PRODUCTS LLC - GADSDEN **"
+        },
+        {
+            "Name": "INTEVA PRODUCTS LLC (ADR)**"
+        },
+        {
+            "Name": "INTEVA PRODUCTS LLC **"
+        },
+        {
+            "Name": "INTEVA VANDALIA ENGINEERING CENTER**"
+        },
+        {
+            "Name": "IPG PHOTONICS MIDWEST"
+        },
+        {
+            "Name": "IPG PHOTONICS MIDWEST**"
+        },
+        {
+            "Name": "Isolate It"
+        },
+        {
+            "Name": "J.S.E MACHINERY"
+        },
+        {
+            "Name": "JAVELIN TECHNOLOGIES INC."
+        },
+        {
+            "Name": "JC MACHINE LTD."
+        },
+        {
+            "Name": "Jet Fluid Systems Inc"
+        },
+        {
+            "Name": "JMP ENGINEERING"
+        },
+        {
+            "Name": "K&J Magnetics, Inc."
+        },
+        {
+            "Name": "KAUTEX"
+        },
+        {
+            "Name": "KAUTEX  **"
+        },
+        {
+            "Name": "KAUTEX - NORTH AMERICA**"
+        },
+        {
+            "Name": "Kautex Avilla"
+        },
+        {
+            "Name": "KAUTEX DETROIT"
+        },
+        {
+            "Name": "KAUTEX DETROIT**"
+        },
+        {
+            "Name": "KAUTEX LAVOINA"
+        },
+        {
+            "Name": "KAUTEX LAVONIA"
+        },
+        {
+            "Name": "KAUTEX PUEBLA"
+        },
+        {
+            "Name": "KAUTEX SAN ANTONIO"
+        },
+        {
+            "Name": "KAUTEX SILAO"
+        },
+        {
+            "Name": "KAUTEX TEXTRON"
+        },
+        {
+            "Name": "Kautex Textron - Avilla"
+        },
+        {
+            "Name": "KAUTEX TEXTRON - AVILLA **"
+        },
+        {
+            "Name": "Kautex Textron - Bonn"
+        },
+        {
+            "Name": "KAUTEX TEXTRON - GUARAREMO"
+        },
+        {
+            "Name": "KAUTEX TEXTRON - JAPAN"
+        },
+        {
+            "Name": "Kautex Textron - Lavonia"
+        },
+        {
+            "Name": "Kautex Textron - Mexico"
+        },
+        {
+            "Name": "Kautex Textron - Puebla"
+        },
+        {
+            "Name": "KAUTEX TEXTRON - SAN ANTONIO"
+        },
+        {
+            "Name": "Kautex Textron - Troy"
+        },
+        {
+            "Name": "Kautex Textron - Windsor"
+        },
+        {
+            "Name": "KAUTEX TEXTRON ACCOUNTS PAYABLE"
+        },
+        {
+            "Name": "KAUTEX TEXTRON DE MEXICO - US"
+        },
+        {
+            "Name": "KAUTEX TEXTRON DE MEXICO SILAO PLANT**"
+        },
+        {
+            "Name": "KAUTEX TEXTRON DE MEXICO SILAO**"
+        },
+        {
+            "Name": "KAUTEX TEXTRON FINANCED SHARED  **"
+        },
+        {
+            "Name": "Kautex Textron Financed Shared Services Center"
+        },
+        {
+            "Name": "KAUTEX TEXTRON GMBH & CO **"
+        },
+        {
+            "Name": "Kautex Textron- Japan"
+        },
+        {
+            "Name": "KAUTEX TEXTRON LAVONIA GA"
+        },
+        {
+            "Name": "KAUTEX TROY"
+        },
+        {
+            "Name": "KAUTEX WINDSOR"
+        },
+        {
+            "Name": "KAUTEX WINDSOR - CDN"
+        },
+        {
+            "Name": "KAUTEX WINDSOR - US"
+        },
+        {
+            "Name": "KAUTEX WINDSOR **"
+        },
+        {
+            "Name": "KAUTEX WINDSOR**"
+        },
+        {
+            "Name": "KENT STRESS"
+        },
+        {
+            "Name": "KEPWARE TECHNOLOGIES"
+        },
+        {
+            "Name": "Key Line Cutting Tools"
+        },
+        {
+            "Name": "KEYENCE CANADA - MISSISSAUGA"
+        },
+        {
+            "Name": "KEYENCE CANADA INC."
+        },
+        {
+            "Name": "KEYLINE CUTTING TOOLS"
+        },
+        {
+            "Name": "KIMANTLE CORPORATION"
+        },
+        {
+            "Name": "KINTO CANADA LTD."
+        },
+        {
+            "Name": "KLASSEN CUSTOM FAB INC."
+        },
+        {
+            "Name": "KOOPS INC"
+        },
+        {
+            "Name": "KRELUS AG"
+        },
+        {
+            "Name": "KUEHNE + NAGEL, EXPO SERVICE C/O SPM AUTOMATION"
+        },
+        {
+            "Name": "KVK US TECHNOLOGIES"
+        },
+        {
+            "Name": "LACKS ENTERPRISES"
+        },
+        {
+            "Name": "Lakeside Plastics Limited"
+        },
+        {
+            "Name": "LAMINA"
+        },
+        {
+            "Name": "LATHE-CO"
+        },
+        {
+            "Name": "L-COM"
+        },
+        {
+            "Name": "LED Energy Inc"
+        },
+        {
+            "Name": "LEFKO"
+        },
+        {
+            "Name": "Lefko Plastic Products"
+        },
+        {
+            "Name": "LEFKO PRODUITS DE PLASTIQUE INC."
+        },
+        {
+            "Name": "Level One Robotics & Controls"
+        },
+        {
+            "Name": "LexaMar"
+        },
+        {
+            "Name": "LexaMar - Magna Exteriors"
+        },
+        {
+            "Name": "LEXAMAR CORPORATION"
+        },
+        {
+            "Name": "LINAK Canada Inc."
+        },
+        {
+            "Name": "LINDE"
+        },
+        {
+            "Name": "LIVINGSTON INTERNATIONAL INC."
+        },
+        {
+            "Name": "LT & D TOOL & DIE INC."
+        },
+        {
+            "Name": "MACHINECRAFT PRECISION TOOL & CUTTER GRINDING"
+        },
+        {
+            "Name": "MACK MEDICAL"
+        },
+        {
+            "Name": "MACK MOLDING"
+        },
+        {
+            "Name": "Macrodyne"
+        },
+        {
+            "Name": "MACRODYNE HYDRAULIC PRESSES & AUTOMATION"
+        },
+        {
+            "Name": "MADEN  INDUSTRIAL LTD."
+        },
+        {
+            "Name": "MAGNA"
+        },
+        {
+            "Name": "Magna - Autosystems"
+        },
+        {
+            "Name": "MAGNA - AUTOSYSTEMS AMERICA INC."
+        },
+        {
+            "Name": "MAGNA - AUTOSYSTEMS BELLEVILLE"
+        },
+        {
+            "Name": "Magna - Changsha"
+        },
+        {
+            "Name": "MAGNA - EXTERIORS"
+        },
+        {
+            "Name": "MAGNA - Howell"
+        },
+        {
+            "Name": "MAGNA - Nascote"
+        },
+        {
+            "Name": "MAGNA - Polycon"
+        },
+        {
+            "Name": "MAGNA AIM"
+        },
+        {
+            "Name": "MAGNA AUTOSYSTEMS"
+        },
+        {
+            "Name": "MAGNA AUTOSYSTEMS AMERICA INC. **"
+        },
+        {
+            "Name": "MAGNA AUTOSYSTEMS**"
+        },
+        {
+            "Name": "MAGNA BELVIDERE"
+        },
+        {
+            "Name": "MAGNA CLOSURES"
+        },
+        {
+            "Name": "MAGNA DECOFINMEX"
+        },
+        {
+            "Name": "Magna Exterior PPD"
+        },
+        {
+            "Name": "MAGNA EXTERIORS"
+        },
+        {
+            "Name": "MAGNA EXTERIORS - TEAM**"
+        },
+        {
+            "Name": "MAGNA EXTERIORS (PPD)"
+        },
+        {
+            "Name": "MAGNA EXTERIORS Belvidere"
+        },
+        {
+            "Name": "MAGNA EXTERIORS BELVIDERE**"
+        },
+        {
+            "Name": "Magna Exteriors Inc. (PPD)"
+        },
+        {
+            "Name": "MAGNA EXTERIORS**"
+        },
+        {
+            "Name": "MAGNA GUANGNENG AUTOMOTIVE TRIM SYSTEM**"
+        },
+        {
+            "Name": "MAGNA Howell"
+        },
+        {
+            "Name": "MAGNA INTERNATIONAL"
+        },
+        {
+            "Name": "MAGNA PPD"
+        },
+        {
+            "Name": "MAGNA-AUTO SYSTEMS"
+        },
+        {
+            "Name": "Magneti Marelli"
+        },
+        {
+            "Name": "Mahle"
+        },
+        {
+            "Name": "MAHLE - CANADA**"
+        },
+        {
+            "Name": "MAHLE - SYSTEMS - SANTA CATARINA MEXICO**"
+        },
+        {
+            "Name": "Mahle Filter Systems Canada"
+        },
+        {
+            "Name": "MAHLE SISTEMAS de FILTRACION de MEXICO SA de CV"
+        },
+        {
+            "Name": "MAHLE-BEHR"
+        },
+        {
+            "Name": "Manufacture Scorpion"
+        },
+        {
+            "Name": "MC MASTER-CARR"
+        },
+        {
+            "Name": "McMaster - Carr Supply Company"
+        },
+        {
+            "Name": "McNICHOLS CONVEYOR COMPANY"
+        },
+        {
+            "Name": "MECAPLAST-KEY PLASTICS"
+        },
+        {
+            "Name": "Mergon Corporation"
+        },
+        {
+            "Name": "METTLER-TOLEDO INC."
+        },
+        {
+            "Name": "MIDWEST ROBOTICS LTD."
+        },
+        {
+            "Name": "MIDWEST TOOL COMPANY"
+        },
+        {
+            "Name": "MILLER'S MILLWORK & HARDWARE INC."
+        },
+        {
+            "Name": "MODULAR AUTOMOTIVE SYSTEMS"
+        },
+        {
+            "Name": "MONELCO (MONCUR ELECTRIC)"
+        },
+        {
+            "Name": "Montaplast"
+        },
+        {
+            "Name": "MONTS ON TIME EXPRESS, INC"
+        },
+        {
+            "Name": "MOONJUMP - JENO SHABO"
+        },
+        {
+            "Name": "MORRELL CONTROLS CANADA"
+        },
+        {
+            "Name": "Morton Industrial"
+        },
+        {
+            "Name": "MOTION CANADA"
+        },
+        {
+            "Name": "MOTION CANADA HAMILTON"
+        },
+        {
+            "Name": "MOTION INDUSTRIES"
+        },
+        {
+            "Name": "Motorola"
+        },
+        {
+            "Name": "Mouser Electronics"
+        },
+        {
+            "Name": "MPD WELDING LTD."
+        },
+        {
+            "Name": "MURR CANADA"
+        },
+        {
+            "Name": "MVA"
+        },
+        {
+            "Name": "MVA Stratford Inc."
+        },
+        {
+            "Name": "NACHI ROBOTIC SYSTEMS"
+        },
+        {
+            "Name": "NAVISTAR"
+        },
+        {
+            "Name": "NAVISTAR - SHAKER LAB"
+        },
+        {
+            "Name": "NEBS Business Products Limited"
+        },
+        {
+            "Name": "NEWCO INDUSTRIAL"
+        },
+        {
+            "Name": "NEWPARK"
+        },
+        {
+            "Name": "NEWPARK MATS & INTEGRATED SERVEICES"
+        },
+        {
+            "Name": "NEWPARK MATS & INTEGRATED SERVICES"
+        },
+        {
+            "Name": "NEWPARK MATS & INTEGRATED SERVICES****"
+        },
+        {
+            "Name": "Newpark Mats & Integrated Svs"
+        },
+        {
+            "Name": "NEWPARK MATS & INTEGRATED SVS **"
+        },
+        {
+            "Name": "NEWPARK MATS & SERVICES INTEGRATED**"
+        },
+        {
+            "Name": "NEWPARK MATS &INTEGRATED SERVICES"
+        },
+        {
+            "Name": "Newpark Mats and Integrated Services"
+        },
+        {
+            "Name": "NewPark Resources"
+        },
+        {
+            "Name": "NEXT GENERATION PRODUCTS LTD."
+        },
+        {
+            "Name": "NINGBO ROCKET"
+        },
+        {
+            "Name": "NORDIC SENSORS INDUSTRIAL"
+        },
+        {
+            "Name": "Normont Industrial Hardware Canada Inc."
+        },
+        {
+            "Name": "NORPLAS"
+        },
+        {
+            "Name": "North York Iron Corp."
+        },
+        {
+            "Name": "NORTHERN TOOL & EQUIPMENT"
+        },
+        {
+            "Name": "NOVITA TECHNOLOGIES"
+        },
+        {
+            "Name": "N-TRON"
+        },
+        {
+            "Name": "OCR Canada"
+        },
+        {
+            "Name": "Oerlikon Balzers"
+        },
+        {
+            "Name": "Oerlikon Balzers - Wixom"
+        },
+        {
+            "Name": "OERLIKON BALZERS COATING USA, INC."
+        },
+        {
+            "Name": "OLYMPUS SCIENTIFIC SOLUTIONS AMERICAS"
+        },
+        {
+            "Name": "OMEGA - Canada"
+        },
+        {
+            "Name": "Omico Plastics"
+        },
+        {
+            "Name": "ON POINT PRECISION MFG. INC."
+        },
+        {
+            "Name": "ONLINE COMPONENTS"
+        },
+        {
+            "Name": "ONLINE METALS"
+        },
+        {
+            "Name": "Ontegra - Brighton"
+        },
+        {
+            "Name": "Ontegra Etobicoke"
+        },
+        {
+            "Name": "Onward Automation Inc."
+        },
+        {
+            "Name": "ONWARD CONTROL"
+        },
+        {
+            "Name": "ONWARD CONTROL SOLUTIONS INC."
+        },
+        {
+            "Name": "PARRLINE"
+        },
+        {
+            "Name": "PCI, ProCal Inc."
+        },
+        {
+            "Name": "Peak Industries Inc."
+        },
+        {
+            "Name": "perma USA"
+        },
+        {
+            "Name": "perma USA"
+        },
+        {
+            "Name": "PHASOR INDUSTRIAL"
+        },
+        {
+            "Name": "Phoenix Mecano"
+        },
+        {
+            "Name": "PILZ AUTOMATION SAFETY CANADA"
+        },
+        {
+            "Name": "PILZ AUTOMATION SAFETY L.P."
+        },
+        {
+            "Name": "PLASCOAT"
+        },
+        {
+            "Name": "PLASMAN"
+        },
+        {
+            "Name": "PLASTCOAT"
+        },
+        {
+            "Name": "PLASTIC OMNIUM"
+        },
+        {
+            "Name": "Plastic Omnium - Auto Inergy"
+        },
+        {
+            "Name": "PLASTIC OMNIUM AUTO INERGY (US) LLC**"
+        },
+        {
+            "Name": "PLASTIC OMNIUM AUTO INERGY**"
+        },
+        {
+            "Name": "Plastikon Industires Inc"
+        },
+        {
+            "Name": "PLASTIQUES MOORE"
+        },
+        {
+            "Name": "PLATEMASTER METAL FINISHING INC."
+        },
+        {
+            "Name": "Platinum Tool Technologies"
+        },
+        {
+            "Name": "PM Plastics"
+        },
+        {
+            "Name": "Polycon Industries"
+        },
+        {
+            "Name": "POLYFAB INDUSTRIAL SERVICES INC."
+        },
+        {
+            "Name": "POWERHOUSE CONTROLS"
+        },
+        {
+            "Name": "POWERTRAN CORPORATION"
+        },
+        {
+            "Name": "PRAXAIR"
+        },
+        {
+            "Name": "Precision Molding"
+        },
+        {
+            "Name": "PRECISION PLATING"
+        },
+        {
+            "Name": "PRIME ELECTRICAL SERVICES INC."
+        },
+        {
+            "Name": "PROAX TECHNOLOGIES"
+        },
+        {
+            "Name": "Process Heaters"
+        },
+        {
+            "Name": "PRODUCTIONWORKS INC."
+        },
+        {
+            "Name": "PROMINENT FIXTURE & GAUGE LTD."
+        },
+        {
+            "Name": "PROMINENT FIXTURE AND GAUGE LTD."
+        },
+        {
+            "Name": "PROSS INC"
+        },
+        {
+            "Name": "PTi Automation Inc. c/o Funtig & Assoc."
+        },
+        {
+            "Name": "PTi Automation USA"
+        },
+        {
+            "Name": "PURE METALGALVANIZING"
+        },
+        {
+            "Name": "QUALITY MOLDED PLASTICS"
+        },
+        {
+            "Name": "Quartz Scientific Inc."
+        },
+        {
+            "Name": "QUERETARO US** USA/MEX THERMOTECH"
+        },
+        {
+            "Name": "R. B. MOSHER CO"
+        },
+        {
+            "Name": "RAPID COATING SOLUTIONS, LLC - RCS"
+        },
+        {
+            "Name": "RCO Engineering"
+        },
+        {
+            "Name": "RED SEAL ELECTRIC COMPANY"
+        },
+        {
+            "Name": "REKO MANUFACTURING GROUP"
+        },
+        {
+            "Name": "RELIANT MANUFACTURING SOLUTIONS"
+        },
+        {
+            "Name": "Resource Tool Inc."
+        },
+        {
+            "Name": "RICHFIELD IND."
+        },
+        {
+            "Name": "RITE HITE MACHINE GUARDING"
+        },
+        {
+            "Name": "RITKUTEC Richter Kunststofftechnik GmbH & Co. KG"
+        },
+        {
+            "Name": "RK Rose+ Krieger- PHOENIX MECANO CO."
+        },
+        {
+            "Name": "ROBERT BOSCH LLC"
+        },
+        {
+            "Name": "ROBOTWORX"
+        },
+        {
+            "Name": "Rocco Trentadue (HAPCO INC)"
+        },
+        {
+            "Name": "ROTALEC CANADA INC."
+        },
+        {
+            "Name": "RS Systems Inc"
+        },
+        {
+            "Name": "RS TECH"
+        },
+        {
+            "Name": "RS Tech Limited"
+        },
+        {
+            "Name": "SAFETYSIGNS.COM"
+        },
+        {
+            "Name": "SALGA PLASTICS"
+        },
+        {
+            "Name": "SALGA PLASTICS INC.**"
+        },
+        {
+            "Name": "SAS Automation LLC"
+        },
+        {
+            "Name": "SATURN TOOL & DIE (WINDSOR) INC."
+        },
+        {
+            "Name": "SAWENSBERG FAB INC."
+        },
+        {
+            "Name": "SCITEC INSTRUMENTS"
+        },
+        {
+            "Name": "SEMPRESS CANADA INC."
+        },
+        {
+            "Name": "SENTRY STEEL"
+        },
+        {
+            "Name": "Sernacon Holdings"
+        },
+        {
+            "Name": "SERVICE MOLD"
+        },
+        {
+            "Name": "SGS Testing Services Group"
+        },
+        {
+            "Name": "SHAPE CORP"
+        },
+        {
+            "Name": "Shelley Automation - North York"
+        },
+        {
+            "Name": "SHERDIL PRECISION INC."
+        },
+        {
+            "Name": "Signature Systems Group"
+        },
+        {
+            "Name": "SINGLE SOURCE TECH (SST)"
+        },
+        {
+            "Name": "SINGLE SOURCE TECH. CANADA, ULC"
+        },
+        {
+            "Name": "SINGLE SOURCE TECHNOLOGIES -CANADA, ULC"
+        },
+        {
+            "Name": "SMP AUTOMOTIVE"
+        },
+        {
+            "Name": "SNS AUTOMATION PRODUCTS"
+        },
+        {
+            "Name": "Solar Plastics"
+        },
+        {
+            "Name": "SOLUTIONS DIRECT"
+        },
+        {
+            "Name": "SOUTHPORT THERMAL COMPONENTS INC"
+        },
+        {
+            "Name": "SPECTRUM TECHNOLOGIES"
+        },
+        {
+            "Name": "SPLENDOR POOLS - THE POOL PEOPLE"
+        },
+        {
+            "Name": "SPM AUTOMATION (Canada) INC."
+        },
+        {
+            "Name": "SPM GmBH"
+        },
+        {
+            "Name": "SPRECTRA PREMIUM"
+        },
+        {
+            "Name": "SRG"
+        },
+        {
+            "Name": "SRG Global"
+        },
+        {
+            "Name": "SRG Global - Evansville"
+        },
+        {
+            "Name": "SRG GLOBAL - Morehead"
+        },
+        {
+            "Name": "SRG GLOBAL - MOREHEAD**"
+        },
+        {
+            "Name": "SRG Global - Newbern"
+        },
+        {
+            "Name": "SRG GLOBAL INC * *"
+        },
+        {
+            "Name": "SRG GLOBAL INC.- ADVANCED DEVELOPMENT CENTER"
+        },
+        {
+            "Name": "SRG GLOBAL MOREHEAD"
+        },
+        {
+            "Name": "SRG GLOBAL**"
+        },
+        {
+            "Name": "SRP control systems ltd."
+        },
+        {
+            "Name": "Stant"
+        },
+        {
+            "Name": "STANTEC CONSULTING"
+        },
+        {
+            "Name": "STAYBRIDGE SUITES"
+        },
+        {
+            "Name": "STERLING FUELS"
+        },
+        {
+            "Name": "Sterling Motor Technology"
+        },
+        {
+            "Name": "STIHL INC."
+        },
+        {
+            "Name": "Stromag Niagara Limited"
+        },
+        {
+            "Name": "SUMMIT RACING EQUIPMENT"
+        },
+        {
+            "Name": "SUNSOURCE"
+        },
+        {
+            "Name": "SUNSTAR"
+        },
+        {
+            "Name": "SUN-TECH Machine & Tool"
+        },
+        {
+            "Name": "SUPREME TOOLING"
+        },
+        {
+            "Name": "SURE CAN"
+        },
+        {
+            "Name": "Surecan"
+        },
+        {
+            "Name": "SURECAN USA"
+        },
+        {
+            "Name": "T.E.A.M Systems"
+        },
+        {
+            "Name": "TA SYSTEMS"
+        },
+        {
+            "Name": "TAKATA"
+        },
+        {
+            "Name": "TAYLOR FLUID SYSTEMS"
+        },
+        {
+            "Name": "TECH SALES CO."
+        },
+        {
+            "Name": "Tech-Source Inc."
+        },
+        {
+            "Name": "TELSONIC SOLUTIONS INC. - MA"
+        },
+        {
+            "Name": "Telsonic Ultrasonics"
+        },
+        {
+            "Name": "TELSONIC ULTRASONICS INC."
+        },
+        {
+            "Name": "TELSONICS"
+        },
+        {
+            "Name": "TENAQUIP - ONLINE"
+        },
+        {
+            "Name": "TESLA INC."
+        },
+        {
+            "Name": "TESLA MOTORS NETHERLANDS B.V."
+        },
+        {
+            "Name": "The Plastics Group"
+        },
+        {
+            "Name": "THERMAL CONTROL PRODUCTS"
+        },
+        {
+            "Name": "THERMAL TRANSFER PRODUCTS"
+        },
+        {
+            "Name": "THERMAL ZERO"
+        },
+        {
+            "Name": "Thermocoax"
+        },
+        {
+            "Name": "THERMOTECH LLC"
+        },
+        {
+            "Name": "THERMOTECH LLC **"
+        },
+        {
+            "Name": "THERMOTECH SA de CV"
+        },
+        {
+            "Name": "THERMOWORKS"
+        },
+        {
+            "Name": "Thomson Plastics"
+        },
+        {
+            "Name": "THORLABS INC."
+        },
+        {
+            "Name": "THYSSEN KRUPP - AIN PLASTICS DIV NA"
+        },
+        {
+            "Name": "THYSSEN KRUPP MAT'L AIN PLASTICS DIV NA"
+        },
+        {
+            "Name": "TI Automotive"
+        },
+        {
+            "Name": "TI Automotive - Ossian"
+        },
+        {
+            "Name": "TI Group -  Hartwell"
+        },
+        {
+            "Name": "TI Group Automotive"
+        },
+        {
+            "Name": "TI GROUP AUTOMOTIVE SYSTEMS INC **"
+        },
+        {
+            "Name": "TIERCON"
+        },
+        {
+            "Name": "TOOL & ASSEMBLY SYSTEMS INC."
+        },
+        {
+            "Name": "Total Tooling Services Inc."
+        },
+        {
+            "Name": "TPI CORPORATION"
+        },
+        {
+            "Name": "Treknocom Engineering Pvt Ltd."
+        },
+        {
+            "Name": "TRW CANADA LTD."
+        },
+        {
+            "Name": "TSG"
+        },
+        {
+            "Name": "TYLER HARD CHROME INC"
+        },
+        {
+            "Name": "ULINE"
+        },
+        {
+            "Name": "UPS - C/O Chris Holtkamp"
+        },
+        {
+            "Name": "USUI CORPORATION"
+        },
+        {
+            "Name": "Valiant Tool & Mold"
+        },
+        {
+            "Name": "VaporKote Inc."
+        },
+        {
+            "Name": "VELTRI"
+        },
+        {
+            "Name": "Ventra"
+        },
+        {
+            "Name": "VENTRA EVART"
+        },
+        {
+            "Name": "VENTRA EVART**"
+        },
+        {
+            "Name": "VENTRA GR5"
+        },
+        {
+            "Name": "VENTRA GRAND RAPIDS 5, LLC"
+        },
+        {
+            "Name": "VENTRA GRAND RAPIDS 5, LLC * *"
+        },
+        {
+            "Name": "VENTRA GREENWICH TOOLING COMPANY"
+        },
+        {
+            "Name": "VENTRA GREENWICH TOOLING COMPANY **"
+        },
+        {
+            "Name": "VENTRA IONIA MAIN**"
+        },
+        {
+            "Name": "VENTRA PLASTICS RUSSELLVILLE Inc."
+        },
+        {
+            "Name": "VENTRA PLASTICS- RUSSELLVILLE**"
+        },
+        {
+            "Name": "VENTRA RUSSELLVILLE"
+        },
+        {
+            "Name": "VENTRA RUSSELLVILLE**"
+        },
+        {
+            "Name": "VENTRA SALEM"
+        },
+        {
+            "Name": "VENTRA SALEM**"
+        },
+        {
+            "Name": "VENTRA SALEM, LLC"
+        },
+        {
+            "Name": "VENTRA SANDUSKY"
+        },
+        {
+            "Name": "VENTRA SANDUSKY**"
+        },
+        {
+            "Name": "Versatile Machine & Tool Mfg. Co. Ltd."
+        },
+        {
+            "Name": "VIBRATORY TOOLING & REPAIR"
+        },
+        {
+            "Name": "VITEC"
+        },
+        {
+            "Name": "VITEC LLC"
+        },
+        {
+            "Name": "VITEC LLC **"
+        },
+        {
+            "Name": "Vitec, LLC"
+        },
+        {
+            "Name": "VTR FEEDER SOLUTIONS"
+        },
+        {
+            "Name": "W.S. Wood Associates Limited"
+        },
+        {
+            "Name": "WAINBEE"
+        },
+        {
+            "Name": "Walbro"
+        },
+        {
+            "Name": "Walbro Engine Management"
+        },
+        {
+            "Name": "WALBRO LLC - **"
+        },
+        {
+            "Name": "WALBRO LLC - ** (1)"
+        },
+        {
+            "Name": "Wallaceburg Preferred Partners"
+        },
+        {
+            "Name": "WATERVILLE TG INC."
+        },
+        {
+            "Name": "Weber Screwdriving Systems Inc."
+        },
+        {
+            "Name": "WECO INTERNATIONAL INC."
+        },
+        {
+            "Name": "WELKE GLOBAL LOGISTICS LTD."
+        },
+        {
+            "Name": "WESCO DISTRIBUTION CANADA LP"
+        },
+        {
+            "Name": "Wiebes Welding"
+        },
+        {
+            "Name": "WILBERT PLASTIC SERVICES"
+        },
+        {
+            "Name": "Windsor Mold Group"
+        },
+        {
+            "Name": "WOLVERINE BRONZE COMPANY"
+        },
+        {
+            "Name": "X/Y TOOLING"
+        },
+        {
+            "Name": "YANFENG"
+        },
+        {
+            "Name": "YANFENG AUTOMOTIVE HOLLAND"
+        },
+        {
+            "Name": "Yanfeng Automotive Interiors"
+        },
+        {
+            "Name": "YANFENG MEXICO INTERIORS"
+        },
+        {
+            "Name": "YANFENG MEXICO INTERIORS**"
+        },
+        {
+            "Name": "YANFENG MEXICO**"
+        },
+        {
+            "Name": "YANGFENG MEXICO INTERIORS"
+        },
+        {
+            "Name": "YAPP"
+        },
+        {
+            "Name": "YAPP Automotive Systems Inc."
+        },
+        {
+            "Name": "YAPP ROMULUS"
+        },
+        {
+            "Name": "YAPP USA"
+        },
+        {
+            "Name": "YAPP USA Automotive Systems"
+        },
+        {
+            "Name": "YAPP USA AUTOMOTIVE SYSTEMS **"
+        },
+        {
+            "Name": "YAPP USA Automotive Systems Inc."
+        },
+        {
+            "Name": "YAPP USA AUTOMOTIVE SYSTEMS INC. ROMULUS"
+        },
+        {
+            "Name": "YAPP USA AUTOMOTIVE SYSTEMS**"
+        },
+        {
+            "Name": "YAPP USA Automotive Systems, Inc."
+        },
+        {
+            "Name": "YCM CNC SYSTEMS, INC."
+        },
+        {
+            "Name": "YF MEXICO INTERIORS - QUERETARO"
+        },
+        {
+            "Name": "YF MEXICO INTERIORS - QUERETARO**"
+        },
+        {
+            "Name": "YF MEXICO INTERIORS, S. DE R.L.DE.C.V.**"
+        },
+        {
+            "Name": "YFS"
+        },
+        {
+            "Name": "YFS Auotmotive"
+        },
+        {
+            "Name": "YFS Automotive"
+        },
+        {
+            "Name": "YFS Automotive Systems"
+        },
+        {
+            "Name": "YFS Automotive Systems Inc"
+        },
+        {
+            "Name": "YFS Automotive Systems Inc."
+        },
+        {
+            "Name": "ZELUS MATERIAL HANDLING"
+        },
+        {
+            "Name": "ZIMMER CONTROLS AND CONTRACTING"
+        },
+        {
+            "Name": "ZIRCAR Refractory Composites, Inc."
+        }
+    ]
+}

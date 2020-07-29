@@ -28,11 +28,12 @@ class ReportPreviewState extends State<ReportPreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-        middle: Text(
+      appBar: AppBar(
+        title: Text(
           'Report Details',
           style: TextStyle(fontSize: 19.0),
         ),
+        centerTitle: true,
       ),
       body: body(),
     );
@@ -63,7 +64,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.reportno),
+                      child: new Text(this.report.getreportno),
                     ),
                   ],
                 ),
@@ -75,7 +76,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.date),
+                      child: new Text(this.report.getdate),
                     ),
                   ],
                 ),
@@ -87,7 +88,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.projectno),
+                      child: new Text(this.report.getprojectno),
                     ),
                   ],
                 ),
@@ -99,7 +100,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.customer),
+                      child: new Text(this.report.getcustomer),
                     ),
                   ],
                 ),
@@ -111,7 +112,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.plantloc),
+                      child: new Text(this.report.getplantloc),
                     ),
                   ],
                 ),
@@ -123,7 +124,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.contactname),
+                      child: new Text(this.report.getcontactname),
                     ),
                   ],
                 ),
@@ -135,7 +136,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.authorby),
+                      child: new Text(this.report.getauthorby),
                     ),
                   ],
                 ),
@@ -147,7 +148,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.equipment),
+                      child: new Text(this.report.getequipment),
                     ),
                   ],
                 ),
@@ -159,7 +160,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.techname),
+                      child: new Text(this.report.gettechname),
                     ),
                   ],
                 ),
@@ -188,7 +189,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.furtheractions),
+                      child: new Text(this.report.getfurtheractions),
                     ),
                   ],
                 ),
@@ -200,7 +201,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.custcomments),
+                      child: new Text(this.report.getcustcomments),
                     ),
                   ],
                 ),
@@ -229,7 +230,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.custrep),
+                      child: new Text(this.report.getcustrep),
                     ),
                   ],
                 ),
@@ -241,7 +242,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.custemail),
+                      child: new Text(this.report.getcustemail),
                     ),
                   ],
                 ),
@@ -253,7 +254,7 @@ class ReportPreviewState extends State<ReportPreview> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: new Text(this.report.custcontact),
+                      child: new Text(this.report.getcustcontact),
                     ),
                   ],
                 ),
@@ -279,7 +280,7 @@ class ReportPreviewState extends State<ReportPreview> {
                   ? FadeInImage(
                       placeholder: AssetImage('assets/spm.png'),
                       image: FileImage(
-                        File('$path${report.reportmapid.toString()}.png'),
+                        File('$path'),
                       ),
                     )
                   : CircularProgressIndicator(),
@@ -295,7 +296,7 @@ class ReportPreviewState extends State<ReportPreview> {
       Directory directory = await getApplicationDocumentsDirectory();
       String _path = directory.path;
       print("$_path/$directoryName/");
-      path = "$_path/$directoryName/";
+      path = "$_path/$directoryName/${report.getreportmapid.toString()}.png";
       setState(() {});
     } catch (e) {
       print(e);

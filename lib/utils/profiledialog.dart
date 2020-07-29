@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:spmconnectapp/models/consts.dart';
+import 'package:spmconnectapp/themes/appTheme.dart';
 
 class CustomDialog extends StatelessWidget {
   final String name, email, empid, jobtitle, id, profile, buttonText;
@@ -40,7 +40,7 @@ class CustomDialog extends StatelessWidget {
           ),
           margin: EdgeInsets.only(top: Consts.avatarRadius),
           decoration: new BoxDecoration(
-            color: Colors.white,
+            color: AppTheme.getTheme().backgroundColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(Consts.padding),
             boxShadow: [
@@ -56,7 +56,7 @@ class CustomDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min, // To make the card compact
             children: <Widget>[
               Text(
-                name == null? 'Name Not Found' : name,
+                name == null ? 'Name Not Found' : name,
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w700,
@@ -64,7 +64,7 @@ class CustomDialog extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               Text(
-                email == null? 'Email Not Found': email,
+                email == null ? 'Email Not Found' : email,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16.0,
