@@ -23,7 +23,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
   String _emailError;
   String _phoneError;
   Report report;
-  PermissionStatus _permissionStatus = PermissionStatus.unknown;
+  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
   TextEditingController custrepController;
   TextEditingController custemailController;
   TextEditingController custcontactController;
@@ -64,7 +64,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle textStyle = Theme.of(context).textTheme.headline6;
     TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
     return Scaffold(
@@ -161,39 +161,35 @@ class _ReportDetail4 extends State<ReportDetail4> {
             ),
 
             // Fourth Element -
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 15.0, bottom: 15.0, left: 40, right: 40),
-              child: Material(
-                elevation: 20.0,
-                borderRadius: BorderRadius.circular(30.0),
-                color: Colors.blue,
-                child: MaterialButton(
-                  minWidth: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                  onPressed: () async {
-                    await onConfirm();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Center(
-                        child: Icon(
-                          Icons.assignment_turned_in,
-                          size: 40,
-                          color: Colors.white,
-                        ),
+
+            Material(
+              elevation: 20.0,
+              borderRadius: BorderRadius.circular(30.0),
+              color: Colors.blue,
+              child: MaterialButton(
+                minWidth: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                onPressed: () async {
+                  await onConfirm();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: Icon(
+                        Icons.assignment_turned_in,
+                        size: 40,
+                        color: Colors.white,
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text("Customer Sign Off",
-                          textAlign: TextAlign.center,
-                          style: style.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text("Customer Sign Off",
+                        textAlign: TextAlign.center,
+                        style: style.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  ],
                 ),
               ),
             ),
@@ -204,11 +200,13 @@ class _ReportDetail4 extends State<ReportDetail4> {
   }
 
   Future<void> requestPermission() async {
-    final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+    final Map<Permission, PermissionStatus> permissionRequestResult = await [
+      Permission.location,
+    ].request();
+    print(permissionRequestResult[Permission.storage]);
     setState(() {
       print(permissionRequestResult);
-      _permissionStatus = permissionRequestResult[PermissionGroup.storage];
+      _permissionStatus = permissionRequestResult[Permission.storage];
       print(_permissionStatus);
     });
   }
@@ -247,7 +245,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
           }),
         );
       } else {
-        if (_permissionStatus.value == 2) {
+        if (_permissionStatus.isGranted) {
           await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
@@ -256,7 +254,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
             }),
           );
         } else {
-          requestPermission();
+          await requestPermission();
         }
       }
     } catch (e) {

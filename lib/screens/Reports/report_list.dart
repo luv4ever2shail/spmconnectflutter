@@ -128,7 +128,9 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
         },
         tooltip: 'Create New Report',
         icon: Icon(Icons.add),
-        label: Text('Create New Report'),
+        label: Text(
+          'Create New Report',
+        ),
       ),
     );
   }
@@ -140,7 +142,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
     ReportTasks reportTasks,
     ReportImages reportImages,
   ) {
-    TextStyle titleStyle = Theme.of(context).textTheme.subhead;
+    TextStyle titleStyle = Theme.of(context).textTheme.subtitle1;
     return AnimatedBuilder(
         animation: animationController,
         builder: (BuildContext context, Widget child) {

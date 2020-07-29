@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:spmconnectapp/API_Keys/keys.dart';
 import 'package:spmconnectapp/Resource/database_helper.dart';
 import 'package:spmconnectapp/aad_auth/aad_oauth.dart';
 import 'package:spmconnectapp/aad_auth/model/config.dart';
+import 'package:spmconnectapp/models/projectmanagers.dart';
 import 'package:spmconnectapp/models/report.dart';
 import 'package:spmconnectapp/models/tasks.dart';
 import 'package:spmconnectapp/screens/home.dart';
@@ -134,7 +136,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
           ),
           Container(
               padding: EdgeInsets.fromLTRB(0, 30.0, 0, 0),
-              width: 300.0,
+              width: MediaQuery.of(context).size.width * .8,
               child: Column(
                 children: <Widget>[
                   Material(
@@ -213,7 +215,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
         });
   }
 
-  Future<void> fetchAllReports() async {
+  Future<bool> fetchAllReports() async {
     showDialogSpinner(context, text: 'Downloading Reports...');
     String _accesstoken = await getSharepointToken();
     Response response = await get(
@@ -225,22 +227,32 @@ class _MyLoginPageState extends State<MyLoginPage> {
       },
     );
     // print(response.body);
-    var data = json.decode(response.body);
-    (data['value'] as List).map((report) {
-      // print('Inserting $report');
-      DBProvider.db.getReport(Report.fromJson(report).id).then((exist) {
-        if (exist != null)
-          return;
-        else {
-          print('inserting report ' + report['Title']);
-          DBProvider.db.inserReport(Report.fromJson(report));
-        }
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      (data['value'] as List).map((report) async {
+        // print('Inserting $report');
+        await DBProvider.db
+            .getReport(Report.fromJson(report).id)
+            .then((exist) async {
+          if (exist != null)
+            return;
+          else {
+            print('inserting report ' + report['Title']);
+            await DBProvider.db.inserReport(Report.fromJson(report));
+          }
+        });
+      }).toList();
+      await fetchAllTasks(_accesstoken).then((value) async {
+        // await fetchProjectManagers(_accesstoken);
+        return value;
       });
-    }).toList();
-    await fetchAllTasks(_accesstoken);
+    } else {
+      return false;
+    }
+    return false;
   }
 
-  Future<void> fetchAllTasks(String accesstoken) async {
+  Future<bool> fetchAllTasks(String accesstoken) async {
     Response response = await get(
       Uri.encodeFull(
           "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectTasks')/Items"),
@@ -250,18 +262,52 @@ class _MyLoginPageState extends State<MyLoginPage> {
       },
     );
     // print(response.body);
-    var data = json.decode(response.body);
-    (data['value'] as List).map((task) {
-      // print('Inserting $report');
-      DBProvider.db.getTask(Tasks.fromJson(task).id).then((exist) {
-        if (exist != null)
-          return;
-        else {
-          print('inserting task ' + task['Title']);
-          DBProvider.db.insertTask(Tasks.fromJson(task));
-        }
-      });
-    }).toList();
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      (data['value'] as List).map((task) async {
+        // print('Inserting $report');
+        await DBProvider.db
+            .getTask(Tasks.fromJson(task).id)
+            .then((exist) async {
+          if (exist != null)
+            return;
+          else {
+            print('inserting task ' + task['Title']);
+            await DBProvider.db.insertTask(Tasks.fromJson(task));
+          }
+        });
+      }).toList();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> fetchProjectManagers(String accesstoken) async {
+    Response response = await get(
+      Uri.encodeFull(
+          "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ProjectManagers')/Items"),
+      headers: {
+        "Authorization": "Bearer " + accesstoken,
+        "Accept": "application/json"
+      },
+    );
+    // print(response.body);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      List<ProjectManagers> projectmanagers = new List<ProjectManagers>();
+      Iterable list = data['value'] as List;
+      for (var item in list) {
+        projectmanagers.add(ProjectManagers(item['Title']));
+      }
+      print(projectmanagers[0].name);
+      Box _box = Hive.box('myBox');
+      _box.add(projectmanagers);
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<void> login() async {

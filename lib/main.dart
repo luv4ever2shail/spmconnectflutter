@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:spmconnectapp/Resource/connectivity.dart';
 import 'package:spmconnectapp/Resource/images_repository.dart';
@@ -20,8 +20,10 @@ Future main() async {
 }
 
 Future openBox() async {
-  var dir = await getApplicationDocumentsDirectory();
-  Hive.init(dir.path);
+  // var dir = await getApplicationDocumentsDirectory();
+  // Hive.init(dir.path);
+  await Hive.initFlutter();
+  // Hive.registerAdapter(ProjectManagersAdapter());
   return await Hive.openBox('myBox');
 }
 
@@ -71,7 +73,6 @@ class _MyAppState extends State<MyApp> {
     _box = Hive.box('myBox');
     final String userId = _box.get('Name');
     final bool darktheme = _box.get('Theme') ?? false;
-
     if (darktheme) setCustomeTheme();
 
     if (userId != null) {

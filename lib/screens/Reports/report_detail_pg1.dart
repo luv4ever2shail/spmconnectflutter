@@ -168,7 +168,7 @@ class _ReportDetail extends State<ReportDetail> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle textStyle = Theme.of(context).textTheme.headline6;
 
     return Scaffold(
       backgroundColor: AppTheme.getTheme().backgroundColor,

@@ -54,7 +54,7 @@ class _TaskListState extends State<TaskList> {
   }
 
   ListView getReportListView(ReportTasks reportTasks) {
-    TextStyle titleStyle = Theme.of(context).textTheme.subhead;
+    TextStyle titleStyle = Theme.of(context).textTheme.subtitle1;
 
     return ListView.builder(
       itemCount: reportTasks.getCount,

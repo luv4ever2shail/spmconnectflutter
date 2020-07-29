@@ -6,19 +6,19 @@ class AppTheme {
   static TextTheme _buildTextTheme(TextTheme base) {
     var fontName = "WorkSans";
     return base.copyWith(
-      title: base.title.copyWith(fontFamily: fontName),
-      body1: base.title.copyWith(fontFamily: fontName),
-      body2: base.title.copyWith(fontFamily: fontName),
-      button: base.title.copyWith(fontFamily: fontName),
-      caption: base.title.copyWith(fontFamily: fontName),
-      display1: base.title.copyWith(fontFamily: fontName),
-      display2: base.title.copyWith(fontFamily: fontName),
-      display3: base.title.copyWith(fontFamily: fontName),
-      display4: base.title.copyWith(fontFamily: fontName),
-      headline: base.title.copyWith(fontFamily: fontName),
-      overline: base.title.copyWith(fontFamily: fontName),
-      subhead: base.title.copyWith(fontFamily: fontName),
-      subtitle: base.title.copyWith(fontFamily: fontName),
+      headline6: base.headline6.copyWith(fontFamily: fontName),
+      bodyText2: base.headline6.copyWith(fontFamily: fontName),
+      bodyText1: base.headline6.copyWith(fontFamily: fontName),
+      button: base.headline6.copyWith(fontFamily: fontName),
+      caption: base.headline6.copyWith(fontFamily: fontName),
+      headline4: base.headline6.copyWith(fontFamily: fontName),
+      headline3: base.headline6.copyWith(fontFamily: fontName),
+      headline2: base.headline6.copyWith(fontFamily: fontName),
+      headline1: base.headline6.copyWith(fontFamily: fontName),
+      headline5: base.headline6.copyWith(fontFamily: fontName),
+      overline: base.headline6.copyWith(fontFamily: fontName),
+      subtitle1: base.headline6.copyWith(fontFamily: fontName),
+      subtitle2: base.headline6.copyWith(fontFamily: fontName),
     );
   }
 

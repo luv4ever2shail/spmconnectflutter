@@ -40,7 +40,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
   _ReportDetail3(this.report);
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle textStyle = Theme.of(context).textTheme.headline6;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Padding(
@@ -57,7 +57,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
                 ],
                 keyboardType: TextInputType.text,
                 maxLines: 8,
-                maxLength: 350,
+                maxLength: 500,
                 textInputAction: TextInputAction.newline,
                 controller: furtheractionController,
                 style: textStyle,
@@ -86,7 +86,7 @@ class _ReportDetail3 extends State<ReportDetail3> {
                 keyboardType: TextInputType.text,
                 maxLines: 8,
                 controller: custcommentsController,
-                maxLength: 350,
+                maxLength: 500,
                 style: textStyle,
                 focusNode: custcommentsFocusNode,
                 textInputAction: TextInputAction.newline,

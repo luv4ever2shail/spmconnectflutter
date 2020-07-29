@@ -46,10 +46,12 @@ class _ReportDetail2 extends State<ReportDetail2> {
     hoursController = MaskedTextController(mask: '00:00');
 
     itemController.text = task.getitem;
-    starttimeController.text =
-        task.getstarttime != null ? format.format(task.getstarttime).toString() : '';
-    endtimeController.text =
-        task.getendtime != null ? format.format(task.getendtime).toString() : '';
+    starttimeController.text = task.getstarttime != null
+        ? format.format(task.getstarttime).toString()
+        : '';
+    endtimeController.text = task.getendtime != null
+        ? format.format(task.getendtime).toString()
+        : '';
     workperfrmController.text = task.getworkperformed;
     hoursController.text = task.gethours;
     _starttime = task.getstarttime != null ? task.getstarttime : null;
@@ -80,7 +82,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle textStyle = Theme.of(context).textTheme.headline6;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,

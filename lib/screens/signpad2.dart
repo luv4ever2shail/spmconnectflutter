@@ -283,7 +283,6 @@ class _ColorPickerButtonState extends State<ColorPickerButton> {
               colorPickerWidth: 1000.0,
               pickerAreaHeightPercent: 0.8,
               enableAlpha: true,
-              enableLabel: true,
             ),
           ),
         );

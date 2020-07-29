@@ -43,7 +43,7 @@ class MyReports with ChangeNotifier {
 
   Future<void> fetchReports() async {
     final Future<Database> dbFuture = DBProvider.db.initializeDatabase();
-    dbFuture.then((database) async {
+    await dbFuture.then((database) async {
       List<Report> reportListFuture = await DBProvider.db.getReportList();
       setReports(reportListFuture);
     });

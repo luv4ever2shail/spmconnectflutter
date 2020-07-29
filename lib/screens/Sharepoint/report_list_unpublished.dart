@@ -49,7 +49,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   String empName;
   var percentage = 0.0;
 
-  final PermissionGroup _permissionGroup = PermissionGroup.storage;
+  final Permission _permissionGroup = Permission.storage;
 
   static final SharepointConfig _config = new SharepointConfig(
       Apikeys.sharepointClientId,
@@ -75,10 +75,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
     FLog.applyConfigurations(config);
   }
 
-  Future<void> requestPermission(PermissionGroup permission) async {
-    final List<PermissionGroup> permissions = <PermissionGroup>[permission];
-    final Map<PermissionGroup, PermissionStatus> permissionRequestResult =
-        await PermissionHandler().requestPermissions(permissions);
+  Future<void> requestPermission(Permission permission) async {
+    final Map<Permission, PermissionStatus> permissionRequestResult = await [
+      Permission.location,
+    ].request();
     print(permissionRequestResult);
   }
 
@@ -163,7 +163,7 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
   }
 
   ListView getReportListView(MyReports myReports) {
-    TextStyle titleStyle = Theme.of(context).textTheme.subhead;
+    TextStyle titleStyle = Theme.of(context).textTheme.subtitle1;
     return ListView.builder(
       itemCount: myReports.getCount,
       itemBuilder: (BuildContext context, int position) {

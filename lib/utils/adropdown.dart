@@ -48,7 +48,8 @@ class SearchableDropdown<T> extends StatefulWidget {
 }
 
 class _SearchableDropdownState<T> extends State<SearchableDropdown<T>> {
-  TextStyle get _textStyle => widget.style ?? Theme.of(context).textTheme.title;
+  TextStyle get _textStyle =>
+      widget.style ?? Theme.of(context).textTheme.headline6;
 
   bool enabled = false;
   bool get _enabled =>
