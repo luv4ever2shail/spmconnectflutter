@@ -286,7 +286,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
   ) async {
     await reportTasks.fetchTasks(report.getreportno);
     await reportImages.fetchImages(report.getreportno);
-    if (report.getreportsigned == 1 && (empId != '73' || empId != '25')) {
+    if (report.getreportsigned == 1 && (empId != '73' && empId != '25')) {
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
         return ReportPreview(report);
       }));
@@ -329,7 +329,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
               onPressed: () {
                 Navigator.of(context).pop();
                 _delete(reportlist[position], myReports);
-                Scaffold.of(contex).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(contex).showSnackBar(SnackBar(
                   content: Text("Report Deleted Successfully."),
                 ));
               },

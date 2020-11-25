@@ -103,23 +103,23 @@ class _ReportDetTabState extends State<ReportDetTab> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
-            title: Text('Details'),
+            label: 'Details',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.track_changes),
-            title: Text('Tasks'),
+            label: ('Tasks'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.comment),
-            title: Text('Comments'),
+            label: ('Comments'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera),
-            title: Text('Pictures'),
+            label: ('Pictures'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            title: Text('Customer'),
+            label: ('Customer'),
           ),
         ],
       ),

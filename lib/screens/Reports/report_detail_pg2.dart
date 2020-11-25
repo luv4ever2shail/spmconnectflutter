@@ -104,7 +104,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 textInputAction: TextInputAction.next,
@@ -128,7 +128,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               child: DateTimeField(
                 maxLength: 40,
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 readOnly: true,
@@ -172,7 +172,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               child: DateTimeField(
                 maxLength: 40,
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 controller: endtimeController,
@@ -218,7 +218,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
 
@@ -248,7 +248,7 @@ class _ReportDetail2 extends State<ReportDetail2> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 enabled: _hrsEnable,

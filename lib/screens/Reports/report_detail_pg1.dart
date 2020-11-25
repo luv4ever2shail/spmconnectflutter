@@ -183,7 +183,7 @@ class _ReportDetail extends State<ReportDetail> {
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
                   inputFormatters: [
-                    new BlacklistingTextInputFormatter(new RegExp(
+                    new FilteringTextInputFormatter.deny(new RegExp(
                         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
                   keyboardType: TextInputType.numberWithOptions(),
@@ -221,7 +221,7 @@ class _ReportDetail extends State<ReportDetail> {
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
                   inputFormatters: [
-                    new BlacklistingTextInputFormatter(new RegExp(
+                    new FilteringTextInputFormatter.deny(new RegExp(
                         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
                   controller: refjobController,
@@ -309,7 +309,7 @@ class _ReportDetail extends State<ReportDetail> {
                   children: <Widget>[
                     TextField(
                       inputFormatters: [
-                        new BlacklistingTextInputFormatter(new RegExp(
+                        new FilteringTextInputFormatter.deny(new RegExp(
                             '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                       ],
                       controller: planlocController,
@@ -366,7 +366,7 @@ class _ReportDetail extends State<ReportDetail> {
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
                   inputFormatters: [
-                    new BlacklistingTextInputFormatter(new RegExp(
+                    new FilteringTextInputFormatter.deny(new RegExp(
                         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
                   controller: contactnameController,
@@ -394,7 +394,7 @@ class _ReportDetail extends State<ReportDetail> {
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
                   inputFormatters: [
-                    new BlacklistingTextInputFormatter(new RegExp(
+                    new FilteringTextInputFormatter.deny(new RegExp(
                         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
                   controller: authorizedbyController,
@@ -422,7 +422,7 @@ class _ReportDetail extends State<ReportDetail> {
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
                   inputFormatters: [
-                    new BlacklistingTextInputFormatter(new RegExp(
+                    new FilteringTextInputFormatter.deny(new RegExp(
                         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
                   controller: equipmentController,
@@ -450,7 +450,7 @@ class _ReportDetail extends State<ReportDetail> {
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: TextField(
                   inputFormatters: [
-                    new BlacklistingTextInputFormatter(new RegExp(
+                    new FilteringTextInputFormatter.deny(new RegExp(
                         '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
                   controller: technameController,

@@ -92,7 +92,7 @@ class SimpleAutocompleteFormField<T> extends FormField<T> {
       this.itemFromString,
       this.onChanged,
       this.resetIcon: Icons.close,
-      bool autovalidate: false,
+      AutovalidateMode autovalidate: AutovalidateMode.disabled,
       this.validator,
       this.onFieldSubmitted,
       this.onSaved,
@@ -121,7 +121,7 @@ class SimpleAutocompleteFormField<T> extends FormField<T> {
             suggestionsBuilder ?? _defaultSuggestionsBuilder(suggestionsHeight),
         super(
             key: key,
-            autovalidate: autovalidate,
+            autovalidateMode: autovalidate,
             validator: validator,
             onSaved: onSaved,
             builder: (FormFieldState<T> field) {

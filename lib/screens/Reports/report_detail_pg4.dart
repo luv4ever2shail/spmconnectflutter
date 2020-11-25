@@ -78,7 +78,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
               child: TextField(
                 maxLength: 30,
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 controller: custrepController,
@@ -106,7 +106,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
               child: TextField(
                 maxLength: 45,
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 controller: custemailController,
@@ -137,7 +137,7 @@ class _ReportDetail4 extends State<ReportDetail4> {
               padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: TextField(
                 inputFormatters: [
-                  new BlacklistingTextInputFormatter(new RegExp(
+                  new FilteringTextInputFormatter.deny(new RegExp(
                       '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                 ],
                 keyboardType: TextInputType.phone,
