@@ -349,7 +349,7 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
               onPressed: () {
                 Navigator.of(context).pop();
                 _delete(reportlist[position], myReports);
-                ScaffoldMessenger.of(contex).showSnackBar(SnackBar(
+                Scaffold.of(contex).showSnackBar(SnackBar(
                   content: Text("Report Deleted Successfully."),
                 ));
               },

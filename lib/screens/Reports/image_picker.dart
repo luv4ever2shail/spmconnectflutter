@@ -194,7 +194,7 @@ class _ImagePickerState extends State<ImagePicker> {
                 await reportImages.setImages(null);
                 await _delete();
                 await reportImages.fetchImages(reportid);
-                ScaffoldMessenger.of(_context).showSnackBar(SnackBar(
+                Scaffold.of(_context).showSnackBar(SnackBar(
                   content: Text("Images attached cleared successfully."),
                 ));
               },

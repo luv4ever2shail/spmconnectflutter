@@ -56,7 +56,7 @@ DEPENDENCIES:
   - connectivity_for_web (from `.symlinks/plugins/connectivity_for_web/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
@@ -91,7 +91,7 @@ EXTERNAL SOURCES:
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_webview_plugin:
@@ -130,7 +130,7 @@ SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   connectivity_for_web: 2b8584556930d4bd490d82b836bcf45067ce345b
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
-  device_info: cbf09d2ec12aa7110e0b09fabe54b5bd6c8efe74
+  device_info: ba030f8472d32a15fcaf0c4f4bb583a70cc0c6bb
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
@@ -152,4 +152,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 30486cdea39fcfc4a5f592eb2beb963d032e0389
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.8.4

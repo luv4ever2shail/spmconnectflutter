@@ -102,7 +102,7 @@ class _TaskListState extends State<TaskList> {
                     var item = reportTasks.getTasks.elementAt(position);
                     print('object');
                     await deleteItem(position, reportTasks);
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                             "Task deleted ${reportTasks.getTasks[position].getitem}"),
@@ -130,7 +130,7 @@ class _TaskListState extends State<TaskList> {
             //To delete
             await deleteItem(position, reportTasks);
             //To show a snackbar with the UNDO button
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text(
                     "Task deleted ${reportTasks.getTasks[position].getitem}"),
                 action: SnackBarAction(
