@@ -71,65 +71,74 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          if (empId != null) {
-            debugPrint('FAB clicked');
-            //getReportmapId();
-            await myReports.setReportMapId(0);
-            await myReports.fetchReportmapId();
-            int mapid = 0;
-            if (myReports.getCount == 0) {
-              mapid = 1001;
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            if (empId != null) {
+              debugPrint('FAB clicked');
+              //getReportmapId();
+              await myReports.setReportMapId(0);
+              await myReports.fetchReportmapId();
+              int mapid = 0;
+              if (myReports.getCount == 0) {
+                mapid = 1001;
+              } else {
+                if (myReports.getReportMapId.toString().length > 3 &&
+                    myReports.getReportMapId != 0)
+                  mapid = myReports.getReportMapId + 1;
+                else
+                  return;
+              }
+              navigateToDetail(
+                Report(
+                  '$empId${mapid.toString()}',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                  mapid,
+                  0,
+                  0,
+                  '',
+                  '',
+                  '',
+                  '',
+                  '',
+                ),
+                'Add New Report',
+                myReports,
+                DBProvider.db,
+                reportTasks,
+                reportImages,
+              );
             } else {
-              if (myReports.getReportMapId.toString().length > 3 &&
-                  myReports.getReportMapId != 0)
-                mapid = myReports.getReportMapId + 1;
-              else
-                return;
+              _showAlertDialog('Employee Id not found',
+                  'Please contact the admin to have your employee id setup in order to create service reports.');
             }
-            navigateToDetail(
-              Report(
-                '$empId${mapid.toString()}',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                mapid,
-                0,
-                0,
-                '',
-                '',
-                '',
-                '',
-                '',
-              ),
-              'Add New Report',
-              myReports,
-              DBProvider.db,
-              reportTasks,
-              reportImages,
-            );
-          } else {
-            _showAlertDialog('Employee Id not found',
-                'Please contact the admin to have your employee id setup in order to create service reports.');
-          }
-        },
-        tooltip: 'Create New Report',
-        icon: Icon(Icons.add),
-        label: Text(
-          'Create New Report',
+          },
+          tooltip: 'Create New Report',
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          label: Text(
+            'Create New Report',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
     );
@@ -155,7 +164,14 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
                     itemCount: reportlist.length,
                     itemBuilder: (BuildContext context, int position) {
                       return Padding(
-                        padding: EdgeInsets.all(5.0),
+                        padding: (position == reportlist.length - 1)
+                            ? EdgeInsets.only(
+                                top: 5,
+                                right: 5,
+                                left: 5,
+                                bottom: 200,
+                              )
+                            : EdgeInsets.all(5.0),
                         child: Card(
                           elevation: 10.0,
                           child: ListTile(
@@ -232,7 +248,9 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
                               } else {
                                 await Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return ReportPreview(reportlist[position]);
+                                  return ReportPreview(
+                                    reportlist[position],
+                                  );
                                 }));
                               }
                             },
@@ -288,7 +306,9 @@ class _ReportList extends State<ReportList> with TickerProviderStateMixin {
     await reportImages.fetchImages(report.getreportno);
     if (report.getreportsigned == 1 && (empId != '73' && empId != '25')) {
       await Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ReportPreview(report);
+        return ReportPreview(
+          report,
+        );
       }));
     } else {
       bool result =

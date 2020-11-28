@@ -216,69 +216,79 @@ class _MyLoginPageState extends State<MyLoginPage> {
   }
 
   Future<bool> fetchAllReports() async {
-    showDialogSpinner(context, text: 'Downloading Reports...');
-    String _accesstoken = await getSharepointToken();
-    Response response = await get(
-      Uri.encodeFull(
-          "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/Items"),
-      headers: {
-        "Authorization": "Bearer " + _accesstoken,
-        "Accept": "application/json"
-      },
-    );
-    // print(response.body);
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      (data['value'] as List).map((report) async {
-        // print('Inserting $report');
-        await DBProvider.db
-            .getReport(Report.fromJson(report).id)
-            .then((exist) async {
-          if (exist != null)
-            return;
-          else {
-            print('inserting report ' + report['Title']);
-            await DBProvider.db.inserReport(Report.fromJson(report));
-          }
+    try {
+      showDialogSpinner(context, text: 'Downloading Reports...');
+      String _accesstoken = await getSharepointToken();
+      Response response = await get(
+        Uri.encodeFull(
+            "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectReportBase')/Items"),
+        headers: {
+          "Authorization": "Bearer " + _accesstoken,
+          "Accept": "application/json"
+        },
+      );
+      // print(response.body);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        (data['value'] as List).map((report) async {
+          // print('Inserting $report');
+          await DBProvider.db
+              .getReport(Report.fromJson(report).id)
+              .then((exist) async {
+            if (exist != null)
+              return;
+            else {
+              print('inserting report ' + report['Title']);
+              await DBProvider.db.inserReport(Report.fromJson(report));
+            }
+          });
+        }).toList();
+        await fetchAllTasks(_accesstoken).then((value) async {
+          // await fetchProjectManagers(_accesstoken);
+          return value;
         });
-      }).toList();
-      await fetchAllTasks(_accesstoken).then((value) async {
-        // await fetchProjectManagers(_accesstoken);
-        return value;
-      });
-    } else {
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
       return false;
     }
     return false;
   }
 
   Future<bool> fetchAllTasks(String accesstoken) async {
-    Response response = await get(
-      Uri.encodeFull(
-          "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectTasks')/Items"),
-      headers: {
-        "Authorization": "Bearer " + accesstoken,
-        "Accept": "application/json"
-      },
-    );
-    // print(response.body);
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      (data['value'] as List).map((task) async {
-        // print('Inserting $report');
-        await DBProvider.db
-            .getTask(Tasks.fromJson(task).id)
-            .then((exist) async {
-          if (exist != null)
-            return;
-          else {
-            print('inserting task ' + task['Title']);
-            await DBProvider.db.insertTask(Tasks.fromJson(task));
-          }
-        });
-      }).toList();
-      return true;
-    } else {
+    try {
+      Response response = await get(
+        Uri.encodeFull(
+            "https://spmautomation.sharepoint.com/sites/SPMConnect/_api/web/lists/GetByTitle('ConnectTasks')/Items"),
+        headers: {
+          "Authorization": "Bearer " + accesstoken,
+          "Accept": "application/json"
+        },
+      );
+      // print(response.body);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        (data['value'] as List).map((task) async {
+          // print('Inserting $report');
+          await DBProvider.db
+              .getTask(Tasks.fromJson(task).id)
+              .then((exist) async {
+            if (exist != null)
+              return;
+            else {
+              print('inserting task ' + task['Title']);
+              await DBProvider.db.insertTask(Tasks.fromJson(task));
+            }
+          });
+        }).toList();
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
       return false;
     }
   }

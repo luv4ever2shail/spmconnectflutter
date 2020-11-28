@@ -22,7 +22,11 @@ class _TaskListState extends State<TaskList> {
   Widget build(BuildContext context) {
     ReportTasks reportTasks = Provider.of<ReportTasks>(context);
     return Scaffold(
-      body: Scrollbar(child: getReportListView(reportTasks)),
+      body: Scrollbar(
+        child: reportTasks.count > 0
+            ? getReportListView(reportTasks)
+            : Container(),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -48,8 +52,16 @@ class _TaskListState extends State<TaskList> {
               reportTasks,
             );
           },
-          icon: Icon(Icons.add),
-          label: Text('Add a new task')),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          label: Text(
+            'Add a new task',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          )),
     );
   }
 
@@ -76,7 +88,9 @@ class _TaskListState extends State<TaskList> {
                   style: titleStyle.apply(fontSizeFactor: 1.5),
                 ),
                 subtitle: Text(
-                  'Added on :-' + reportTasks.getTasks[position].getdate,
+                  (reportTasks.getTasks[position].getdate == null
+                      ? ''
+                      : 'Added on :-' + reportTasks.getTasks[position].getdate),
                 ),
                 onTap: () {
                   debugPrint("ListTile Tapped");

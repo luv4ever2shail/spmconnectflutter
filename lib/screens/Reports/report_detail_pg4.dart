@@ -67,133 +67,143 @@ class _ReportDetail4 extends State<ReportDetail4> {
     TextStyle textStyle = Theme.of(context).textTheme.headline6;
     TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Padding(
-        padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-        child: ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                maxLength: 30,
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: custrepController,
-                style: textStyle,
-                keyboardType: TextInputType.text,
-                focusNode: custrepFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(custemailFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Cust rep Text Field');
-                  updateCustrep();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Customer Representative',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
 
-            // Second Element - Cust Email
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                maxLength: 45,
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: custemailController,
-                keyboardType: TextInputType.emailAddress,
-                style: textStyle,
-                focusNode: custemailFocusNode,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () {
-                  FocusScope.of(context).requestFocus(custcontactFocusNode);
-                },
-                onChanged: (value) {
-                  debugPrint('Something changed in Cust email Text Field');
-                  updateCustEmail();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Customer Email',
-                    labelStyle: textStyle,
-                    hintText: 'abc@abc.com',
-                    errorText: _emailError,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            // Third Element
-
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                keyboardType: TextInputType.phone,
-                maxLength: 10,
-                controller: custcontactController,
-                style: textStyle,
-                focusNode: custcontactFocusNode,
-                textInputAction: TextInputAction.done,
-                onChanged: (value) {
-                  debugPrint('Something changed in Cust contact Text Field');
-                  updateCustContact();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Customer Contact',
-                    labelStyle: textStyle,
-                    hintText: '###-###-####',
-                    errorText: _phoneError,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            // Fourth Element -
-
-            Material(
-              elevation: 20.0,
-              borderRadius: BorderRadius.circular(30.0),
-              color: Colors.blue,
-              child: MaterialButton(
-                minWidth: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                onPressed: () async {
-                  await onConfirm();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Icon(
-                        Icons.assignment_turned_in,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text("Customer Sign Off",
-                        textAlign: TextAlign.center,
-                        style: style.copyWith(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Padding(
+          padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  maxLength: 30,
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
                   ],
+                  controller: custrepController,
+                  style: textStyle,
+                  keyboardType: TextInputType.text,
+                  focusNode: custrepFocusNode,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(custemailFocusNode),
+                  onChanged: (value) {
+                    debugPrint('Something changed in Cust rep Text Field');
+                    updateCustrep();
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Customer Representative',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
                 ),
               ),
-            ),
-          ],
+
+              // Second Element - Cust Email
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  maxLength: 45,
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: custemailController,
+                  keyboardType: TextInputType.emailAddress,
+                  style: textStyle,
+                  focusNode: custemailFocusNode,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () {
+                    FocusScope.of(context).requestFocus(custcontactFocusNode);
+                  },
+                  onChanged: (value) {
+                    debugPrint('Something changed in Cust email Text Field');
+                    updateCustEmail();
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Customer Email',
+                      labelStyle: textStyle,
+                      hintText: 'abc@abc.com',
+                      errorText: _emailError,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
+              ),
+
+              // Third Element
+
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  keyboardType: TextInputType.phone,
+                  maxLength: 10,
+                  controller: custcontactController,
+                  style: textStyle,
+                  focusNode: custcontactFocusNode,
+                  textInputAction: TextInputAction.done,
+                  onChanged: (value) {
+                    debugPrint('Something changed in Cust contact Text Field');
+                    updateCustContact();
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Customer Contact',
+                      labelStyle: textStyle,
+                      hintText: '###-###-####',
+                      errorText: _phoneError,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
+              ),
+
+              // Fourth Element -
+
+              Material(
+                elevation: 20.0,
+                borderRadius: BorderRadius.circular(30.0),
+                color: Colors.blue,
+                child: MaterialButton(
+                  minWidth: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                  onPressed: () async {
+                    await onConfirm();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Icon(
+                          Icons.assignment_turned_in,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text("Customer Sign Off",
+                          textAlign: TextAlign.center,
+                          style: style.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

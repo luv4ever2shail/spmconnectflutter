@@ -84,203 +84,221 @@ class _ReportDetail2 extends State<ReportDetail2> {
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.headline6;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text(appBarTitle),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            movetolastscreen();
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Text(appBarTitle),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              movetolastscreen();
+            },
+          ),
+        ),
+        body: Padding(
+          padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+          child: ListView(
+            children: <Widget>[
+              // First Element - Item Number
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  textInputAction: TextInputAction.next,
+                  maxLength: 30,
+                  controller: itemController,
+                  style: textStyle,
+                  onChanged: (value) {
+                    debugPrint('Something changed in Item Text Field');
+                    updateItem();
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Task Id',
+                      hintText: 'Enter a short label for the task',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 5.0),
+                child: DateTimeField(
+                  maxLength: 40,
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  readOnly: true,
+                  controller: starttimeController,
+                  onShowPicker: (context, currentValue) async {
+                    final date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(2019),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2100));
+                    if (date != null) {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()),
+                      );
+                      return DateTimeField.combine(date, time);
+                    } else {
+                      return currentValue;
+                    }
+                  },
+                  format: format,
+                  decoration: InputDecoration(
+                    labelText: 'Start Time',
+                    errorText: _validatestarttime
+                        ? 'Work start time cannot be empty '
+                        : null,
+                    hintText: 'HH:MM',
+                    icon: Icon(Icons.date_range),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _starttime = value;
+                      updateStartTime(value);
+                    });
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                child: DateTimeField(
+                  maxLength: 40,
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  controller: endtimeController,
+                  format: format,
+                  readOnly: true,
+                  enabled: starttimeController.text.length > 0,
+                  onShowPicker: (context, currentValue) async {
+                    final date = await showDatePicker(
+                        context: context,
+                        firstDate:
+                            _starttime != null ? _starttime : DateTime(2019),
+                        initialDate: _starttime ?? DateTime.now(),
+                        lastDate: DateTime(2100));
+                    if (date != null) {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()),
+                      );
+                      return DateTimeField.combine(date, time);
+                    } else {
+                      return currentValue;
+                    }
+                  },
+                  decoration: InputDecoration(
+                    errorText: _validateendtime
+                        ? 'Work end time cannot be empty '
+                        : null,
+                    labelText: 'End Time',
+                    hintText: 'HH:MM',
+                    icon: Icon(Icons.date_range),
+                  ),
+                  onChanged: (dt) {
+                    setState(() {
+                      _endtime = dt;
+                      updateEndTime(dt);
+                    });
+                  },
+                ),
+              ),
+              // Third Element - Work Performed
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 8,
+                  controller: workperfrmController,
+                  maxLength: 500,
+                  style: textStyle,
+                  //focusNode: wrkperfrmFocusNode,
+                  textInputAction: TextInputAction.newline,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(hoursFocusNode),
+                  onChanged: (value) {
+                    debugPrint(
+                        'Something changed in Work Performed Text Field');
+                    updateWorkperformed();
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Work Performed',
+                      labelStyle: textStyle,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
+              ),
+
+              //Fourth Element - Hours
+              Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: TextField(
+                  inputFormatters: [
+                    new FilteringTextInputFormatter.deny(new RegExp(
+                        '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
+                  ],
+                  enabled: _hrsEnable,
+                  controller: hoursController,
+                  keyboardType: TextInputType.numberWithOptions(),
+                  style: textStyle,
+                  focusNode: hoursFocusNode,
+                  textInputAction: TextInputAction.done,
+                  onChanged: (value) {
+                    debugPrint('Something changed in Hours Text Field');
+                    updateHours();
+                  },
+                  decoration: InputDecoration(
+                      labelText: 'Hours',
+                      labelStyle: textStyle,
+                      errorText:
+                          _validate ? 'Hours can\'t be zero or less ' : null,
+                      hintText: '00\:00',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          icon: Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          label: Text(
+            'Save',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          tooltip: "Save task performed",
+          onPressed: () async {
+            await _save(reportid);
           },
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-        child: ListView(
-          children: <Widget>[
-            // First Element - Item Number
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                textInputAction: TextInputAction.next,
-                maxLength: 30,
-                controller: itemController,
-                style: textStyle,
-                onChanged: (value) {
-                  debugPrint('Something changed in Item Text Field');
-                  updateItem();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Task Id',
-                    hintText: 'Enter a short label for the task',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 5.0),
-              child: DateTimeField(
-                maxLength: 40,
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                readOnly: true,
-                controller: starttimeController,
-                onShowPicker: (context, currentValue) async {
-                  final date = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(2019),
-                      initialDate: currentValue ?? DateTime.now(),
-                      lastDate: DateTime(2100));
-                  if (date != null) {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(
-                          currentValue ?? DateTime.now()),
-                    );
-                    return DateTimeField.combine(date, time);
-                  } else {
-                    return currentValue;
-                  }
-                },
-                format: format,
-                decoration: InputDecoration(
-                  labelText: 'Start Time',
-                  errorText: _validatestarttime
-                      ? 'Work start time cannot be empty '
-                      : null,
-                  hintText: 'HH:MM',
-                  icon: Icon(Icons.date_range),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _starttime = value;
-                    updateStartTime(value);
-                  });
-                },
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
-              child: DateTimeField(
-                maxLength: 40,
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                controller: endtimeController,
-                format: format,
-                readOnly: true,
-                enabled: starttimeController.text.length > 0,
-                onShowPicker: (context, currentValue) async {
-                  final date = await showDatePicker(
-                      context: context,
-                      firstDate:
-                          _starttime != null ? _starttime : DateTime(2019),
-                      initialDate: _starttime ?? DateTime.now(),
-                      lastDate: DateTime(2100));
-                  if (date != null) {
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(
-                          currentValue ?? DateTime.now()),
-                    );
-                    return DateTimeField.combine(date, time);
-                  } else {
-                    return currentValue;
-                  }
-                },
-                decoration: InputDecoration(
-                  errorText: _validateendtime
-                      ? 'Work end time cannot be empty '
-                      : null,
-                  labelText: 'End Time',
-                  hintText: 'HH:MM',
-                  icon: Icon(Icons.date_range),
-                ),
-                onChanged: (dt) {
-                  setState(() {
-                    _endtime = dt;
-                    updateEndTime(dt);
-                  });
-                },
-              ),
-            ),
-            // Third Element - Work Performed
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-
-                keyboardType: TextInputType.multiline,
-                maxLines: 8,
-                controller: workperfrmController,
-                maxLength: 500,
-                style: textStyle,
-                //focusNode: wrkperfrmFocusNode,
-                textInputAction: TextInputAction.newline,
-                onEditingComplete: () =>
-                    FocusScope.of(context).requestFocus(hoursFocusNode),
-                onChanged: (value) {
-                  debugPrint('Something changed in Work Performed Text Field');
-                  updateWorkperformed();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Work Performed',
-                    labelStyle: textStyle,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-
-            //Fourth Element - Hours
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: TextField(
-                inputFormatters: [
-                  new FilteringTextInputFormatter.deny(new RegExp(
-                      '\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]')),
-                ],
-                enabled: _hrsEnable,
-                controller: hoursController,
-                keyboardType: TextInputType.numberWithOptions(),
-                style: textStyle,
-                focusNode: hoursFocusNode,
-                textInputAction: TextInputAction.done,
-                onChanged: (value) {
-                  debugPrint('Something changed in Hours Text Field');
-                  updateHours();
-                },
-                decoration: InputDecoration(
-                    labelText: 'Hours',
-                    labelStyle: textStyle,
-                    errorText:
-                        _validate ? 'Hours can\'t be zero or less ' : null,
-                    hintText: '00\:00',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0))),
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.save),
-        label: Text('Save'),
-        tooltip: "Save task performed",
-        onPressed: () async {
-          await _save(reportid);
-        },
       ),
     );
   }

@@ -36,92 +36,101 @@ class _ReportDetTabState extends State<ReportDetTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(appBarTitle + ' - ' + report.getreportno),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => movetolastscreen(),
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(appBarTitle + ' - ' + report.getreportno),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => movetolastscreen(),
+          ),
         ),
-      ),
-      body: PageView(
-        controller: controller,
-        children: <Widget>[
-          ReportDetail(report),
-          TaskList(report.getreportno, widget.helper),
-          ReportDetail3(report),
-          ImagePicker(report.getreportno),
-          ReportDetail4(report, widget.helper),
-        ],
-        onPageChanged: (int index) {
-          if (report.getprojectno.length == 0 && index == 1) {
-            _showAlertDialog('Error!', 'Project number cannot be empty.');
-            controller.jumpToPage(0);
-          } else {
-            if (index == 1)
-              this.appBarTitle = 'Edit Tasks';
-            else if (index == 0)
-              this.appBarTitle = 'Edit Report';
-            else if (index == 4)
-              this.appBarTitle = 'Customer Info';
-            else if (index == 3)
-              this.appBarTitle = 'Attach Pictures';
-            else
-              this.appBarTitle = 'Report Comments';
-            setState(() {
-              _selectedTab = index;
-            });
-          }
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppTheme.getTheme().backgroundColor,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedTab,
-        onTap: (int index) {
-          if (report.getprojectno.length == 0 &&
-              (index == 1 || index == 2 || index == 3 || index == 4)) {
-            _showAlertDialog('Error!', 'Project number cannot be empty.');
-          } else {
-            if (index == 1)
-              this.appBarTitle = 'Edit Tasks';
-            else if (index == 0)
-              this.appBarTitle = 'Edit Report';
-            else if (index == 3)
-              this.appBarTitle = 'Attach Images';
-            else if (index == 4)
-              this.appBarTitle = 'Customer';
-            else
-              this.appBarTitle = 'Comments';
-            setState(() {
-              _selectedTab = index;
-              controller.jumpToPage(index);
-            });
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'Details',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.track_changes),
-            label: ('Tasks'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.comment),
-            label: ('Comments'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
-            label: ('Pictures'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: ('Customer'),
-          ),
-        ],
+        body: PageView(
+          controller: controller,
+          children: <Widget>[
+            ReportDetail(report),
+            TaskList(report.getreportno, widget.helper),
+            ReportDetail3(report),
+            ImagePicker(report.getreportno),
+            ReportDetail4(report, widget.helper),
+          ],
+          onPageChanged: (int index) {
+            if (report.getprojectno.length == 0 && index == 1) {
+              _showAlertDialog('Error!', 'Project number cannot be empty.');
+              controller.jumpToPage(0);
+            } else {
+              if (index == 1)
+                this.appBarTitle = 'Edit Tasks';
+              else if (index == 0)
+                this.appBarTitle = 'Edit Report';
+              else if (index == 4)
+                this.appBarTitle = 'Customer Info';
+              else if (index == 3)
+                this.appBarTitle = 'Attach Pictures';
+              else
+                this.appBarTitle = 'Report Comments';
+              setState(() {
+                _selectedTab = index;
+              });
+            }
+          },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppTheme.getTheme().backgroundColor,
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedTab,
+          onTap: (int index) {
+            if (report.getprojectno.length == 0 &&
+                (index == 1 || index == 2 || index == 3 || index == 4)) {
+              _showAlertDialog('Error!', 'Project number cannot be empty.');
+            } else {
+              if (index == 1)
+                this.appBarTitle = 'Edit Tasks';
+              else if (index == 0)
+                this.appBarTitle = 'Edit Report';
+              else if (index == 3)
+                this.appBarTitle = 'Attach Images';
+              else if (index == 4)
+                this.appBarTitle = 'Customer';
+              else
+                this.appBarTitle = 'Comments';
+              setState(() {
+                _selectedTab = index;
+                controller.jumpToPage(index);
+              });
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info),
+              label: 'Details',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.track_changes),
+              label: ('Tasks'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.comment),
+              label: ('Comments'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera),
+              label: ('Pictures'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: ('Customer'),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -102,8 +102,16 @@ class _Signpad2State extends State<Signpad2> {
             ),
           ),
           floatingActionButton: FloatingActionButton.extended(
-            label: Text('Complete'),
-            icon: Icon(Icons.check_box),
+            label: Text(
+              'Complete',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            icon: Icon(
+              Icons.check_box,
+              color: Colors.white,
+            ),
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,

@@ -155,7 +155,10 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
                     Icons.sync,
                     color: Colors.white,
                   ),
-                  label: Text('Sync Reports'),
+                  label: Text(
+                    'Sync Reports',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               : Offstage()
           : Offstage(),
@@ -173,6 +176,15 @@ class _ReportListUnpublishedState extends State<ReportListUnpublished> {
             elevation: 10.0,
             child: ListTile(
               isThreeLine: true,
+              // trailing: InkWell(
+              //   child: Icon(
+              //     Icons.cloud_upload,
+              //     size: 40,
+              //     color: Colors.grey,
+              //   ),
+              //   onTap: () =>
+              //       print(myReports.getReports[position].reportno.toString()),
+              // ),
               leading: CircleAvatar(
                 backgroundColor: Colors.green,
                 child: Icon(
